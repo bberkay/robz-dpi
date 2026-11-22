@@ -63,6 +63,25 @@ function ConfirmDialog() {
   </dialog>`;
 }
 
+// Motorun günlüğü (engine.log): ne zaman başladı, hangi süzgeçle, neden durdu.
+function LogDialog() {
+  const { log } = useStore();
+  const ref = useRef(null);
+  useEffect(() => {
+    if (log !== null && ref.current && !ref.current.open) ref.current.showModal();
+  }, [log]);
+  if (log === null) return null;
+  const close = () => update({ log: null });
+  return html`<dialog class="dialog dialog-wide" ref=${ref} onClose=${close} onCancel=${close}>
+    <h2>${t('adv.log')}</h2>
+    <pre class="log selectable">${log}</pre>
+    <div class="dialog-actions">
+      <button class="btn" onClick=${actions.showLog}>${t('adv.log.refresh')}</button>
+      <button class="btn btn-primary" onClick=${close}>${t('action.dismiss')}</button>
+    </div>
+  </dialog>`;
+}
+
 function Toasts() {
   const { toasts } = useStore();
   return html`<div class="toasts" aria-live="polite">
@@ -90,6 +109,7 @@ function App() {
     <main class="content">${tab === 'settings' ? html`<${Settings} />` : html`<${Home} />`}</main>
     <${Toasts} />
     <${ConfirmDialog} />
+    <${LogDialog} />
   </div>`;
 }
 

@@ -379,6 +379,15 @@
   background-color: var(--btn-hover);
 }
 
+.field-number {
+  width: 72px;
+  padding: 0 10px;
+  text-align: right;
+}
+.field-host {
+  width: 168px;
+}
+
 /* Dil seçimi: bayraklı açılır kutu */
 .flag {
   display: block;
@@ -518,6 +527,10 @@
   margin-top: 2px;
   color: var(--fg-muted);
   text-wrap: pretty;
+}
+.power-stats {
+  margin-top: 6px;
+  font-size: 12px;
 }
 .power-admin {
   display: flex;
@@ -756,6 +769,48 @@
 }
 .dns-custom .input:last-child {
   width: 88px;
+}
+
+/* Gelişmiş bölüm */
+.subsection-title {
+  margin: 20px 0 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-bottom: 1px solid var(--border-muted);
+}
+.stat {
+  padding: 12px 14px;
+}
+.stat + .stat {
+  border-left: 1px solid var(--border-muted);
+}
+.stat-value {
+  font-size: 18px;
+  font-weight: 600;
+}
+.stat-label {
+  font-size: 12px;
+}
+.dialog-wide {
+  width: min(760px, calc(100vw - 32px));
+}
+.log {
+  max-height: 55vh;
+  margin: 12px 0 0;
+  padding: 12px;
+  overflow: auto;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  background: var(--bg-inset);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .about {

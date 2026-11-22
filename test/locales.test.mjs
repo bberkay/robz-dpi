@@ -39,15 +39,25 @@ test("arayüzde t('…') ile kullanılan her anahtar sözlükte var", () => {
   assert.ok(used.size > 50, `yalnız ${used.size} anahtar bulundu`);
 });
 
-// Kod, anahtarı çalışma anında kuruyor: t(`power.${busy}`), t(`method.${id}`), t(`problem.${code}`), t(`error.${code}`).
+// Kod, anahtarı çalışma anında kuruyor: t(`power.${busy}`), t(`method.${id}`), t(`problem.${code}`),
+// t(`engineCode.${kod}`), t(`error.${code}`).
 test('çalışma anında kurulan anahtarlar sözlükte var', () => {
   const dynamic = [
     ...['starting', 'stopping', 'applying', 'removing', 'fixing'].map((busy) => `power.${busy}`),
     ...['m1', 'm2', 'm3', 'm4'].map((id) => `method.${id}`),
-    ...['nothing-selected', 'bad-dns'].map((code) => `problem.${code}`),
+    ...['nothing-selected', 'bad-dns', 'empty-strategy', 'bad-strategy'].map((code) => `problem.${code}`),
     ...['home', 'settings'].map((tab) => `tab.${tab}`),
+    // Motorun çıkış kodları: WinDivert'in bilinen hataları ve engine/service.rs'teki EXIT_* sabitleri.
+    ...[2, 5, 577, 654, 1275, 1753, 9001, 9002, 9003].map((code) => `engineCode.${code}`),
   ];
   assert.deepEqual(dynamic.filter((key) => !(key in tr)), []);
+});
+
+test('motorun çıkış kodlarının metni var', () => {
+  const service = readFileSync(fileURLToPath(new URL('../src-tauri/src/engine/service.rs', import.meta.url)), 'utf8');
+  const codes = [...service.matchAll(/pub const EXIT_[A-Z_]+: u32 = ([0-9]+);/g)].map((m) => m[1]);
+  assert.ok(codes.length >= 3, `yalnız ${codes.length} sabit bulundu`);
+  assert.deepEqual(codes.filter((code) => !(`engineCode.${code}` in tr)), []);
 });
 
 // Rust tarafının üretebildiği her hata kodunun bir metni olmalı; yoksa kullanıcı "Bir şeyler ters gitti" görür.

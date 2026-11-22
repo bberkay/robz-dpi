@@ -1,5 +1,5 @@
 // Kullanıcı eylemleri: gerekirse onay ister, ana süreci çağırır, hatayı okunur bir bildirime çevirir.
-import { call, openDialog, store, toast } from './store.js';
+import { call, openDialog, store, toast, update } from './store.js';
 import { list, t } from './i18n.js';
 
 export function errorText(error) {
@@ -30,6 +30,14 @@ export const test = () => run('test');
 export const dismissError = () => run('dismissError');
 export const setService = (id, on) => run('setService', id, on);
 export const removeDomain = (domain) => run('removeDomain', domain);
+// "Gelişmiş" ekranındaki tek alanlık strateji değişikliği. Hazır bir yöntem seçiliyse onu "özel"e çevirir.
+export const setCustom = (field, value) => run('setCustom', field, value);
+
+// Motorun günlüğünü okur ve pencerede gösterir.
+export async function showLog() {
+  const text = await run('getLog');
+  if (text !== undefined) update({ log: text || t('adv.log.empty') });
+}
 export const openExternal = (url) => run('openExternal', url);
 
 // Yazılan ya da yapıştırılan adresleri ekler. Eklenen olduysa true (kutu temizlensin diye).

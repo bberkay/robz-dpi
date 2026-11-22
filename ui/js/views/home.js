@@ -44,6 +44,10 @@ function PowerCard() {
     <div class="power-text">
       <div class="power-state" aria-live="polite">${busy ? t(`power.${busy}`) : on ? t('power.on') : t('power.off')}</div>
       ${subtitle && html`<p class="power-sub">${subtitle}</p>`}
+      ${on &&
+      !busy &&
+      engine.stats &&
+      html`<p class="power-stats muted">${t('power.stats', { tls: engine.stats.tls, dns: engine.stats.dns })}</p>`}
       ${!on &&
       !busy &&
       !blocked &&
@@ -67,10 +71,14 @@ function Notices() {
   }
 
   if (engine.error) {
+    // Motorun çıkış kodu bilinen bir nedense onu söyle; değilse ayrıntıyı olduğu gibi göster.
+    const detail = engine.error.detail;
+    const hintKey = `engineCode.${detail}`;
+    const hint = /^[0-9]+$/.test(detail || '') && t(hintKey) !== hintKey ? t(hintKey) : null;
     notices.push(html`<${Flash}
       kind="danger"
       icon="alert"
-      detail=${engine.error.detail && t('error.detail', { detail: engine.error.detail })}
+      detail=${hint || (detail && t('error.detail', { detail }))}
       actions=${html`<button class="btn btn-sm" onClick=${actions.dismissError}>${t('action.dismiss')}</button>`}
     >
       ${actions.errorText(engine.error)}

@@ -35,6 +35,32 @@ export function Segmented({ value, options, onChange, label }) {
   </div>`;
 }
 
+// Sayı kutusu: kutudan çıkınca ya da Enter'a basınca, değer [min, max] aralığındaysa kaydedilir; değilse eski
+// değere döner.
+export function NumberField({ value, min, max, onCommit, label }) {
+  const [text, setText] = useState(String(value));
+  useEffect(() => setText(String(value)), [value]);
+  const commit = () => {
+    const number = Number(text);
+    if (text === '' || !Number.isInteger(number) || number < min || number > max) {
+      setText(String(value));
+      return;
+    }
+    if (number !== value) onCommit(number);
+  };
+  return html`<input
+    class="input mono field-number"
+    type="text"
+    inputmode="numeric"
+    aria-label=${label}
+    title=${`${min} – ${max}`}
+    value=${text}
+    onInput=${(event) => setText(event.target.value.replace(/[^0-9]/g, '').slice(0, 5))}
+    onBlur=${commit}
+    onKeyDown=${(event) => event.key === 'Enter' && event.target.blur()}
+  />`;
+}
+
 // kind: 'danger' | 'attention' | 'accent' | ''. actions: düğmeler.
 export function Flash({ kind = '', icon = 'info', children, detail, actions }) {
   return html`<div class=${`flash ${kind ? `flash-${kind}` : ''}`} role=${kind === 'danger' ? 'alert' : 'status'}>

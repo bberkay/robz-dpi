@@ -10,6 +10,7 @@ export const store = {
   tab: 'home', // 'home' | 'settings'
   toasts: [],
   dialog: null,
+  log: null, // açık günlük penceresinin metni
 };
 
 let version = 0;

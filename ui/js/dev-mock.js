@@ -4,11 +4,28 @@
 // Adres çubuğundan başlangıç durumu seçilebilir:
 //   ?lang=en            İngilizce
 //   ?on                 motor açık
+//   ?tab=settings       Ayarlar sekmesi
+//   ?advanced           gelişmiş bölüm açık
 //   ?conflict           başka bir DPI aracı çalışıyor
-//   ?error=<kod>        hata kutusu (örnek: engine-stopped)
+//   ?error=<kod>        hata kutusu (örnek: engine-stopped); ?detail=1275 ile motorun çıkış kodu
 const query = new URLSearchParams(location.search);
 const listeners = new Set();
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const base = {
+  split: 2,
+  splitAtSni: false,
+  reverse: true,
+  httpSplit: 2,
+  fakeTtlMode: 'fixed',
+  fakeTtl: 5,
+  fakeBadChecksum: false,
+  fakeBadSeq: false,
+  fakeRepeats: 1,
+  fakeHost: 'www.w3.org',
+  blockQuic: false,
+  noSni: 'known',
+};
 
 const catalog = {
   services: [
@@ -16,10 +33,10 @@ const catalog = {
     { id: 'roblox', name: 'Roblox', domains: Array.from({ length: 8 }, (_, i) => `r${i}.example`) },
   ],
   methods: [
-    { id: 'm1', flags: '-5 --set-ttl 5' },
-    { id: 'm2', flags: '-5' },
-    { id: 'm3', flags: '--set-ttl 3' },
-    { id: 'm4', flags: '-9' },
+    { id: 'm1', flags: '-5 --set-ttl 5', strategy: base },
+    { id: 'm2', flags: '-5', strategy: { ...base, fakeTtlMode: 'auto' } },
+    { id: 'm3', flags: '--set-ttl 3', strategy: { ...base, split: 0, httpSplit: 0, reverse: false, fakeTtl: 3 } },
+    { id: 'm4', flags: '-9', strategy: { ...base, fakeTtlMode: 'off', fakeBadChecksum: true, fakeBadSeq: true, blockQuic: true } },
   ],
   dns: [
     { id: 'quad9', name: 'Quad9', address: '9.9.9.9', port: 9953 },
@@ -38,21 +55,36 @@ const settings = {
   services: ['discord', 'roblox'],
   customDomains: [],
   method: 'm1',
+  custom: { ...base },
+  advanced: query.has('advanced'),
   dnsEnabled: true,
+  dnsAll: false,
   dnsProvider: 'quad9',
   dnsCustomAddr: '',
   dnsCustomPort: 53,
 };
 
-const ENGINE_KEYS = ['scope', 'services', 'customDomains', 'method', 'dnsEnabled', 'dnsProvider', 'dnsCustomAddr', 'dnsCustomPort'];
-const fingerprint = () => JSON.stringify(ENGINE_KEYS.map((key) => settings[key]));
+const strategy = () => catalog.methods.find((m) => m.id === settings.method)?.strategy ?? settings.custom;
+const fingerprint = () =>
+  JSON.stringify([
+    settings.scope,
+    settings.services,
+    settings.customDomains,
+    strategy(),
+    settings.dnsEnabled,
+    settings.dnsAll,
+    settings.dnsProvider,
+    settings.dnsCustomAddr,
+    settings.dnsCustomPort,
+  ]);
 
 const engine = {
   installed: query.has('on'),
   state: query.has('on') ? 'running' : 'stopped',
   busy: null,
   applied: query.has('on') ? fingerprint() : null,
-  error: query.get('error') ? { code: query.get('error'), detail: null } : null,
+  error: query.get('error') ? { code: query.get('error'), detail: query.get('detail') } : null,
+  startedAt: Date.now(),
 };
 let conflicts = query.has('conflict') ? [{ name: 'goodbyedpi.exe', pid: 4408 }] : [];
 const probe = { running: false, results: [] };
@@ -60,7 +92,24 @@ const probe = { running: false, results: [] };
 function problem() {
   if (settings.scope === 'selected' && !settings.services.length && !settings.customDomains.length) return 'nothing-selected';
   if (settings.dnsEnabled && settings.dnsProvider === 'custom' && !settings.dnsCustomAddr) return 'bad-dns';
+  const s = strategy();
+  if (!s.split && !s.splitAtSni && s.fakeTtlMode === 'off' && !s.fakeBadChecksum && !s.fakeBadSeq) return 'empty-strategy';
   return null;
+}
+
+// Motor açıkken sayaçlar yavaşça artar.
+function stats() {
+  if (engine.state !== 'running') return null;
+  const ticks = Math.floor((Date.now() - engine.startedAt) / 4000);
+  return {
+    tls: 14 + ticks,
+    http: 0,
+    dns: 6 + Math.floor(ticks / 2),
+    quic: strategy().blockQuic ? 2 : 0,
+    known: 9,
+    recent: ['gateway.discord.gg', 'cdn.discordapp.com', 'discord.com', 'apis.roblox.com', 'tr.rbxcdn.com'],
+    since: Math.floor(engine.startedAt / 1000),
+  };
 }
 
 function snapshot() {
@@ -86,6 +135,7 @@ function snapshot() {
       needsAdmin: !matches,
       problem: problem(),
       error: engine.error,
+      stats: stats(),
     },
     conflicts,
     probe,
@@ -108,17 +158,24 @@ async function operate(busy, work) {
 }
 
 function normalize(text) {
-  const host = text.trim().toLowerCase().replace(/^[a-z]+:\/\//, '').replace(/[/?#].*$/, '').replace(/^www\./, '');
-  return /^([a-z0-9-]+\.)+[a-z][a-z0-9-]*$/.test(host) ? host : null;
+  const host = text.trim().toLowerCase().replace(/^[a-z]+:[/][/]/, '').replace(/[/?#].*$/, '').replace(/^www[.]/, '');
+  return /^([a-z0-9-]+[.])+[a-z][a-z0-9-]*$/.test(host) ? host : null;
 }
+
+const LIMITS = { split: [0, 1200], httpSplit: [0, 1200], fakeTtl: [1, 64], fakeRepeats: [1, 10] };
 
 const methods = {
   getState: () => snapshot(),
-  turnOn: () =>
-    operate('starting', () => {
-      Object.assign(engine, { installed: true, state: 'running', applied: fingerprint() });
+  turnOn: () => {
+    if (problem()) {
+      engine.error = { code: problem(), detail: null };
+      return emit();
+    }
+    return operate('starting', () => {
+      Object.assign(engine, { installed: true, state: 'running', applied: fingerprint(), startedAt: Date.now() });
       settings.enabled = true;
-    }),
+    });
+  },
   turnOff: () =>
     operate('stopping', () => {
       engine.state = 'stopped';
@@ -132,8 +189,17 @@ const methods = {
     emit();
   },
   setSetting: (key, value) => {
-    if (!(key in settings)) throw { code: 'bad-request', detail: key };
+    if (!(key in settings) || key === 'custom') throw { code: 'bad-request', detail: key };
     settings[key] = value;
+    emit();
+  },
+  setCustom: (field, value) => {
+    if (!(field in base)) throw { code: 'bad-request', detail: field };
+    const limit = LIMITS[field];
+    if (limit && (!Number.isInteger(value) || value < limit[0] || value > limit[1])) throw { code: 'bad-request', detail: field };
+    if (field === 'fakeHost' && !/^([a-z0-9-]+[.])+[a-z][a-z0-9-]*$/.test(value)) throw { code: 'bad-request', detail: field };
+    settings.custom = { ...strategy(), [field]: value };
+    settings.method = 'custom';
     emit();
   },
   setService: (id, on) => {
@@ -171,8 +237,17 @@ const methods = {
     probe.running = false;
     emit();
   },
+  getLog: () =>
+    [
+      '2026-11-22 19:40:01  Robz DPI motoru 0.1.0 başlıyor',
+      '2026-11-22 19:40:01  süzgeç: !impostor and !loopback and ((outbound and tcp and tcp.DstPort == 443 and tcp.PayloadLength > 5 and tcp.Payload[0] == 0x16 and tcp.Payload[1] == 0x03 and tcp.Payload[5] == 0x01) or (outbound and udp and udp.DstPort == 53) or (inbound and udp and (udp.SrcPort == 9953)))',
+      '2026-11-22 19:40:01  çalışıyor: 30 alan adı, DNS 9.9.9.9:9953 (yalnız hedefler)',
+    ].join('\n'),
   openExternal: (url) => window.open(url, '_blank', 'noopener'),
 };
+
+// Sayaçlar değiştikçe arayüz yenilensin (gerçek çekirdek 2 saniyede bir durumu yeniden okur).
+setInterval(() => engine.state === 'running' && emit(), 4000);
 
 window.__TAURI__ = {
   core: {
@@ -188,3 +263,8 @@ window.__TAURI__ = {
     },
   },
 };
+
+if (query.get('tab') === 'settings') {
+  // main.js yüklendikten sonra Ayarlar sekmesine geç.
+  setTimeout(() => document.querySelectorAll('.tab')[1]?.click(), 150);
+}
