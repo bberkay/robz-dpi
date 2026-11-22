@@ -1,9 +1,10 @@
-// Dil: Türkçe ve İngilizce. Ayar "auto" ise Windows'un dili; Türkçe değilse İngilizce.
+// Dil: Türkçe, İngilizce ve Rusça. Ayar "auto" ise Windows'un dili; bu üçünden biri değilse İngilizce.
 import { store } from './store.js';
 import tr from './locales/tr.js';
 import en from './locales/en.js';
+import ru from './locales/ru.js';
 
-const DICTS = { tr, en };
+const DICTS = { tr, en, ru };
 
 // Arayüz dilleri, seçim kutularında görünecekleri sırayla. Her birinin adı sözlükte `lang.<kod>` anahtarındadır.
 export const LANGUAGES = Object.keys(DICTS);

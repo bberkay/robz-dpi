@@ -25,7 +25,16 @@ struct Strings {
 }
 
 fn strings(lang: &str) -> Strings {
-    if lang == "en" {
+    if lang == "ru" {
+        Strings {
+            open: "Открыть Robz DPI",
+            turn_on: "Включить",
+            turn_off: "Выключить",
+            quit: "Выход",
+            tip_on: "Robz DPI: включено",
+            tip_off: "Robz DPI: выключено",
+        }
+    } else if lang == "en" {
         Strings {
             open: "Open Robz DPI",
             turn_on: "Turn on",
@@ -48,7 +57,8 @@ fn strings(lang: &str) -> Strings {
 
 // ---- dil ------------------------------------------------------------------------------------------------------------
 
-/// "Windows dili": görüntü dili, tercih edilen diller ya da bölge Türkiye ise Türkçe; değilse İngilizce.
+/// "Windows dili": görüntü dili, tercih edilen diller ya da bölge Türkiye ise Türkçe; Rusça ise Rusça; değilse
+/// İngilizce.
 /// (Türkiye'de İngilizce Windows kullanmak yaygındır; kullanıcı üst çubuktan tek tıkla değiştirebilir.)
 #[cfg(windows)]
 pub fn system_language() -> &'static str {
@@ -75,8 +85,11 @@ pub fn system_language() -> &'static str {
             texts.extend(String::from_utf16_lossy(&list[..len as usize]).split('\0').map(str::to_string));
         }
     }
-    if texts.iter().any(|t| t.to_ascii_lowercase().starts_with("tr")) {
+    let speaks = |code: &str| texts.iter().any(|t| t.to_ascii_lowercase().starts_with(code));
+    if speaks("tr") {
         "tr"
+    } else if speaks("ru") {
+        "ru"
     } else {
         "en"
     }

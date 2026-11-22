@@ -6,6 +6,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import tr from '../ui/js/locales/tr.js';
 import en from '../ui/js/locales/en.js';
+import ru from '../ui/js/locales/ru.js';
 
 const root = fileURLToPath(new URL('../ui/js/', import.meta.url));
 
@@ -17,16 +18,36 @@ function sources(dir) {
   });
 }
 
-test('iki dilde aynı anahtarlar var', () => {
+test('bütün dillerde aynı anahtarlar var', () => {
   assert.deepEqual(Object.keys(en).sort(), Object.keys(tr).sort());
+  assert.deepEqual(Object.keys(ru).sort(), Object.keys(tr).sort());
 });
 
-test('yer tutucular iki dilde aynı', () => {
+test('yer tutucular bütün dillerde aynı', () => {
+  const vars = (s) => [...s.matchAll(/[{]([a-zA-Z]+)[}]/g)].map((m) => m[1]).sort();
   for (const key of Object.keys(tr)) {
-    if (typeof tr[key] !== 'string') continue;
-    const vars = (s) => [...s.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort();
-    assert.deepEqual(vars(en[key]), vars(tr[key]), key);
+    for (const [name, dict] of [['en', en], ['ru', ru]]) {
+      // Çoğul biçimi gereken metinler işlevdir (Rusça: 1 сайт, 2 сайта, 5 сайтов); onlar aşağıda sınanır.
+      if (typeof dict[key] !== 'string') continue;
+      assert.deepEqual(vars(dict[key]), vars(tr[key]), `${name}: ${key}`);
+    }
   }
+});
+
+test('işlev olan metinler çalışır ve yer tutucu bırakmaz', () => {
+  const samples = { n: 5, tls: 21, dns: 2, total: 3 };
+  for (const [name, dict] of [['tr', tr], ['en', en], ['ru', ru]]) {
+    for (const [key, value] of Object.entries(dict)) {
+      if (typeof value !== 'function') continue;
+      const text = value(samples);
+      assert.equal(typeof text, 'string', `${name}: ${key}`);
+      assert.ok(!/[{}]|undefined/.test(text), `${name}: ${key} -> ${text}`);
+    }
+  }
+  assert.equal(ru['scope.sites']({ n: 1 }), '1 сайт');
+  assert.equal(ru['scope.sites']({ n: 3 }), '3 сайта');
+  assert.equal(ru['scope.sites']({ n: 11 }), '11 сайтов');
+  assert.equal(ru['service.domains']({ n: 22 }), '22 адреса');
 });
 
 test("arayüzde t('…') ile kullanılan her anahtar sözlükte var", () => {

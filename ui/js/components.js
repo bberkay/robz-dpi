@@ -98,6 +98,13 @@ export function Flag({ code, size = 20 }) {
       <polygon points=${STAR} fill="#fff" />
     </svg>`;
   }
+  if (code === 'ru') {
+    return html`<svg class="flag" width=${size} height=${height} viewBox="0 0 30 20" aria-hidden="true">
+      <rect width="30" height="20" fill="#fff" />
+      <rect y="6.67" width="30" height="6.67" fill="#0039A6" />
+      <rect y="13.33" width="30" height="6.67" fill="#D52B1E" />
+    </svg>`;
+  }
   if (code === 'en') {
     return html`<svg class="flag" width=${size} height=${height} viewBox="0 0 45 30" aria-hidden="true">
       <rect width="45" height="30" fill="#012169" />

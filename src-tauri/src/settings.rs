@@ -10,7 +10,7 @@ use std::path::Path;
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", default)]
 pub struct Settings {
-    /// "auto" | "tr" | "en"
+    /// "auto" | "tr" | "en" | "ru"
     pub language: String,
     /// Pencere kapatılınca tepside kal.
     pub close_to_tray: bool,
@@ -75,7 +75,7 @@ impl Settings {
     /// Elle düzenlenmiş ya da eski sürümden kalmış dosyadaki geçersiz değerleri varsayılana çeker.
     fn sanitize(&mut self) {
         let defaults = Settings::default();
-        if !matches!(self.language.as_str(), "auto" | "tr" | "en") {
+        if !matches!(self.language.as_str(), "auto" | "tr" | "en" | "ru") {
             self.language = defaults.language;
         }
         if !matches!(self.scope.as_str(), "selected" | "all") {
@@ -126,7 +126,7 @@ impl Settings {
     /// Arayüzden gelen değişiklik. Bilinmeyen anahtar, yanlış tür ya da geçersiz değer: false.
     pub fn set(&mut self, key: &str, value: &Value) -> bool {
         match (key, value) {
-            ("language", Value::String(s)) if matches!(s.as_str(), "auto" | "tr" | "en") => self.language = s.clone(),
+            ("language", Value::String(s)) if matches!(s.as_str(), "auto" | "tr" | "en" | "ru") => self.language = s.clone(),
             ("closeToTray", Value::Bool(b)) => self.close_to_tray = *b,
             ("onboarded", Value::Bool(b)) => self.onboarded = *b,
             ("launchAtLogin", Value::Bool(b)) => self.launch_at_login = *b,
@@ -218,6 +218,7 @@ mod tests {
         let mut s = Settings::default();
         assert!(s.set("language", &json!("en")));
         assert!(!s.set("language", &json!("de")));
+        assert!(s.set("language", &json!("ru")) && s.set("language", &json!("en")));
         assert!(s.set("scope", &json!("all")));
         assert!(!s.set("scope", &json!("everything")));
         assert!(s.set("method", &json!("m3")));

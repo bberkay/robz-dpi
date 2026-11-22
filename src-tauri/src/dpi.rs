@@ -94,6 +94,7 @@ impl Dpi {
         match self.lock().settings.language.as_str() {
             "tr" => "tr",
             "en" => "en",
+            "ru" => "ru",
             _ => self.system_language,
         }
     }

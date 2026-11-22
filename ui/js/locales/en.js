@@ -5,6 +5,7 @@ export default {
 
   'lang.tr': 'Türkçe',
   'lang.en': 'English',
+  'lang.ru': 'Русский',
 
   'power.on': 'On',
   'power.off': 'Off',

@@ -42,7 +42,8 @@
         "installMode": "currentUser",
         "languages": [
           "Turkish",
-          "English"
+          "English",
+          "Russian"
         ],
         "displayLanguageSelector": false,
         "installerIcon": "icons/icon.ico",
