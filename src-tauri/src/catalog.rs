@@ -1,6 +1,7 @@
 //! Yerleşik listeler: hazır uygulamalar (Discord, Roblox) ve alan adları, motor yöntemleri, DNS sağlayıcıları.
 //! Kullanıcı bunları arayüzden seçer; dosya ya da bayrak düzenlemesi gerekmez.
 
+use crate::plan::Strategy;
 use serde_json::{json, Value};
 
 pub struct Service {
@@ -61,16 +62,43 @@ pub const SERVICES: &[Service] = &[
 
 pub struct Method {
     pub id: &'static str,
-    /// GoodbyeDPI bayrakları. GoodbyeDPI-Turkey'in komut dosyalarındaki dört ayrı birleşim.
-    pub args: &'static [&'static str],
+    /// Aynı davranışı veren GoodbyeDPI bayrakları (GoodbyeDPI-Turkey'in komut dosyalarındaki dört birleşim).
+    /// Yalnız bilgi içindir: GoodbyeDPI kullanmış olanlar hangi yöntemin neye karşılık geldiğini görsün.
+    pub goodbyedpi: &'static str,
 }
 
 pub const METHODS: &[Method] = &[
-    Method { id: "m1", args: &["-5", "--set-ttl", "5"] },
-    Method { id: "m2", args: &["-5"] },
-    Method { id: "m3", args: &["--set-ttl", "3"] },
-    Method { id: "m4", args: &["-9"] },
+    Method { id: "m1", goodbyedpi: "-5 --set-ttl 5" },
+    Method { id: "m2", goodbyedpi: "-5" },
+    Method { id: "m3", goodbyedpi: "--set-ttl 3" },
+    Method { id: "m4", goodbyedpi: "-9" },
 ];
+
+/// Kullanıcının "Gelişmiş" ekranında kendi kurduğu strateji.
+pub const CUSTOM_METHOD: &str = "custom";
+
+impl Method {
+    /// Yöntemin motor stratejisi.
+    pub fn strategy(&self) -> Strategy {
+        let base = Strategy::default();
+        match self.id {
+            // Böl (2 bayt, ters sırayla) + 5 sıçramada ölen sahte paket.
+            "m1" => base,
+            // Aynısı; sahte paketin ömrü sunucunun uzaklığına göre hesaplanır.
+            "m2" => Strategy { fake_ttl_mode: "auto".into(), ..base },
+            // Bölme yok; yalnız 3 sıçramada ölen sahte paket.
+            "m3" => Strategy { split: 0, http_split: 0, reverse: false, fake_ttl: 3, ..base },
+            // Böl + sağlama toplamı bozuk ve sıra numarası eski iki sahte paket; QUIC kapalı.
+            _ => Strategy {
+                fake_ttl_mode: "off".into(),
+                fake_bad_checksum: true,
+                fake_bad_seq: true,
+                block_quic: true,
+                ..base
+            },
+        }
+    }
+}
 
 pub struct Dns {
     pub id: &'static str,
@@ -110,7 +138,7 @@ pub fn dns(id: &str) -> Option<&'static Dns> {
 pub fn public() -> Value {
     json!({
         "services": SERVICES.iter().map(|s| json!({ "id": s.id, "name": s.name, "domains": s.domains })).collect::<Vec<_>>(),
-        "methods": METHODS.iter().map(|m| json!({ "id": m.id, "flags": m.args.join(" ") })).collect::<Vec<_>>(),
+        "methods": METHODS.iter().map(|m| json!({ "id": m.id, "flags": m.goodbyedpi, "strategy": m.strategy() })).collect::<Vec<_>>(),
         "dns": DNS.iter().map(|d| json!({ "id": d.id, "name": d.name, "address": d.v4, "port": d.port })).collect::<Vec<_>>(),
     })
 }
@@ -137,5 +165,20 @@ mod tests {
         }
         assert!(method(DEFAULT_METHOD).is_some());
         assert!(dns(DEFAULT_DNS).is_some());
+        assert!(method(CUSTOM_METHOD).is_none());
+    }
+
+    #[test]
+    fn every_method_is_a_valid_and_distinct_strategy() {
+        let strategies: Vec<_> = METHODS.iter().map(Method::strategy).collect();
+        for (method, strategy) in METHODS.iter().zip(&strategies) {
+            assert!(strategy.validate().is_ok(), "{}", method.id);
+        }
+        for (i, a) in strategies.iter().enumerate() {
+            assert!(strategies.iter().skip(i + 1).all(|b| a != b), "iki yöntem aynı");
+        }
+        assert_eq!(strategies[0], Strategy::default());
+        assert!(!strategies[2].splits() && strategies[2].fakes(), "yöntem 3 yalnız sahte paket gönderir");
+        assert!(strategies[3].block_quic && strategies[3].fake_ttl_mode == "off");
     }
 }

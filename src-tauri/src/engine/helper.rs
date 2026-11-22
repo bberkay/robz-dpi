@@ -4,22 +4,27 @@
 //! Çıkış kodu 0 başarıdır. Hata olursa ayrıntı korumalı klasördeki last-result.json'a yazılır.
 //!
 //! Yardımcı, arayüz sürecinden geleni güvenilir saymaz:
-//!   * İstek (yöntem, DNS adresi, alan adları) yeniden doğrulanır; komut satırı buradaki sabitlerle kurulur.
-//!   * Motor dosyaları, derleme anında gömülen SHA-256 özetleriyle tutuyorsa korumalı klasöre kopyalanır.
+//!   * İstek (strateji, DNS adresi, alan adları) yeniden doğrulanır; servisin komut satırı buradaki sabitlerle
+//!     kurulur ve istekten hiçbir metin içermez.
+//!   * Motor olarak kopyalanan exe bu sürecin kendi çalışan görüntüsüdür: kullanıcının yönetici onayı verdiği kod
+//!     ile servis olarak kurulan kod aynıdır.
+//!   * WinDivert dosyaları, derleme anında gömülen SHA-256 özetleriyle tutuyorsa kopyalanır.
 //!   * Yalnız korumalı klasöre ("Program Files\RobzDPI") yazılır.
 
 use super::scm::{self, State};
-use super::windows::{engine_id, protected_dir, source_dir, win_error, Applied, Job, JobResult, ENGINE_FILES, FOREIGN_ENGINES, SERVICE_NAME};
+use super::windows::{
+    engine_id, image_path, protected_dir, sha256_hex, source_dir, wait_until_running, win_error, Applied, Job, JobResult,
+    DRIVER_FILES, ENGINE_EXE, FOREIGN_ENGINES, SERVICE_NAME,
+};
 use crate::error::{DpiError, DpiResult};
 use crate::plan::{command_line, EngineRequest};
-use sha2::{Digest, Sha256};
 use std::path::Path;
 use std::ptr::null;
 use std::time::Duration;
 use windows_sys::Win32::Storage::FileSystem::{MoveFileExW, MOVEFILE_DELAY_UNTIL_REBOOT};
 
 const SERVICE_DISPLAY: &str = "Robz DPI";
-const SERVICE_DESCRIPTION: &str = "Robz DPI motoru (GoodbyeDPI). Robz DPI uygulamasından açılır ve kapatılır.";
+const SERVICE_DESCRIPTION: &str = "Robz DPI motoru. Robz DPI uygulamasından açılır ve kapatılır.";
 
 /// Servisin erişim listesi. SYSTEM ve yöneticiler: tam denetim. Oturum açmış kullanıcı (IU): sorgula, başlat (RP),
 /// durdur (WP). Kullanıcı servisin ayarını (çalıştırdığı komutu) değiştiremez; onun için yönetici onayı gerekir.
@@ -65,52 +70,52 @@ fn write_result(nonce: &str, error: DpiError) {
     let _ = std::fs::write(dir.join("last-result.json"), serde_json::to_vec(&result).unwrap_or_default());
 }
 
-fn sha256_hex(bytes: &[u8]) -> String {
-    hex::encode(Sha256::digest(bytes))
-}
-
 fn io_error(code: &str) -> impl Fn(std::io::Error) -> DpiError + '_ {
     move |error| DpiError::with(code, error)
 }
 
-/// Servisi kurar ya da ayarını değiştirir, sonra başlatır.
+/// Motoru kurar ya da ayarını değiştirir, sonra başlatır.
 fn apply(request: &EngineRequest) -> DpiResult<()> {
     request.validate()?;
     let dir = protected_dir().ok_or_else(|| DpiError::new("no-program-files"))?;
-    let engine_dir = dir.join("engine");
-    std::fs::create_dir_all(&engine_dir).map_err(io_error("write-failed"))?;
+    std::fs::create_dir_all(&dir).map_err(io_error("write-failed"))?;
 
-    // Çalışıyorsa durdur: dosyalar ve komut satırı değişecek.
+    // Çalışıyorsa durdur: dosyalar ve ayar değişecek.
     stop_engine()?;
-    install_engine(&engine_dir)?;
+    install_engine(&dir)?;
 
-    let blacklist = dir.join("blacklist.txt");
-    match request.blacklist_text() {
-        Some(text) => std::fs::write(&blacklist, text).map_err(io_error("write-failed"))?,
-        None => {
-            let _ = std::fs::remove_file(&blacklist);
-        }
-    }
+    std::fs::write(dir.join("engine.json"), serde_json::to_vec_pretty(request).unwrap_or_default())
+        .map_err(io_error("write-failed"))?;
 
-    let command = command_line(&engine_dir.join(ENGINE_FILES[0].0), &request.args(&blacklist));
+    let command = command_line(&dir.join(ENGINE_EXE), &["--engine"]);
     scm::install(SERVICE_NAME, SERVICE_DISPLAY, SERVICE_DESCRIPTION, &command, SERVICE_SDDL).map_err(win_error)?;
 
     // Servis artık bu ayarla kurulu: başlatma başarısız olsa da kayıt doğrudur.
     let applied = Applied { fingerprint: request.fingerprint(&engine_id()) };
     std::fs::write(dir.join("applied.json"), serde_json::to_vec(&applied).unwrap_or_default()).map_err(io_error("write-failed"))?;
 
+    // Motorun GoodbyeDPI paketlendiği ilk sürümünden kalanlar.
+    let _ = std::fs::remove_dir_all(dir.join("engine"));
+    let _ = std::fs::remove_file(dir.join("blacklist.txt"));
+
     scm::start(SERVICE_NAME).map_err(win_error)?;
-    if !scm::wait_for(SERVICE_NAME, State::Running, Duration::from_secs(8)) {
-        return Err(DpiError::with("engine-start-failed", scm::query(SERVICE_NAME).exit_code));
-    }
-    Ok(())
+    wait_until_running()
 }
 
-/// Uygulamayla gelen motor dosyalarını doğrulayıp korumalı klasöre kopyalar. Dosya bir kez okunur: özeti alınan
-/// baytlar ile yazılan baytlar aynıdır.
-fn install_engine(engine_dir: &Path) -> DpiResult<()> {
+/// Motoru ve WinDivert dosyalarını korumalı klasöre kopyalar. Her dosya bir kez okunur: denetlenen baytlar ile
+/// yazılan baytlar aynıdır.
+fn install_engine(dir: &Path) -> DpiResult<()> {
+    let copy = |name: &str, bytes: &[u8]| -> DpiResult<()> {
+        let target = dir.join(name);
+        if std::fs::read(&target).is_ok_and(|current| current == bytes) {
+            return Ok(());
+        }
+        // Yazılamıyorsa dosya kullanımdadır (sürücü yüklü ya da motor hâlâ kapanıyor).
+        std::fs::write(&target, bytes).map_err(|error| DpiError::with("engine-busy", format!("{name}: {error}")))
+    };
+
     let source = source_dir().ok_or_else(|| DpiError::new("engine-missing"))?;
-    for (name, expected) in ENGINE_FILES {
+    for (name, expected) in DRIVER_FILES {
         if expected.is_empty() {
             return Err(DpiError::new("engine-missing"));
         }
@@ -118,13 +123,13 @@ fn install_engine(engine_dir: &Path) -> DpiResult<()> {
         if sha256_hex(&bytes) != expected {
             return Err(DpiError::with("engine-tampered", name));
         }
-        let target = engine_dir.join(name);
-        if std::fs::read(&target).is_ok_and(|current| sha256_hex(&current) == expected) {
-            continue;
-        }
-        std::fs::write(&target, &bytes).map_err(|error| DpiError::with("engine-busy", format!("{name}: {error}")))?;
+        copy(name, &bytes)?;
     }
-    Ok(())
+
+    // Motor: yönetici onayı verilmiş bu sürecin kendi exe'si.
+    let image = image_path().ok_or_else(|| DpiError::new("engine-missing"))?;
+    let bytes = std::fs::read(&image).map_err(|_| DpiError::with("engine-missing", ENGINE_EXE))?;
+    copy(ENGINE_EXE, &bytes)
 }
 
 fn stop_engine() -> DpiResult<()> {
@@ -140,7 +145,7 @@ fn remove() -> DpiResult<()> {
     scm::delete(SERVICE_NAME).map_err(win_error)?;
 
     // WinDivert sürücüsü ilk kullanımda yüklenir ve bilgisayar yeniden başlayana kadar kalır. Başka bir DPI aracı
-    // çalışmıyorsa şimdi durdurulur (GoodbyeDPI'ın kendi kaldırma betiğinin yaptığı gibi).
+    // çalışmıyorsa şimdi durdurulur.
     if scm::processes_named(&FOREIGN_ENGINES).is_empty() {
         for driver in WINDIVERT_SERVICES {
             let _ = scm::delete(driver);
@@ -157,16 +162,10 @@ fn remove() -> DpiResult<()> {
 }
 
 fn delete_on_reboot(dir: &Path) {
-    let mut paths = Vec::new();
-    for sub in [dir.join("engine"), dir.to_path_buf()] {
-        if let Ok(entries) = std::fs::read_dir(&sub) {
-            paths.extend(entries.flatten().map(|entry| entry.path()).filter(|path| path.is_file()));
-        }
-    }
-    paths.push(dir.join("engine"));
+    let mut paths: Vec<_> = std::fs::read_dir(dir).into_iter().flatten().flatten().map(|entry| entry.path()).collect();
     paths.push(dir.to_path_buf());
     for path in paths {
-        if std::fs::remove_file(&path).is_ok() || std::fs::remove_dir(&path).is_ok() || !path.exists() {
+        if std::fs::remove_file(&path).is_ok() || std::fs::remove_dir_all(&path).is_ok() || !path.exists() {
             continue;
         }
         let wide = scm::wide(&path.to_string_lossy());

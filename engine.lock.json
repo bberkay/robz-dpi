@@ -1,43 +1,23 @@
 {
-  "comment": "Robz DPI'ın kullandığı motor: ValdikSS/GoodbyeDPI'ın resmi 0.2.3rc3-2 sürümü ve içindeki WinDivert 2.2.0-D. scripts/fetch-engine.mjs bu dosyadaki özetler tutmazsa hiçbir şey yazmaz.",
-  "name": "GoodbyeDPI 0.2.3rc3-2",
-  "url": "https://github.com/ValdikSS/GoodbyeDPI/releases/download/0.2.3rc3/goodbyedpi-0.2.3rc3-2.zip",
-  "sha256": "37f96b32d050dadcc930a639eba68e1ccd57ed5c04a5f77dfca908f01905a4c5",
+  "comment": "Robz DPI'ın motoru kendi kodudur (src-tauri/src/engine). Dışarıdan gelen tek ikili dosya, paketleri çekirdekte yakalayan imzalı WinDivert sürücüsüdür: basil00/WinDivert'in resmi 2.2.2-A sürümü. scripts/fetch-engine.mjs bu dosyadaki özetler tutmazsa hiçbir şey yazmaz.",
+  "name": "WinDivert 2.2.2-A",
+  "url": "https://github.com/basil00/WinDivert/releases/download/v2.2.2/WinDivert-2.2.2-A.zip",
+  "sha256": "63cb41763bb4b20f600b6de04e991a9c2be73279e317d4d82f237b150c5f3f15",
   "files": [
     {
-      "from": "goodbyedpi-0.2.3rc3-2/x86_64/goodbyedpi.exe",
-      "to": "goodbyedpi.exe",
-      "sha256": "8d412b094bb9c137ff25ba9a794d1122ecc84bb776debff6c249723a13cc31cd"
-    },
-    {
-      "from": "goodbyedpi-0.2.3rc3-2/x86_64/WinDivert.dll",
+      "from": "WinDivert-2.2.2-A/x64/WinDivert.dll",
       "to": "WinDivert.dll",
-      "sha256": "6110bfa44667405179c3e15e12af1b62037e447ed59b054b19042032995e6c7e"
+      "sha256": "c1e060ee19444a259b2162f8af0f3fe8c4428a1c6f694dce20de194ac8d7d9a2"
     },
     {
-      "from": "goodbyedpi-0.2.3rc3-2/x86_64/WinDivert64.sys",
+      "from": "WinDivert-2.2.2-A/x64/WinDivert64.sys",
       "to": "WinDivert64.sys",
-      "sha256": "e69b5ba3f0cd6cfb2983e442636e7f0b342b61b15264b0328317d4559c82cf50"
+      "sha256": "8da085332782708d8767bcace5327a6ec7283c17cfb85e40b03cd2323a90ddc2"
     },
     {
-      "from": "goodbyedpi-0.2.3rc3-2/licenses/LICENSE-goodbyedpi.txt",
-      "to": "licenses/LICENSE-goodbyedpi.txt",
-      "sha256": "e03ba41d7fab20700769fe4118bab50d800cb74f990353a05d2f5fff1c228363"
-    },
-    {
-      "from": "goodbyedpi-0.2.3rc3-2/licenses/LICENSE-windivert.txt",
+      "from": "WinDivert-2.2.2-A/LICENSE",
       "to": "licenses/LICENSE-windivert.txt",
-      "sha256": "e5453b2e71e4c4dcdb89a2539655add3a63202521cf3012b768e8bfeda199312"
-    },
-    {
-      "from": "goodbyedpi-0.2.3rc3-2/licenses/LICENSE-uthash.txt",
-      "to": "licenses/LICENSE-uthash.txt",
-      "sha256": "d3c6556e48104c31e3e0c62238c749c2a09ca79ee87da50b9cd29c6c9027d57d"
-    },
-    {
-      "from": "goodbyedpi-0.2.3rc3-2/licenses/LICENSE-getline.txt",
-      "to": "licenses/LICENSE-getline.txt",
-      "sha256": "ec5f8e03fccb3842cc62ad79ea5f6f6058988e2721a3e6566e8fb72786d485c4"
+      "sha256": "14a0cb5214d536e4fdae6aa3f5696f981eeda106cd026e9794bba489ee79d628"
     }
   ]
 }

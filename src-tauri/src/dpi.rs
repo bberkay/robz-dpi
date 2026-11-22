@@ -125,6 +125,8 @@ impl Dpi {
                 // Şimdiki ayarlarla motor kurulamıyorsa nedeni: "nothing-selected" | "bad-dns"
                 "problem": request.as_ref().err().map(|e| e.code.clone()),
                 "error": inner.error,
+                // Motorun sayaçları: işlenen bağlantılar, yönlendirilen sorgular, son alan adları.
+                "stats": if inner.status.running() { engine::stats() } else { None },
             },
             "conflicts": inner.conflicts,
             "probe": { "running": inner.probing, "results": inner.probe },
@@ -156,7 +158,10 @@ impl Dpi {
         if stopped_alone && inner.settings.enabled {
             // Motor biz istemeden durdu: çoğunlukla WinDivert sürücüsü yüklenemedi ya da antivirüs engelledi.
             inner.settings.enabled = false;
-            inner.error = Some(DpiError::new("engine-stopped"));
+            inner.error = Some(match engine::stop_reason() {
+                Some(code) => DpiError::with("engine-stopped", code),
+                None => DpiError::new("engine-stopped"),
+            });
             let settings = inner.settings.clone();
             drop(inner);
             self.save(&settings);
@@ -333,6 +338,11 @@ impl Dpi {
 
     pub fn set_service(&self, id: &str, on: bool) -> DpiResult<()> {
         self.change(|settings| settings.set_service(id, on))
+    }
+
+    /// "Gelişmiş" ekranından tek alanlık strateji değişikliği (yöntemi "özel"e çevirir).
+    pub fn set_custom(&self, field: &str, value: &Value) -> DpiResult<()> {
+        self.change(|settings| settings.set_custom(field, value))
     }
 
     /// Kullanıcının yazdığı adresleri ekler: { added: [...], rejected: [...] }

@@ -2,6 +2,7 @@
 //!
 //! Arayüz (ui/) WebView2'de çalışır ve bu süreçle tek bir komutla konuşur: dpi_call(method, args).
 //! Aynı exe `--helper …` ile çağrılırsa pencere açmaz: yönetici yardımcısı olarak çalışır (engine/helper.rs).
+//! `--engine` ile çağrılırsa motorun kendisidir: Windows servisi olarak paketleri işler (engine/service.rs).
 //!
 //! Geliştirme için ortam değişkeni:
 //!   ROBZDPI_DATA_DIR    ayarlar için ayrı bir klasör
@@ -66,6 +67,8 @@ async fn dispatch(app: &AppHandle, dpi: &Arc<Dpi>, method: &str, args: &[Value])
             }
         }
         "setService" => dpi.set_service(&arg_str(args, 0)?, arg_bool(args, 1)?)?,
+        "setCustom" => dpi.set_custom(&arg_str(args, 0)?, args.get(1).unwrap_or(&Value::Null))?,
+        "getLog" => return Ok(Value::String(engine::log_tail(48 * 1024))),
         "addDomains" => return Ok(dpi.add_domains(&arg_str(args, 0)?)),
         "removeDomain" => dpi.remove_domain(&arg_str(args, 0)?),
         "openExternal" => open_external(app, &arg_str(args, 0)?)?,
@@ -82,9 +85,11 @@ async fn dpi_call(app: AppHandle, dpi: State<'_, Arc<Dpi>>, method: String, args
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
-    // Yönetici yardımcısı: arayüz yok, işi yap ve çık.
-    if args.get(1).is_some_and(|a| a == "--helper") {
-        std::process::exit(engine::helper_main(&args[2..]));
+    // Yönetici yardımcısı ve motor: arayüz yok.
+    match args.get(1).map(String::as_str) {
+        Some("--helper") => std::process::exit(engine::helper_main(&args[2..])),
+        Some("--engine") => std::process::exit(engine::engine_main()),
+        _ => {}
     }
     let start_hidden = args.iter().any(|a| a == "--hidden");
 

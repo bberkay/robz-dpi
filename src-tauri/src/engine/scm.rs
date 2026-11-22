@@ -80,10 +80,12 @@ pub enum State {
 pub struct Status {
     pub state: State,
     pub pid: u32,
+    /// Servisin son çıkış kodu (Win32). ERROR_SERVICE_SPECIFIC_ERROR ise asıl kod `specific`tedir.
     pub exit_code: u32,
+    pub specific: u32,
 }
 
-const MISSING: Status = Status { state: State::Missing, pid: 0, exit_code: 0 };
+const MISSING: Status = Status { state: State::Missing, pid: 0, exit_code: 0, specific: 0 };
 
 fn query_handle(service: &Handle) -> Option<Status> {
     // SAFETY: yapı düz veridir; boyutu ile birlikte verilir.
@@ -107,7 +109,7 @@ fn query_handle(service: &Handle) -> Option<Status> {
         SERVICE_STOP_PENDING | SERVICE_PAUSE_PENDING => State::Stopping,
         _ => State::Stopped,
     };
-    Some(Status { state, pid: raw.dwProcessId, exit_code: raw.dwWin32ExitCode })
+    Some(Status { state, pid: raw.dwProcessId, exit_code: raw.dwWin32ExitCode, specific: raw.dwServiceSpecificExitCode })
 }
 
 /// Servisin durumu. Servis yoksa ya da sorgulanamıyorsa `State::Missing`.

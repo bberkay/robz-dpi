@@ -1,13 +1,14 @@
-//! Ayarlardan motor isteğine: hangi bayraklar, hangi alan adları, hangi DNS.
+//! Ayarlardan motor isteğine: hangi strateji, hangi alan adları, hangi DNS.
 //!
-//! `EngineRequest` hem arayüz sürecinde (ayarlardan üretilir) hem yönetici yardımcısında (dosyadan okunur ve
-//! yeniden doğrulanır) kullanılır. Yardımcı, komut satırını bu yapıdan kendisi kurar: dışarıdan serbest bayrak
-//! ya da yol kabul edilmez.
+//! `EngineRequest` üç yerde kullanılır: arayüz sürecinde ayarlardan üretilir, yönetici yardımcısında dosyadan
+//! okunup yeniden doğrulanır, motor (Windows servisi) onu engine.json'dan okuyup bir kez daha doğrular.
+//! Serbest metin ya da komut satırı bayrağı yoktur: her alan sayı, açık/kapalı ya da sınırlı bir seçenektir.
 
 use crate::catalog;
 use crate::error::{DpiError, DpiResult};
 use crate::settings::Settings;
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 use sha2::{Digest, Sha256};
 use std::collections::BTreeSet;
 use std::net::{Ipv4Addr, Ipv6Addr};
@@ -15,6 +16,147 @@ use std::path::Path;
 
 pub const MAX_DOMAINS: usize = 2000;
 const MAX_HOST_LEN: usize = 253;
+/// Bir paketi bölebileceğimiz en uzak nokta (tek bir Ethernet çerçevesine sığan yük).
+pub const MAX_SPLIT: u16 = 1200;
+
+/// Motorun bir bağlantıya ne yapacağı. Hazır yöntemler (catalog::METHODS) bu yapının dört ayrı değeridir;
+/// "Gelişmiş" ekranı aynı yapıyı alan alan düzenler.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase", default)]
+pub struct Strategy {
+    /// TLS ClientHello'yu bu kadar bayttan sonra iki pakete böl (0: bölme).
+    pub split: u16,
+    /// Alan adı pakette görünüyorsa tam alan adının önünden böl (`split` yerine).
+    pub split_at_sni: bool,
+    /// İkinci parçayı önce gönder.
+    pub reverse: bool,
+    /// Şifresiz HTTP isteğini bu kadar bayttan sonra böl (0: bölme).
+    pub http_split: u16,
+    /// Sunucuya ulaşmadan ölen sahte paket: "off" | "fixed" (fake_ttl kadar sıçrama) | "auto" (uzaklığa göre)
+    pub fake_ttl_mode: String,
+    pub fake_ttl: u8,
+    /// Sağlama toplamı bozuk sahte paket (sunucu atar).
+    pub fake_bad_checksum: bool,
+    /// Sıra numarası geçmişte kalan sahte paket (sunucu yok sayar).
+    pub fake_bad_seq: bool,
+    /// Her sahte paketin kaç kez gönderileceği.
+    pub fake_repeats: u8,
+    /// Sahte paketin içinde görünen, engelli olmayan alan adı.
+    pub fake_host: String,
+    /// Hedeflere giden QUIC (HTTP/3) bağlantısını düşür; tarayıcı TCP'ye döner.
+    pub block_quic: bool,
+    /// ClientHello'da alan adı görünmüyorsa (büyük ClientHello iki pakete bölünmüşse):
+    /// "skip" (dokunma) | "known" (hedef olduğu DNS'ten bilinen adreslerde uygula) | "always"
+    pub no_sni: String,
+}
+
+impl Default for Strategy {
+    /// Yöntem 1: böl (2 bayt, ters sırayla) + 5 sıçramada ölen sahte paket.
+    fn default() -> Self {
+        Self {
+            split: 2,
+            split_at_sni: false,
+            reverse: true,
+            http_split: 2,
+            fake_ttl_mode: "fixed".into(),
+            fake_ttl: 5,
+            fake_bad_checksum: false,
+            fake_bad_seq: false,
+            fake_repeats: 1,
+            fake_host: "www.w3.org".into(),
+            block_quic: false,
+            no_sni: "known".into(),
+        }
+    }
+}
+
+impl Strategy {
+    pub fn validate(&self) -> DpiResult<()> {
+        let bad = |field: &str| Err(DpiError::with("bad-strategy", field));
+        if self.split > MAX_SPLIT {
+            return bad("split");
+        }
+        if self.http_split > MAX_SPLIT {
+            return bad("httpSplit");
+        }
+        if !matches!(self.fake_ttl_mode.as_str(), "off" | "fixed" | "auto") {
+            return bad("fakeTtlMode");
+        }
+        if self.fake_ttl_mode == "fixed" && !(1..=64).contains(&self.fake_ttl) {
+            return bad("fakeTtl");
+        }
+        if !(1..=10).contains(&self.fake_repeats) {
+            return bad("fakeRepeats");
+        }
+        if host_of(&self.fake_host).as_deref() != Some(self.fake_host.as_str()) {
+            return bad("fakeHost");
+        }
+        if !matches!(self.no_sni.as_str(), "skip" | "known" | "always") {
+            return bad("noSni");
+        }
+        if !self.splits() && !self.fakes() {
+            // Hiçbir şey yapmayan strateji: motor boşuna çalışır.
+            return Err(DpiError::new("empty-strategy"));
+        }
+        Ok(())
+    }
+
+    pub fn splits(&self) -> bool {
+        self.split > 0 || self.split_at_sni
+    }
+
+    pub fn fakes(&self) -> bool {
+        self.fake_ttl_mode != "off" || self.fake_bad_checksum || self.fake_bad_seq
+    }
+
+    /// "Gelişmiş" ekranından gelen tek alanlık değişiklik. Bilinmeyen alan ya da yanlış tür: false.
+    /// Aralık denetimi `validate`'tedir; burada yalnız tür ve kaba sınır bakılır.
+    pub fn set(&mut self, field: &str, value: &Value) -> bool {
+        let number = |max: u64| value.as_u64().filter(|n| *n <= max);
+        match field {
+            "split" => match number(MAX_SPLIT as u64) {
+                Some(n) => self.split = n as u16,
+                None => return false,
+            },
+            "httpSplit" => match number(MAX_SPLIT as u64) {
+                Some(n) => self.http_split = n as u16,
+                None => return false,
+            },
+            "fakeTtl" => match number(64).filter(|n| *n >= 1) {
+                Some(n) => self.fake_ttl = n as u8,
+                None => return false,
+            },
+            "fakeRepeats" => match number(10).filter(|n| *n >= 1) {
+                Some(n) => self.fake_repeats = n as u8,
+                None => return false,
+            },
+            "splitAtSni" | "reverse" | "fakeBadChecksum" | "fakeBadSeq" | "blockQuic" => {
+                let Some(on) = value.as_bool() else { return false };
+                match field {
+                    "splitAtSni" => self.split_at_sni = on,
+                    "reverse" => self.reverse = on,
+                    "fakeBadChecksum" => self.fake_bad_checksum = on,
+                    "fakeBadSeq" => self.fake_bad_seq = on,
+                    _ => self.block_quic = on,
+                }
+            }
+            "fakeTtlMode" => match value.as_str() {
+                Some(mode @ ("off" | "fixed" | "auto")) => self.fake_ttl_mode = mode.into(),
+                _ => return false,
+            },
+            "noSni" => match value.as_str() {
+                Some(policy @ ("skip" | "known" | "always")) => self.no_sni = policy.into(),
+                _ => return false,
+            },
+            "fakeHost" => match value.as_str().and_then(host_of) {
+                Some(host) => self.fake_host = host,
+                None => return false,
+            },
+            _ => return false,
+        }
+        true
+    }
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -23,12 +165,15 @@ pub struct DnsTarget {
     pub port: u16,
     pub v6: Option<String>,
     pub port6: u16,
+    /// true: bütün DNS sorguları yönlendirilir. false: yalnız hedef alan adlarının sorguları.
+    #[serde(default)]
+    pub all: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct EngineRequest {
-    pub method: String,
+    pub strategy: Strategy,
     /// None: DNS'e dokunma.
     pub dns: Option<DnsTarget>,
     /// None: bütün sitelere uygula. Some: yalnız bu alan adlarına (ve alt alan adlarına).
@@ -53,13 +198,15 @@ impl EngineRequest {
             Some(set.into_iter().collect())
         };
 
+        // "Bütün siteler" kipinde hedef listesi yoktur: DNS'in tamamı yönlendirilir.
+        let all = domains.is_none() || settings.dns_all;
         let dns = if !settings.dns_enabled {
             None
         } else if settings.dns_provider == catalog::CUSTOM_DNS {
             if settings.dns_custom_addr.parse::<Ipv4Addr>().is_err() || settings.dns_custom_port == 0 {
                 return Err(DpiError::new("bad-dns"));
             }
-            Some(DnsTarget { v4: settings.dns_custom_addr.clone(), port: settings.dns_custom_port, v6: None, port6: 0 })
+            Some(DnsTarget { v4: settings.dns_custom_addr.clone(), port: settings.dns_custom_port, v6: None, port6: 0, all })
         } else {
             let provider = catalog::dns(&settings.dns_provider).ok_or_else(|| DpiError::new("bad-dns"))?;
             Some(DnsTarget {
@@ -67,19 +214,23 @@ impl EngineRequest {
                 port: provider.port,
                 v6: Some(provider.v6.to_string()),
                 port6: provider.port6,
+                all,
             })
         };
 
-        let request = Self { method: settings.method.clone(), dns, domains };
+        let strategy = match catalog::method(&settings.method) {
+            Some(method) => method.strategy(),
+            None => settings.custom.clone(),
+        };
+
+        let request = Self { strategy, dns, domains };
         request.validate()?;
         Ok(request)
     }
 
-    /// Yönetici yardımcısının güvendiği tek denetim: bilinen yöntem, gerçek IP adresleri, geçerli alan adları.
+    /// Yönetici yardımcısının ve motorun güvendiği tek denetim.
     pub fn validate(&self) -> DpiResult<()> {
-        if catalog::method(&self.method).is_none() {
-            return Err(DpiError::with("bad-request", "method"));
-        }
+        self.strategy.validate()?;
         if let Some(dns) = &self.dns {
             if dns.v4.parse::<Ipv4Addr>().is_err() || dns.port == 0 {
                 return Err(DpiError::new("bad-dns"));
@@ -106,32 +257,6 @@ impl EngineRequest {
         Ok(())
     }
 
-    /// goodbyedpi.exe bayrakları. `blacklist`: alan adı listesinin yazılacağı dosya (yalnız liste varsa kullanılır).
-    pub fn args(&self, blacklist: &Path) -> Vec<String> {
-        let mut args: Vec<String> =
-            catalog::method(&self.method).map(|m| m.args.iter().map(|a| a.to_string()).collect()).unwrap_or_default();
-        if self.domains.is_some() {
-            args.push("--blacklist".into());
-            args.push(blacklist.to_string_lossy().into_owned());
-        }
-        if let Some(dns) = &self.dns {
-            args.extend(["--dns-addr".to_string(), dns.v4.clone(), "--dns-port".to_string(), dns.port.to_string()]);
-            if let Some(v6) = &dns.v6 {
-                args.extend(["--dnsv6-addr".to_string(), v6.clone(), "--dnsv6-port".to_string(), dns.port6.to_string()]);
-            }
-        }
-        args
-    }
-
-    /// Alan adı dosyasının içeriği: her satırda bir alan adı.
-    pub fn blacklist_text(&self) -> Option<String> {
-        self.domains.as_ref().map(|domains| {
-            let mut text = domains.join("\n");
-            text.push('\n');
-            text
-        })
-    }
-
     /// İstek ile motor dosyalarının parmak izi. Uygulanan ayar ile şimdiki ayar aynı mı diye karşılaştırılır.
     pub fn fingerprint(&self, engine_id: &str) -> String {
         let mut hasher = Sha256::new();
@@ -142,9 +267,17 @@ impl EngineRequest {
     }
 }
 
-/// Kullanıcının yazdığını alan adına çevirir: "https://www.Example.com/yol?x=1" -> "example.com".
-/// Alan adı değilse (IP adresi, tek kelime, geçersiz karakter) None.
+/// Kullanıcının yazdığını hedef alan adına çevirir: "https://www.Example.com/yol?x=1" -> "example.com".
+/// Baştaki "www." ve "*." atılır: liste alt alan adlarını zaten kapsar. Alan adı değilse None.
 pub fn normalize_domain(input: &str) -> Option<String> {
+    let input = input.trim();
+    let host = host_of(input.strip_prefix("*.").unwrap_or(input))?;
+    host_of(host.strip_prefix("www.").unwrap_or(&host))
+}
+
+/// Yazılan metindeki sunucu adı, olduğu gibi: "https://www.Example.com:8443/yol" -> "www.example.com".
+/// Alan adı değilse (IP adresi, tek kelime, geçersiz karakter) None.
+pub fn host_of(input: &str) -> Option<String> {
     let mut text = input.trim().to_lowercase();
     if let Some(rest) = text.split_once("://").map(|(_, rest)| rest.to_string()) {
         text = rest;
@@ -163,11 +296,6 @@ pub fn normalize_domain(input: &str) -> Option<String> {
         }
     }
     let mut text = text.trim_matches('.').to_string();
-    for prefix in ["*.", "www."] {
-        if let Some(rest) = text.strip_prefix(prefix) {
-            text = rest.to_string();
-        }
-    }
     if !text.is_ascii() {
         text = idna::domain_to_ascii(&text).ok()?;
     }
@@ -207,7 +335,7 @@ pub fn parse_domains(text: &str) -> (Vec<String>, Vec<String>) {
 }
 
 /// Windows komut satırı: program yolu ve bağımsız değişkenler, CommandLineToArgvW kurallarıyla tırnaklanır.
-pub fn command_line(exe: &Path, args: &[String]) -> String {
+pub fn command_line(exe: &Path, args: &[&str]) -> String {
     let mut line = quote_arg(&exe.to_string_lossy());
     for arg in args {
         line.push(' ');
@@ -245,11 +373,8 @@ pub fn quote_arg(arg: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use serde_json::json;
     use std::path::PathBuf;
-
-    fn blacklist() -> PathBuf {
-        PathBuf::from(r"C:\Program Files\RobzDPI\blacklist.txt")
-    }
 
     #[test]
     fn normalizes_what_people_type() {
@@ -288,27 +413,9 @@ mod tests {
         assert!(domains.contains(&"discord.com".to_string()));
         assert!(domains.contains(&"roblox.com".to_string()));
         assert!(domains.windows(2).all(|w| w[0] < w[1]), "sıralı ve yinelenmesiz olmalı");
-
-        let args = request.args(&blacklist());
-        assert_eq!(
-            args,
-            [
-                "-5",
-                "--set-ttl",
-                "5",
-                "--blacklist",
-                r"C:\Program Files\RobzDPI\blacklist.txt",
-                "--dns-addr",
-                "9.9.9.9",
-                "--dns-port",
-                "9953",
-                "--dnsv6-addr",
-                "2620:fe::fe",
-                "--dnsv6-port",
-                "9953",
-            ]
-        );
-        assert!(request.blacklist_text().unwrap().ends_with("\n"));
+        assert_eq!(request.strategy, Strategy::default());
+        let dns = request.dns.unwrap();
+        assert_eq!((dns.v4.as_str(), dns.port, dns.all), ("9.9.9.9", 9953, false));
     }
 
     #[test]
@@ -316,8 +423,7 @@ mod tests {
         let mut s = Settings { scope: "all".into(), ..Settings::default() };
         let all = EngineRequest::from_settings(&s).unwrap();
         assert_eq!(all.domains, None);
-        assert!(!all.args(&blacklist()).contains(&"--blacklist".to_string()));
-        assert_eq!(all.blacklist_text(), None);
+        assert!(all.dns.unwrap().all, "liste yokken DNS'in tamamı yönlendirilir");
 
         s.scope = "selected".into();
         s.services = vec!["discord".into()];
@@ -335,16 +441,65 @@ mod tests {
     #[test]
     fn dns_choices() {
         let mut s = Settings { dns_enabled: false, ..Settings::default() };
-        let none = EngineRequest::from_settings(&s).unwrap();
-        assert!(!none.args(&blacklist()).iter().any(|a| a.starts_with("--dns")));
+        assert_eq!(EngineRequest::from_settings(&s).unwrap().dns, None);
 
         s.dns_enabled = true;
+        s.dns_all = true;
+        assert!(EngineRequest::from_settings(&s).unwrap().dns.unwrap().all);
+
         s.dns_provider = "custom".into();
         assert!(EngineRequest::from_settings(&s).unwrap_err().is("bad-dns"));
         s.dns_custom_addr = "8.8.8.8".into();
         s.dns_custom_port = 53;
-        let custom = EngineRequest::from_settings(&s).unwrap().args(&blacklist());
-        assert!(custom.ends_with(&["--dns-addr".into(), "8.8.8.8".into(), "--dns-port".into(), "53".into()]));
+        let custom = EngineRequest::from_settings(&s).unwrap().dns.unwrap();
+        assert_eq!((custom.v4.as_str(), custom.port, custom.v6), ("8.8.8.8", 53, None));
+    }
+
+    #[test]
+    fn methods_and_custom_strategy() {
+        let mut s = Settings::default();
+        for method in catalog::METHODS {
+            s.method = method.id.into();
+            let request = EngineRequest::from_settings(&s).unwrap();
+            assert_eq!(request.strategy, method.strategy(), "{}", method.id);
+        }
+
+        s.method = "custom".into();
+        s.custom = Strategy { split: 7, reverse: false, ..Strategy::default() };
+        assert_eq!(EngineRequest::from_settings(&s).unwrap().strategy.split, 7);
+
+        s.custom = Strategy { split: 0, http_split: 0, fake_ttl_mode: "off".into(), ..Strategy::default() };
+        assert!(EngineRequest::from_settings(&s).unwrap_err().is("empty-strategy"));
+    }
+
+    #[test]
+    fn strategy_fields_are_validated() {
+        let mut s = Strategy::default();
+        assert!(s.set("split", &json!(40)));
+        assert!(!s.set("split", &json!(5000)));
+        assert!(!s.set("split", &json!("2")));
+        assert!(s.set("fakeTtlMode", &json!("auto")));
+        assert!(!s.set("fakeTtlMode", &json!("sometimes")));
+        assert!(s.set("fakeTtl", &json!(3)));
+        assert!(!s.set("fakeTtl", &json!(0)));
+        assert!(!s.set("fakeTtl", &json!(200)));
+        assert!(s.set("fakeRepeats", &json!(3)));
+        assert!(!s.set("fakeRepeats", &json!(50)));
+        assert!(s.set("blockQuic", &json!(true)));
+        assert!(!s.set("blockQuic", &json!(1)));
+        assert!(s.set("noSni", &json!("always")));
+        assert!(!s.set("noSni", &json!("maybe")));
+        assert!(s.set("fakeHost", &json!("https://www.Example.org/")));
+        assert!(!s.set("fakeHost", &json!("not a host")));
+        assert!(!s.set("nope", &json!(true)));
+        assert_eq!((s.split, s.fake_ttl, s.fake_host.as_str(), s.no_sni.as_str()), (40, 3, "www.example.org", "always"));
+        assert!(!s.set("fakeHost", &json!("*.example.org")), "sahte paketteki ad gerçek bir sunucu adı olmalı");
+        assert!(s.validate().is_ok());
+
+        let bad = Strategy { fake_host: "a b".into(), ..Strategy::default() };
+        assert!(bad.validate().is_err());
+        let bad = Strategy { no_sni: "x".into(), ..Strategy::default() };
+        assert!(bad.validate().is_err());
     }
 
     #[test]
@@ -352,7 +507,11 @@ mod tests {
         let good = EngineRequest::from_settings(&Settings::default()).unwrap();
 
         let mut bad = good.clone();
-        bad.method = "-5 --blacklist C:\\evil".into();
+        bad.strategy.fake_ttl_mode = "fixed; rm -rf".into();
+        assert!(bad.validate().is_err());
+
+        let mut bad = good.clone();
+        bad.strategy.split = 60000;
         assert!(bad.validate().is_err());
 
         let mut bad = good.clone();
@@ -368,6 +527,9 @@ mod tests {
         assert!(bad.validate().is_err());
 
         assert!(good.validate().is_ok());
+        // Dosyadan okunan istek aynı yapıya geri döner.
+        let text = serde_json::to_string(&good).unwrap();
+        assert_eq!(serde_json::from_str::<EngineRequest>(&text).unwrap(), good);
     }
 
     #[test]
@@ -378,21 +540,18 @@ mod tests {
         assert_ne!(a.fingerprint("e1"), a.fingerprint("e2"));
         s.method = "m4".into();
         assert_ne!(a.fingerprint("e1"), EngineRequest::from_settings(&s).unwrap().fingerprint("e1"));
-        // Arayüz ayarları (dil, tepsi) motoru etkilemez.
-        let mut ui = Settings::default();
-        ui.language = "en".into();
-        ui.close_to_tray = !ui.close_to_tray;
+        // Arayüz ayarları (dil, tepsi, gelişmiş ekranı) motoru etkilemez.
+        let ui = Settings { language: "en".into(), close_to_tray: false, advanced: true, ..Settings::default() };
         assert_eq!(a.fingerprint("e1"), EngineRequest::from_settings(&ui).unwrap().fingerprint("e1"));
+        // Seçili olmayan özel strateji de etkilemez.
+        let unused = Settings { custom: Strategy { split: 9, ..Strategy::default() }, ..Settings::default() };
+        assert_eq!(a.fingerprint("e1"), EngineRequest::from_settings(&unused).unwrap().fingerprint("e1"));
     }
 
     #[test]
     fn quotes_windows_command_lines() {
-        let exe = PathBuf::from(r"C:\Program Files\RobzDPI\engine\goodbyedpi.exe");
-        let line = command_line(&exe, &["-5".into(), "--blacklist".into(), r"C:\Program Files\RobzDPI\blacklist.txt".into()]);
-        assert_eq!(
-            line,
-            r#""C:\Program Files\RobzDPI\engine\goodbyedpi.exe" -5 --blacklist "C:\Program Files\RobzDPI\blacklist.txt""#
-        );
+        let exe = PathBuf::from(r"C:\Program Files\RobzDPI\RobzDPI-engine.exe");
+        assert_eq!(command_line(&exe, &["--engine"]), r#""C:\Program Files\RobzDPI\RobzDPI-engine.exe" --engine"#);
         assert_eq!(quote_arg(r"C:\dir with space\"), r#""C:\dir with space\\""#);
         assert_eq!(quote_arg(r#"a"b"#), r#""a\"b""#);
         assert_eq!(quote_arg(""), r#""""#);

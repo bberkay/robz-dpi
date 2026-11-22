@@ -1,4 +1,5 @@
-// Motoru (GoodbyeDPI + WinDivert) resmi sürümden indirir ve src-tauri/engine altına çıkarır.
+// WinDivert sürücüsünü resmi sürümünden indirir ve src-tauri/engine altına çıkarır. (Motorun kendisi bu
+// depodaki Rust kodudur; dışarıdan gelen tek ikili dosya imzalı sürücüdür.)
 //
 //   npm run engine                     indir, doğrula, çıkar
 //   node scripts/fetch-engine.mjs --optional   (npm install sonunda) indirilemezse uyarır, kurulumu durdurmaz

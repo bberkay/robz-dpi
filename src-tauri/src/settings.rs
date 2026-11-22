@@ -1,7 +1,7 @@
 //! Ayarlar: veri klasöründeki settings.json. Bozuk dosyada ya da yanlış türde varsayılanlar kullanılır.
 
 use crate::catalog;
-use crate::plan::{normalize_domain, parse_domains, MAX_DOMAINS};
+use crate::plan::{normalize_domain, parse_domains, Strategy, MAX_DOMAINS};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::net::Ipv4Addr;
@@ -24,9 +24,15 @@ pub struct Settings {
     pub services: Vec<String>,
     /// Kullanıcının eklediği alan adları.
     pub custom_domains: Vec<String>,
-    /// catalog::METHODS kimliği.
+    /// catalog::METHODS kimliği ya da "custom" (aşağıdaki `custom` stratejisi kullanılır).
     pub method: String,
+    /// "Gelişmiş" ekranında düzenlenen strateji. Yalnız method "custom" iken motora gider.
+    pub custom: Strategy,
+    /// "Gelişmiş" bölümü arayüzde açık mı?
+    pub advanced: bool,
     pub dns_enabled: bool,
+    /// Bütün DNS sorgularını yönlendir (kapalıyken yalnız seçili sitelerin sorguları yönlendirilir).
+    pub dns_all: bool,
     /// catalog::DNS kimliği ya da "custom".
     pub dns_provider: String,
     pub dns_custom_addr: String,
@@ -44,7 +50,10 @@ impl Default for Settings {
             services: catalog::SERVICES.iter().map(|s| s.id.to_string()).collect(),
             custom_domains: Vec::new(),
             method: catalog::DEFAULT_METHOD.into(),
+            custom: Strategy::default(),
+            advanced: false,
             dns_enabled: true,
+            dns_all: false,
             dns_provider: catalog::DEFAULT_DNS.into(),
             dns_custom_addr: String::new(),
             dns_custom_port: 53,
@@ -80,8 +89,13 @@ impl Settings {
             }
         }
         self.custom_domains = domains;
-        if catalog::method(&self.method).is_none() {
+        if self.method != catalog::CUSTOM_METHOD && catalog::method(&self.method).is_none() {
             self.method = defaults.method;
+        }
+        // Alanlarından biri geçersizse özel strateji baştan kurulur. "Hiçbir şey yapmıyor" durumu korunur:
+        // kullanıcı düzenlemenin ortasında olabilir, motoru açarken ayrıca denetlenir.
+        if self.custom.validate().is_err_and(|error| !error.is("empty-strategy")) {
+            self.custom = Strategy::default();
         }
         if self.dns_provider != catalog::CUSTOM_DNS && catalog::dns(&self.dns_provider).is_none() {
             self.dns_provider = defaults.dns_provider;
@@ -113,8 +127,12 @@ impl Settings {
             ("closeToTray", Value::Bool(b)) => self.close_to_tray = *b,
             ("launchAtLogin", Value::Bool(b)) => self.launch_at_login = *b,
             ("scope", Value::String(s)) if matches!(s.as_str(), "selected" | "all") => self.scope = s.clone(),
-            ("method", Value::String(s)) if catalog::method(s).is_some() => self.method = s.clone(),
+            ("method", Value::String(s)) if s == catalog::CUSTOM_METHOD || catalog::method(s).is_some() => {
+                self.method = s.clone()
+            }
+            ("advanced", Value::Bool(b)) => self.advanced = *b,
             ("dnsEnabled", Value::Bool(b)) => self.dns_enabled = *b,
+            ("dnsAll", Value::Bool(b)) => self.dns_all = *b,
             ("dnsProvider", Value::String(s)) if s == catalog::CUSTOM_DNS || catalog::dns(s).is_some() => {
                 self.dns_provider = s.clone()
             }
@@ -127,6 +145,21 @@ impl Settings {
             },
             _ => return false,
         }
+        true
+    }
+
+    /// "Gelişmiş" ekranından tek alanlık strateji değişikliği. Hazır bir yöntem seçiliyken yapılırsa o yöntemin
+    /// stratejisi "özel"e kopyalanır ve değişiklik onun üstüne uygulanır: kullanıcı sıfırdan kurmak zorunda kalmaz.
+    pub fn set_custom(&mut self, field: &str, value: &Value) -> bool {
+        let mut strategy = match catalog::method(&self.method) {
+            Some(method) => method.strategy(),
+            None => self.custom.clone(),
+        };
+        if !strategy.set(field, value) {
+            return false;
+        }
+        self.custom = strategy;
+        self.method = catalog::CUSTOM_METHOD.into();
         true
     }
 
@@ -194,7 +227,11 @@ mod tests {
         assert!(!s.set("dnsCustomPort", &json!(70000)));
         assert!(!s.set("enabled", &json!(true)), "motor durumu yalnız aç/kapa ile değişir");
         assert!(!s.set("customDomains", &json!(["x.com"])));
-        assert_eq!((s.language.as_str(), s.scope.as_str(), s.method.as_str()), ("en", "all", "m3"));
+        assert!(!s.set("custom", &json!({ "split": 9 })), "strateji alan alan değişir");
+        assert!(s.set("dnsAll", &json!(true)));
+        assert!(s.set("advanced", &json!(true)));
+        assert!(s.set("method", &json!("custom")));
+        assert_eq!((s.language.as_str(), s.scope.as_str(), s.method.as_str()), ("en", "all", "custom"));
     }
 
     #[test]
@@ -216,6 +253,22 @@ mod tests {
     }
 
     #[test]
+    fn editing_a_preset_turns_it_into_custom() {
+        let mut s = Settings { method: "m4".into(), ..Settings::default() };
+        let m4 = catalog::method("m4").unwrap().strategy();
+        assert!(s.set_custom("split", &json!(5)));
+        assert_eq!(s.method, "custom");
+        assert_eq!(s.custom, Strategy { split: 5, ..m4 }, "yöntem 4'ün üstüne tek değişiklik");
+        // Sonraki değişiklik özel stratejinin üstüne gelir.
+        assert!(s.set_custom("blockQuic", &json!(false)));
+        assert_eq!((s.custom.split, s.custom.block_quic, s.custom.fake_bad_seq), (5, false, true));
+        // Geçersiz değişiklik hiçbir şeyi değiştirmez.
+        let before = s.clone();
+        assert!(!s.set_custom("split", &json!(99999)));
+        assert_eq!(s, before);
+    }
+
+    #[test]
     fn survives_broken_files() {
         let dir = std::env::temp_dir().join(format!("robzdpi-settings-{}", std::process::id()));
         let file = dir.join("settings.json");
@@ -225,7 +278,8 @@ mod tests {
         std::fs::write(
             &file,
             r#"{ "language": "de", "scope": "x", "services": ["discord", "nope"], "customDomains": ["HTTPS://A.com/", "bad", "a.com"],
-                 "method": "zz", "dnsProvider": "zz", "dnsCustomAddr": "999.1.1.1", "dnsCustomPort": 0, "closeToTray": false }"#,
+                 "method": "zz", "dnsProvider": "zz", "dnsCustomAddr": "999.1.1.1", "dnsCustomPort": 0, "closeToTray": false,
+                 "custom": { "split": 7, "fakeTtlMode": "bogus" } }"#,
         )
         .unwrap();
         let s = Settings::load(&file);
@@ -234,6 +288,7 @@ mod tests {
         assert_eq!(s.services, ["discord"]);
         assert_eq!(s.custom_domains, ["a.com"]);
         assert_eq!(s.method, catalog::DEFAULT_METHOD);
+        assert_eq!(s.custom, Strategy::default(), "geçersiz alanlı özel strateji baştan kurulur");
         assert_eq!(s.dns_provider, catalog::DEFAULT_DNS);
         assert_eq!(s.dns_custom_addr, "");
         assert_eq!(s.dns_custom_port, 53);
