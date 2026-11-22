@@ -19,7 +19,8 @@ Her başlık bir sürümdür; sürüm iş akışı GitHub'daki sürüm notunu bu
 - **Çakışma uyarısı:** çalışan GoodbyeDPI'ı görür ve istersen durdurur.
 - **Tek adımda kaldırma:** Ayarlar → "Robz DPI'ı kaldır" uygulamayı, arka planda çalışan parçasını ve ayarlarını
   birlikte siler. Windows'un Uygulamalar listesinden kaldırmak da arka plandaki parçayı siler.
-- Türkçe ve İngilizce arayüz.
+- **İlk açılış adımları:** dil, sorumluluk reddinin kabulü ve nerede çalışacağı; bir kez sorulur.
+- Türkçe, İngilizce ve Rusça arayüz.
 
 Bilinen eksikler:
 

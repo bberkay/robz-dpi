@@ -276,6 +276,11 @@ window.__TAURI__ = {
 };
 
 if (query.get('tab') === 'settings') {
-  // main.js yüklendikten sonra Ayarlar sekmesine geç.
-  setTimeout(() => document.querySelectorAll('.tab')[1]?.click(), 150);
+  // Arayüz çizilir çizilmez Ayarlar sekmesine geç (modüllerin yüklenme süresi değişebilir).
+  const timer = setInterval(() => {
+    const tab = document.querySelectorAll('.tab')[1];
+    if (!tab) return;
+    clearInterval(timer);
+    tab.click();
+  }, 30);
 }

@@ -11,7 +11,7 @@
   <img src="https://img.shields.io/badge/Rust-Tauri%202-ab7df8?style=flat-square&amp;logo=rust&amp;logoColor=white&amp;labelColor=0d1117" alt="Rust ve Tauri 2 ile yazıldı">
   <img src="https://img.shields.io/badge/motor-kendi%20kodu-ab7df8?style=flat-square&amp;labelColor=0d1117" alt="Motoru kendi kodu">
   <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Windows 10 ve 11">
-  <img src="https://img.shields.io/badge/aray%C3%BCz-T%C3%BCrk%C3%A7e%20%7C%20English-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Arayüz: Türkçe ve İngilizce">
+  <img src="https://img.shields.io/badge/aray%C3%BCz-T%C3%BCrk%C3%A7e%20%7C%20English%20%7C%20%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Arayüz: Türkçe, İngilizce ve Rusça">
   <img src="https://img.shields.io/badge/durum-deneysel-d29922?style=flat-square&amp;labelColor=0d1117" alt="Durum: deneysel">
 </p>
 
@@ -20,6 +20,7 @@
   <a href="https://github.com/kutsalkiremitci/robz-dpi/stargazers"><img src="https://img.shields.io/github/stars/kutsalkiremitci/robz-dpi?style=for-the-badge&amp;logo=github&amp;label=YILDIZ%20VER&amp;labelColor=0d1117&amp;color=e3b341" alt="GitHub'da yıldız ver"></a>
   <br>
   <a href="README.en.md"><img src="https://img.shields.io/badge/ENGLISH-21262d?style=for-the-badge&amp;logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSAzMCI%2BCiAgPHJlY3Qgd2lkdGg9IjQ1IiBoZWlnaHQ9IjMwIiBmaWxsPSIjMDEyMTY5Ii8%2BCiAgPHBhdGggZD0iTTAsMCBMNDUsMzAgTTQ1LDAgTDAsMzAiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSI2Ii8%2BCiAgPHBhdGggZD0iTTAsMCBMNDUsMzAgTTQ1LDAgTDAsMzAiIHN0cm9rZT0iI0M4MTAyRSIgc3Ryb2tlLXdpZHRoPSIyLjIiLz4KICA8cGF0aCBkPSJNMjIuNSwwIFYzMCBNMCwxNSBINDUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSI5Ii8%2BCiAgPHBhdGggZD0iTTIyLjUsMCBWMzAgTTAsMTUgSDQ1IiBzdHJva2U9IiNDODEwMkUiIHN0cm9rZS13aWR0aD0iNS40Ii8%2BCjwvc3ZnPgo%3D" alt="English"></a>
+  <a href="README.ru.md"><img src="https://img.shields.io/badge/%D0%A0%D0%A3%D0%A1%D0%A1%D0%9A%D0%98%D0%99-21262d?style=for-the-badge" alt="Русский"></a>
   <a href="https://discord.gg/UyyEn7SHm4"><img src="https://img.shields.io/badge/DISCORD-%C3%9CCRETS%C4%B0Z%20DESTEK-5865F2?style=for-the-badge&amp;logo=discord&amp;logoColor=white&amp;labelColor=4752C4" alt="Discord: ücretsiz destek"></a>
 </p>
 
@@ -90,14 +91,14 @@
     <td valign="top"><b>Meraklısına gelişmiş bölüm</b><br>
       Yöntemin her ayrıntısı, motorun ne yaptığı ve günlüğü. Açmasan da her şey çalışır.</td>
     <td valign="top"><b>Açık kaynak, veri toplamaz</b><br>
-      Hesap, reklam, kullanım istatistiği yok. Motoru dahil bütün kod bu depoda.</td>
+      Hesap, reklam, kullanım istatistiği yok. Motoru dahil bütün kod bu depoda. Türkçe, İngilizce ve Rusça.</td>
   </tr>
 </table>
 
 <p align="center">
-  <img src="docs/screenshots/01-kapali.png" alt="Robz DPI kapalıyken ana ekran" width="32%">
-  <img src="docs/screenshots/02-acik.png" alt="Robz DPI açıkken ana ekran: Discord ve Roblox için çalışıyor" width="32%">
-  <img src="docs/screenshots/03-ayarlar.png" alt="Ayarlar: dört yöntem ve DNS sunucusu seçimi" width="32%">
+  <img src="docs/screenshots/tr/01-off.png" alt="Robz DPI kapalıyken ana ekran" width="32%">
+  <img src="docs/screenshots/tr/02-on.png" alt="Robz DPI açıkken ana ekran: Discord ve Roblox için çalışıyor" width="32%">
+  <img src="docs/screenshots/tr/06-terms.png" alt="İlk açılış: sorumluluk reddinin özeti ve onay kutusu" width="32%">
 </p>
 
 ## 3 adımda başla
@@ -105,7 +106,8 @@
 1. **İndir:** [RobzDPI-Setup.exe](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Setup.exe)
    (her zaman en son sürüm).
 2. **Kur:** dosyayı çalıştır. Kurulum yönetici izni istemez ve birkaç saniye sürer.
-3. **Aç:** Robz DPI'da büyük düğmeye bas. Windows "bu uygulamanın değişiklik yapmasına izin veriyor musun?" diye
+3. **Aç:** Robz DPI ilk açılışta üç kısa adım gösterir: dil, sorumluluk reddinin onayı ve nerede çalışacağı.
+   Ardından büyük düğmeye bas. Windows "bu uygulamanın değişiklik yapmasına izin veriyor musun?" diye
    sorar; **Evet** de. Düğme yeşile döner: Discord ve Roblox artık açılır.
 
 > [!IMPORTANT]
@@ -149,7 +151,8 @@ Motor çalışırken bir ayarı değiştirirsen mavi bir kutu çıkar: **Uygula*
 - **Motor günlüğü:** motor ne zaman başladı, hangi süzgeçle çalışıyor, durduysa neden durdu.
 
 <p align="center">
-  <img src="docs/screenshots/04-gelismis.png" alt="Gelişmiş bölüm: yöntemin ayrıntıları ve motor etkinliği" width="46%">
+  <img src="docs/screenshots/tr/03-settings.png" alt="Ayarlar: dört yöntem, DNS sunucusu, dil ve kaldırma" width="40%">
+  <img src="docs/screenshots/tr/04-advanced.png" alt="Gelişmiş bölüm: yöntemin ayrıntıları ve motor etkinliği" width="40%">
 </p>
 
 ### Tepsi simgesi
@@ -368,7 +371,7 @@ npm run build        # kurulum dosyası: src-tauri/target/release/bundle/nsis/
 - **Arayüz tarayıcıda denenir.** `ui/` klasörünü herhangi bir yerel sunucuyla açarsan (`python -m http.server
   --directory ui`) çekirdeğin yerine sahte bir çekirdek ([`ui/js/dev-mock.js`](ui/js/dev-mock.js)) geçer: tasarım,
   bilgisayara dokunmadan denenir.
-- `node scripts/screenshots.mjs` [`docs/screenshots`](docs/screenshots) görüntülerini, `node
+- `node scripts/screenshots.mjs` [`docs/screenshots`](docs/screenshots) görüntülerini (üç dilde), `node
   scripts/render-banners.mjs` README görsellerini yeniden üretir.
 
 ```

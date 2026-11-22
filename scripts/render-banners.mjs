@@ -1,6 +1,7 @@
 // README başlık görselini ve sosyal medya önizlemesini (Open Graph) üretir:  node scripts/render-banners.mjs
-//   docs/banner-tr.png, docs/banner-en.png   1280×640 (2x çizilir: 2560×1280), README'nin en üstünde
-//   docs/og-tr.png, docs/og-en.png           1200×630, bağlantı paylaşılınca görünen önizleme
+//   docs/banner-<dil>.png   1280×640 (2x çizilir: 2560×1280), README'nin en üstünde
+//   docs/og-<dil>.png       1200×630, bağlantı paylaşılınca görünen önizleme
+// Diller: tr, en, ru. Her görsel kendi dilindeki ekran görüntüsünü kullanır.
 // Microsoft Edge'in başsız kipiyle çizer (Windows'ta zaten kurulu); ekran görüntüleri docs/screenshots'tan alınır
 // (önce `node scripts/screenshots.mjs`).
 import { execFileSync } from 'node:child_process';
@@ -22,14 +23,24 @@ const TEXT = {
     sub: 'Discord, Roblox ve eklediğin siteler için tek düğmeli DPI aracı. Motoru Rust ile yazıldı, açık kaynak.',
     del: 'her siteye uygulanan betikler, bozulan sayfalar',
     add: 'yalnız seçtiklerin, tek düğme',
-    shot: 'docs/screenshots/02-acik.png',
+    shot: 'docs/screenshots/tr/02-on.png',
+    size: 58,
   },
   en: {
     title: 'Open what you pick, leave the rest alone.',
     sub: 'A one-button DPI tool for Discord, Roblox and the sites you add. Engine written in Rust, open source.',
     del: 'scripts applied to every site, broken pages',
     add: 'only what you pick, one button',
-    shot: 'docs/screenshots/05-on-en.png',
+    shot: 'docs/screenshots/en/02-on.png',
+    size: 54,
+  },
+  ru: {
+    title: 'Открывай выбранное, остальное не трогай.',
+    sub: 'Инструмент DPI с одной кнопкой для Discord, Roblox и добавленных вами сайтов. Движок написан на Rust, открытый код.',
+    del: 'скрипты для всех сайтов, сломанные страницы',
+    add: 'только выбранное, одна кнопка',
+    shot: 'docs/screenshots/ru/02-on.png',
+    size: 46, // Mona Sans'ta Kiril harfleri yok; yedek yazı tipi daha geniştir
   },
 };
 
@@ -41,11 +52,11 @@ function html(t, { width, height }) {
 * { box-sizing: border-box; margin: 0; }
 html, body { width: ${width}px; height: ${height}px; overflow: hidden; background: #0d1117; }
 .stage { position: relative; width: 1280px; height: ${Math.round(height / scale)}px; transform: scale(${scale}); transform-origin: 0 0; overflow: hidden;
-  font-family: 'Mona Sans', sans-serif; color: #f0f6fc; -webkit-font-smoothing: antialiased; }
+  font-family: 'Mona Sans', 'Segoe UI Variable Display', 'Segoe UI', sans-serif; color: #f0f6fc; -webkit-font-smoothing: antialiased; }
 .text { position: absolute; left: 72px; top: 72px; width: 690px; }
 .brand { display: flex; align-items: center; gap: 14px; font-size: 26px; font-weight: 700; font-stretch: 112%; }
 .brand img { width: 48px; height: 48px; border-radius: 11px; }
-h1 { margin-top: 44px; font-size: 58px; line-height: 1.04; font-weight: 820; font-stretch: 125%; letter-spacing: -0.025em; text-wrap: balance; }
+h1 { margin-top: 44px; font-size: ${t.size}px; line-height: 1.06; font-weight: 820; font-stretch: 125%; letter-spacing: -0.025em; text-wrap: balance; }
 p { margin-top: 22px; max-width: 620px; color: #9198a1; font-size: 21px; line-height: 1.45; }
 .diff { margin-top: 32px; max-width: 640px; overflow: hidden; border: 1px solid #3d444d; border-radius: 10px;
   font-family: 'Cascadia Code', 'Cascadia Mono', Consolas, monospace; font-size: 18px; }
@@ -100,7 +111,7 @@ function render(name, t, size, deviceScale) {
   console.log(`docs/${name}`);
 }
 
-for (const lang of ['tr', 'en']) {
+for (const lang of Object.keys(TEXT)) {
   render(`banner-${lang}.png`, TEXT[lang], { width: 1280, height: 640 }, 2);
   render(`og-${lang}.png`, TEXT[lang], { width: 1200, height: 630 }, 1);
 }

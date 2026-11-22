@@ -1,9 +1,11 @@
-// Arayüzün ekran görüntülerini alır:  node scripts/screenshots.mjs
+// Arayüzün ekran görüntülerini üç dilde alır:  node scripts/screenshots.mjs
 //
-// Arayüzü (ui/) geçici bir yerel sunucudan, sahte çekirdekle (ui/js/dev-mock.js) açar ve docs/screenshots altına
-// PNG yazar. Uygulamayı ve motoru çalıştırmaz, bilgisayarın ağ ayarlarına dokunmaz: görüntüdeki sayılar ve alan
-// adları örnek veridir. Microsoft Edge'i başsız kipte açar ve hata ayıklama bağlantı noktasıyla (Chrome DevTools
-// Protocol) yönetir; ek paket gerekmez.
+//   docs/screenshots/tr/…   docs/screenshots/en/…   docs/screenshots/ru/…
+//
+// Arayüzü (ui/) geçici bir yerel sunucudan, sahte çekirdekle (ui/js/dev-mock.js) açar. Uygulamayı ve motoru
+// çalıştırmaz, bilgisayarın ağ ayarlarına dokunmaz: görüntüdeki sayılar ve alan adları örnek veridir.
+// Microsoft Edge'i başsız kipte açar ve hata ayıklama bağlantı noktasıyla (Chrome DevTools Protocol) yönetir;
+// ek paket gerekmez. README'ler ve web sitesi her dilde o dilin görüntülerini kullanır.
 import { spawn } from 'node:child_process';
 import { createReadStream, existsSync, mkdirSync, mkdtempSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:http';
@@ -19,16 +21,20 @@ if (!EDGE) throw new Error('Microsoft Edge bulunamadı');
 
 const DEBUG_PORT = 9335;
 const WIDTH = 520;
+const HEIGHT = 800; // uygulama penceresinin boyu
+const LANGS = ['tr', 'en', 'ru'];
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.woff2': 'font/woff2', '.json': 'application/json' };
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// [dosya adı, adres sorgusu, görünür alanın yüksekliği]
+// [dosya adı, adres sorgusu, sayfanın tamamı mı?]
+// "Tamamı" seçilirse görünür alan içeriğin boyuna uzatılır: uzun sayfalar (ayarlar) kaydırmadan tek görüntüde çıkar.
 const SHOTS = [
-  ['01-kapali.png', '', 800],
-  ['02-acik.png', '?on', 800],
-  ['03-ayarlar.png', '?on&tab=settings', 1090],
-  ['04-gelismis.png', '?on&tab=settings&advanced', 2330],
-  ['05-on-en.png', '?on&lang=en', 800],
+  ['01-off.png', '', false],
+  ['02-on.png', 'on', false],
+  ['03-settings.png', 'on&tab=settings', true],
+  ['04-advanced.png', 'on&tab=settings&advanced', true],
+  ['05-welcome.png', 'wizard', false],
+  ['06-terms.png', 'wizard&step=2', false],
 ];
 
 const server = createServer((request, response) => {
@@ -38,12 +44,11 @@ const server = createServer((request, response) => {
     response.writeHead(404).end();
     return;
   }
-  response.writeHead(200, { 'Content-Type': TYPES[extname(file)] || 'application/octet-stream' });
+  response.writeHead(200, { 'Content-Type': TYPES[extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-store' });
   createReadStream(file).pipe(response);
 });
 await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
 const base = `http://127.0.0.1:${server.address().port}/`;
-mkdirSync(out, { recursive: true });
 
 const profile = mkdtempSync(join(tmpdir(), 'robzdpi-shot-'));
 const browser = spawn(
@@ -86,14 +91,27 @@ try {
       pending.set(id, resolve);
       socket.send(JSON.stringify({ id, method, params }));
     });
+  const viewport = (height) => send('Emulation.setDeviceMetricsOverride', { width: WIDTH, height, deviceScaleFactor: 2, mobile: false });
 
-  for (const [name, query, height] of SHOTS) {
-    await send('Emulation.setDeviceMetricsOverride', { width: WIDTH, height, deviceScaleFactor: 2, mobile: false });
-    await send('Page.navigate', { url: base + query });
-    await sleep(1500); // yazı tipi, ilk durum ve (varsa) sekme geçişi
-    const shot = await send('Page.captureScreenshot', { format: 'png' });
-    writeFileSync(join(out, name), Buffer.from(shot.result.data, 'base64'));
-    console.log(`docs/screenshots/${name}`);
+  for (const lang of LANGS) {
+    mkdirSync(join(out, lang), { recursive: true });
+    for (const [name, query, whole] of SHOTS) {
+      await viewport(HEIGHT);
+      await send('Page.navigate', { url: `${base}?lang=${lang}${query ? `&${query}` : ''}` });
+      await sleep(1500); // yazı tipi, ilk durum ve (varsa) sekme geçişi
+      if (whole) {
+        // Kaydırılan bölümün başladığı yer + içeriğinin tam boyu
+        const measured = await send('Runtime.evaluate', {
+          expression: `(() => { const c = document.querySelector('.content'); return Math.ceil(c.getBoundingClientRect().top + c.scrollHeight); })()`,
+          returnByValue: true,
+        });
+        await viewport(Math.min(Math.max(measured.result.result.value, HEIGHT), 6000));
+        await sleep(400);
+      }
+      const shot = await send('Page.captureScreenshot', { format: 'png' });
+      writeFileSync(join(out, lang, name), Buffer.from(shot.result.data, 'base64'));
+      console.log(`docs/screenshots/${lang}/${name}`);
+    }
   }
   socket.close();
 } catch (error) {

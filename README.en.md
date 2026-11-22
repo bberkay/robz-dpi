@@ -11,7 +11,7 @@
   <img src="https://img.shields.io/badge/Rust-Tauri%202-ab7df8?style=flat-square&amp;logo=rust&amp;logoColor=white&amp;labelColor=0d1117" alt="Built with Rust and Tauri 2">
   <img src="https://img.shields.io/badge/engine-own%20code-ab7df8?style=flat-square&amp;labelColor=0d1117" alt="Its own engine">
   <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Windows 10 and 11">
-  <img src="https://img.shields.io/badge/interface-T%C3%BCrk%C3%A7e%20%7C%20English-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Interface: Turkish and English">
+  <img src="https://img.shields.io/badge/interface-T%C3%BCrk%C3%A7e%20%7C%20English%20%7C%20%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Interface: Turkish, English and Russian">
   <img src="https://img.shields.io/badge/status-experimental-d29922?style=flat-square&amp;labelColor=0d1117" alt="Status: experimental">
 </p>
 
@@ -20,6 +20,7 @@
   <a href="https://github.com/kutsalkiremitci/robz-dpi/stargazers"><img src="https://img.shields.io/github/stars/kutsalkiremitci/robz-dpi?style=for-the-badge&amp;logo=github&amp;label=STAR&amp;labelColor=0d1117&amp;color=e3b341" alt="Star on GitHub"></a>
   <br>
   <a href="README.md"><img src="https://img.shields.io/badge/T%C3%9CRK%C3%87E-21262d?style=for-the-badge" alt="Türkçe"></a>
+  <a href="README.ru.md"><img src="https://img.shields.io/badge/%D0%A0%D0%A3%D0%A1%D0%A1%D0%9A%D0%98%D0%99-21262d?style=for-the-badge" alt="Русский"></a>
   <a href="https://discord.gg/UyyEn7SHm4"><img src="https://img.shields.io/badge/DISCORD-FREE%20SUPPORT-5865F2?style=for-the-badge&amp;logo=discord&amp;logoColor=white&amp;labelColor=4752C4" alt="Discord: free support"></a>
 </p>
 
@@ -90,13 +91,15 @@
     <td valign="top"><b>An advanced section for tinkerers</b><br>
       Every detail of the method, what the engine is doing, and its log. Everything works without opening it.</td>
     <td valign="top"><b>Open source, collects no data</b><br>
-      No account, ads or usage statistics. All the code, engine included, is in this repository.</td>
+      No account, ads or usage statistics. All the code, engine included, is in this repository. Turkish, English
+      and Russian.</td>
   </tr>
 </table>
 
 <p align="center">
-  <img src="docs/screenshots/05-on-en.png" alt="Robz DPI turned on: working for Discord and Roblox" width="32%">
-  <img src="docs/screenshots/03-ayarlar.png" alt="Settings: four methods and the DNS server choice (Turkish interface)" width="32%">
+  <img src="docs/screenshots/en/01-off.png" alt="Robz DPI turned off: the main screen" width="32%">
+  <img src="docs/screenshots/en/02-on.png" alt="Robz DPI turned on: working for Discord and Roblox" width="32%">
+  <img src="docs/screenshots/en/06-terms.png" alt="First run: the disclaimer summary and the acceptance checkbox" width="32%">
 </p>
 
 ## Start in 3 steps
@@ -104,7 +107,8 @@
 1. **Download:** [RobzDPI-Setup.exe](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Setup.exe)
    (always the latest version).
 2. **Install:** run the file. The installer does not ask for administrator permission and takes a few seconds.
-3. **Turn it on:** press the big button in Robz DPI. Windows asks "do you want to allow this app to make changes?";
+3. **Turn it on:** the first time it opens, Robz DPI shows three short steps: language, accepting the disclaimer,
+   and where it should work. Then press the big button. Windows asks "do you want to allow this app to make changes?";
    say **Yes**. The button turns green: Discord and Roblox now load.
 
 > [!IMPORTANT]
@@ -148,6 +152,11 @@ Turning on "Show advanced settings" adds three things:
 - **Engine activity:** how many connections it was applied to, how many DNS queries were redirected, and which site
   names were handled last.
 - **Engine log:** when the engine started, with which filter, and why it stopped if it did.
+
+<p align="center">
+  <img src="docs/screenshots/en/03-settings.png" alt="Settings: four methods, DNS server, language and uninstall" width="40%">
+  <img src="docs/screenshots/en/04-advanced.png" alt="Advanced section: method details and engine activity" width="40%">
+</p>
 
 ### Tray icon
 
@@ -370,7 +379,7 @@ npm run build        # installer: src-tauri/target/release/bundle/nsis/
 - **The interface can be tried in a browser.** Serve the `ui/` folder with any local server (`python -m http.server
   --directory ui`) and a mock core ([`ui/js/dev-mock.js`](ui/js/dev-mock.js)) takes the place of the real one: the
   design can be tried without touching the computer.
-- `node scripts/screenshots.mjs` regenerates [`docs/screenshots`](docs/screenshots); `node
+- `node scripts/screenshots.mjs` regenerates [`docs/screenshots`](docs/screenshots) in three languages; `node
   scripts/render-banners.mjs` redraws the README images.
 
 ```
