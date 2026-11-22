@@ -17,10 +17,11 @@ Her başlık bir sürümdür; sürüm iş akışı GitHub'daki sürüm notunu bu
 - **Gelişmiş bölüm:** yöntemin ayrıntıları, motorun sayaçları ve günlüğü.
 - **Her zaman açık:** Windows açılınca tepside başlar, en son açık bıraktıysan kendiliğinden açılır.
 - **Çakışma uyarısı:** çalışan GoodbyeDPI'ı görür ve istersen durdurur.
+- **Tek adımda kaldırma:** Ayarlar → "Robz DPI'ı kaldır" uygulamayı, arka planda çalışan parçasını ve ayarlarını
+  birlikte siler. Windows'un Uygulamalar listesinden kaldırmak da arka plandaki parçayı siler.
 - Türkçe ve İngilizce arayüz.
 
 Bilinen eksikler:
 
-- Robz DPI kaldırılırken motor kendiliğinden silinmez; önce Ayarlar → "Motoru kaldır" gerekir.
 - Kurulum dosyası imzalı değildir; Windows SmartScreen uyarı gösterir.
 - Yalnız Windows 10 ve 11 (64 bit).

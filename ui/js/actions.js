@@ -61,6 +61,22 @@ export function stopConflicts() {
   });
 }
 
+// Her şeyi kaldırır: motor, sürücü, ayarlar ve uygulamanın kendisi. Başarılı olursa uygulama kapanır.
+export function uninstallApp() {
+  openDialog({
+    title: t('dialog.uninstall.title'),
+    body: t('dialog.uninstall.body'),
+    confirm: t('dialog.uninstall.confirm'),
+    danger: true,
+    onConfirm: async () => {
+      const removed = await run('uninstallApp');
+      // Kurulu sürümde uygulama buraya gelmeden kapanır; geliştirme kipinde yalnız motor kaldırılır.
+      if (removed === true) toast(t('toast.uninstalledDev'));
+    },
+  });
+}
+
+// Yalnız motoru kaldırır (gelişmiş bölüm); uygulama ve ayarlar kalır.
 export function removeAll() {
   openDialog({
     title: t('dialog.remove.title'),

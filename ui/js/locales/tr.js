@@ -75,8 +75,13 @@ export default {
   'dialog.conflict.confirm': 'Durdur',
   'dialog.remove.title': 'Motor kaldırılsın mı?',
   'dialog.remove.body':
-    'Windows servisi, WinDivert sürücüsü ve Program Files\\RobzDPI klasörü silinir. Ayarların kalır. Windows yönetici izni ister.',
+    'Windows servisi, WinDivert sürücüsü ve Program Files\\RobzDPI klasörü silinir. Uygulama ve ayarların kalır. Windows yönetici izni ister.',
   'dialog.remove.confirm': 'Kaldır',
+  'dialog.uninstall.title': 'Robz DPI kaldırılsın mı?',
+  'dialog.uninstall.body':
+    'Uygulama, arka planda çalışan parçası (Windows servisi ve sürücü) ve ayarların bu bilgisayardan silinir. Windows yönetici izni isteyebilir. Ardından uygulama kapanır.',
+  'dialog.uninstall.confirm': 'Kaldır',
+  'toast.uninstalledDev': 'Motor kaldırıldı. Geliştirme kipinde uygulamanın kendisi kaldırılmaz.',
 
   'settings.method': 'Yöntem',
   'settings.method.desc': 'Servis sağlayıcılar engeli farklı uygular. Seçtiklerin açılmıyorsa sıradaki yöntemi dene.',
@@ -161,6 +166,10 @@ export default {
   'adv.log.show': 'Göster',
   'adv.log.refresh': 'Yenile',
   'adv.log.empty': 'Günlük boş.',
+  'adv.removeEngine': 'Yalnız motoru kaldır',
+  'adv.removeEngine.desc': 'Windows servisini ve sürücüyü siler; uygulama ve ayarların kalır. Yeniden açınca motor yeniden kurulur.',
+  'adv.removeEngine.none': 'Motor kurulu değil; ilk açışta kurulur.',
+  'adv.removeEngine.button': 'Motoru kaldır',
 
   'settings.app': 'Uygulama',
   'settings.closeToTray': 'Kapatınca tepside kal',
@@ -168,10 +177,9 @@ export default {
   'settings.language': 'Dil',
   'settings.language.desc': 'Arayüzün dili.',
   'settings.language.auto': 'Windows dili',
-  'settings.remove': 'Motoru kaldır',
-  'settings.remove.desc': "Windows servisini, WinDivert sürücüsünü ve motor dosyalarını siler. Robz DPI'ı kaldırmadan önce bunu yap.",
-  'settings.remove.none': 'Motor kurulu değil; ilk açışta kurulur.',
-  'settings.remove.button': 'Kaldır',
+  'settings.uninstall': "Robz DPI'ı kaldır",
+  'settings.uninstall.desc': 'Uygulamayı, arka planda çalışan parçasını ve ayarlarını bu bilgisayardan tümüyle siler.',
+  'settings.uninstall.button': 'Kaldır',
 
   'settings.about': 'Hakkında',
   'settings.about.body':
@@ -204,6 +212,7 @@ export default {
   'error.windows-error': 'Windows bir hata bildirdi.',
   'error.write-failed': 'Dosya yazılamadı.',
   'error.no-program-files': 'Program Files klasörü bulunamadı.',
+  'error.uninstall-failed': "Kaldırma programı başlatılamadı. Windows'un Uygulamalar listesinden kaldırmayı dene.",
   'error.conflict-stop-failed': "Diğer araç durdurulamadı. Görev Yöneticisi'nden kapatmayı dene.",
 
   // Motorun çıkış kodları: WinDivert'in verdiği Windows hata kodu ya da motorun kendi kodu (engine/service.rs).

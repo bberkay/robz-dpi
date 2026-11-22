@@ -1,6 +1,7 @@
 //! Pencere, tepsi simgesi ve "Windows açılışında başlat". İş mantığı dpi.rs'tedir; burası onu masaüstüne bağlar.
 
 use crate::dpi::Dpi;
+use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use tauri::menu::{Menu, MenuItem, PredefinedMenuItem};
@@ -9,6 +10,8 @@ use tauri::window::Color;
 use tauri::{AppHandle, Manager, WebviewUrl, WebviewWindowBuilder, WindowEvent};
 use tauri_plugin_autostart::ManagerExt as _;
 
+/// tauri.conf.json'daki kimlik; uygulamanın veri klasörünün adıdır.
+const APP_IDENTIFIER: &str = "com.robz.dpi";
 const TRAY_ID: &str = "main";
 const WINDOW: &str = "main";
 
@@ -193,6 +196,39 @@ pub fn state_changed(dpi: &Dpi) {
             *last = signature;
         }
     }
+}
+
+// ---- uygulamayı kaldırma --------------------------------------------------------------------------------------------
+
+/// Kurulum programının bıraktığı kaldırma programı (yalnız kurulu sürümde vardır).
+pub fn uninstaller() -> Option<PathBuf> {
+    let path = std::env::current_exe().ok()?.parent()?.join("uninstall.exe");
+    path.is_file().then_some(path)
+}
+
+/// Bu süreç kapandıktan sonra uygulamayı sessizce kaldırır ve ayar klasörünü siler. Ayrı, penceresiz bir komut
+/// satırı başlatır ve hemen döner; çağıran ardından uygulamadan çıkmalıdır.
+#[cfg(windows)]
+pub fn run_uninstaller(uninstaller: &Path, data_dir: &Path) -> std::io::Result<()> {
+    use std::os::windows::process::CommandExt;
+    const CREATE_NO_WINDOW: u32 = 0x0800_0000;
+    let mut script = format!("/d /s /c \"ping -n 3 127.0.0.1 >nul & \"{}\" /S", uninstaller.display());
+    // Yalnız uygulamanın kendi veri klasörü silinir (geliştirme için başka bir klasör verilmişse dokunulmaz).
+    if data_dir.file_name().is_some_and(|name| name == APP_IDENTIFIER) {
+        script.push_str(&format!(" & ping -n 4 127.0.0.1 >nul & rmdir /s /q \"{}\"", data_dir.display()));
+    }
+    script.push('"');
+    let cmd = std::env::var_os("SystemRoot").map(|root| Path::new(&root).join("System32").join("cmd.exe"));
+    std::process::Command::new(cmd.as_deref().unwrap_or(Path::new("cmd.exe")))
+        .raw_arg(script)
+        .creation_flags(CREATE_NO_WINDOW)
+        .spawn()
+        .map(drop)
+}
+
+#[cfg(not(windows))]
+pub fn run_uninstaller(_uninstaller: &Path, _data_dir: &Path) -> std::io::Result<()> {
+    Err(std::io::Error::other("yalnız Windows"))
 }
 
 // ---- açılışta başlatma ve zamanlayıcı -------------------------------------------------------------------------------

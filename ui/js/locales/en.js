@@ -75,8 +75,13 @@ export default {
   'dialog.conflict.confirm': 'Stop it',
   'dialog.remove.title': 'Remove the engine?',
   'dialog.remove.body':
-    'The Windows service, the WinDivert driver and the Program Files\\RobzDPI folder are deleted. Your settings stay. Windows asks for administrator permission.',
+    'The Windows service, the WinDivert driver and the Program Files\\RobzDPI folder are deleted. The app and your settings stay. Windows asks for administrator permission.',
   'dialog.remove.confirm': 'Remove',
+  'dialog.uninstall.title': 'Uninstall Robz DPI?',
+  'dialog.uninstall.body':
+    'The app, its background part (the Windows service and driver) and your settings are deleted from this computer. Windows may ask for administrator permission. The app then closes.',
+  'dialog.uninstall.confirm': 'Uninstall',
+  'toast.uninstalledDev': 'The engine was removed. In development mode the app itself is not uninstalled.',
 
   'settings.method': 'Method',
   'settings.method.desc': 'Internet providers block in different ways. If what you picked does not load, try the next method.',
@@ -161,6 +166,10 @@ export default {
   'adv.log.show': 'Show',
   'adv.log.refresh': 'Refresh',
   'adv.log.empty': 'The log is empty.',
+  'adv.removeEngine': 'Remove only the engine',
+  'adv.removeEngine.desc': 'Deletes the Windows service and driver; the app and your settings stay. The engine is installed again the next time you turn it on.',
+  'adv.removeEngine.none': 'The engine is not installed; it is installed the first time you turn it on.',
+  'adv.removeEngine.button': 'Remove engine',
 
   'settings.app': 'App',
   'settings.closeToTray': 'Stay in the tray when closed',
@@ -168,10 +177,9 @@ export default {
   'settings.language': 'Language',
   'settings.language.desc': 'Language of the interface.',
   'settings.language.auto': 'Windows language',
-  'settings.remove': 'Remove the engine',
-  'settings.remove.desc': 'Deletes the Windows service, the WinDivert driver and the engine files. Do this before uninstalling Robz DPI.',
-  'settings.remove.none': 'The engine is not installed; it is installed the first time you turn it on.',
-  'settings.remove.button': 'Remove',
+  'settings.uninstall': 'Uninstall Robz DPI',
+  'settings.uninstall.desc': 'Completely removes the app, its background part and your settings from this computer.',
+  'settings.uninstall.button': 'Uninstall',
 
   'settings.about': 'About',
   'settings.about.body':
@@ -204,6 +212,7 @@ export default {
   'error.windows-error': 'Windows reported an error.',
   'error.write-failed': 'A file could not be written.',
   'error.no-program-files': 'The Program Files folder was not found.',
+  'error.uninstall-failed': 'The uninstaller could not be started. Try uninstalling from the Windows Apps list.',
   'error.conflict-stop-failed': 'The other tool could not be stopped. Try closing it from Task Manager.',
 
   // Engine exit codes: the Windows error code from WinDivert, or the engine's own code (engine/service.rs).

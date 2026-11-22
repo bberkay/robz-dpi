@@ -55,6 +55,23 @@ async fn dispatch(app: &AppHandle, dpi: &Arc<Dpi>, method: &str, args: &[Value])
                 shell::apply_autostart(app, false);
             }
         }
+        // Her şeyi kaldırır: motor (yönetici onayıyla), Windows açılışındaki kayıt, ayarlar ve uygulamanın kendisi.
+        // false: motor kaldırılamadı ya da onay verilmedi; hiçbir şey silinmedi.
+        "uninstallApp" => {
+            if engine::status().installed {
+                dpi.remove_all().await;
+                if engine::status().installed {
+                    return Ok(Value::Bool(false));
+                }
+            }
+            shell::apply_autostart(app, false);
+            if let Some(uninstaller) = shell::uninstaller() {
+                shell::run_uninstaller(&uninstaller, dpi.data_dir()).map_err(|e| DpiError::with("uninstall-failed", e))?;
+                app.exit(0);
+            }
+            // Geliştirme kipinde kaldırma programı yoktur: yalnız motor kaldırılmış olur.
+            return Ok(Value::Bool(true));
+        }
         "stopConflicts" => dpi.stop_conflicts().await,
         "test" => dpi.test().await,
         "dismissError" => dpi.dismiss_error(),

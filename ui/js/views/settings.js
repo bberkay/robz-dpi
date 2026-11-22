@@ -231,6 +231,11 @@ function Activity() {
     <${Row} title=${t('adv.log')} desc=${t('adv.log.desc')}>
       <button class="btn" disabled=${!data.engine.installed} onClick=${actions.showLog}>${t('adv.log.show')}</button>
     <//>
+    <${Row} title=${t('adv.removeEngine')} desc=${data.engine.installed ? t('adv.removeEngine.desc') : t('adv.removeEngine.none')}>
+      <button class="btn" disabled=${!data.engine.installed || Boolean(data.engine.busy)} onClick=${actions.removeAll}>
+        ${t('adv.removeEngine.button')}
+      </button>
+    <//>
   </div>`;
 }
 
@@ -274,9 +279,9 @@ function AppSettings() {
           ]}
         />
       <//>
-      <${Row} title=${t('settings.remove')} desc=${data.engine.installed ? t('settings.remove.desc') : t('settings.remove.none')}>
-        <button class="btn btn-danger" disabled=${!data.engine.installed || Boolean(data.engine.busy)} onClick=${actions.removeAll}>
-          <${Icon} name="trash" />${t('settings.remove.button')}
+      <${Row} title=${t('settings.uninstall')} desc=${t('settings.uninstall.desc')}>
+        <button class="btn btn-danger" disabled=${Boolean(data.engine.busy)} onClick=${actions.uninstallApp}>
+          <${Icon} name="trash" />${t('settings.uninstall.button')}
         </button>
       <//>
     </div>

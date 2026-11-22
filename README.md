@@ -136,7 +136,7 @@ Motor çalışırken bir ayarı değiştirirsen mavi bir kutu çıkar: **Uygula*
   birinden sonra bağlantı testine bak.
 - **DNS:** servis sağlayıcının DNS'i engelli siteler için yanlış adres döndürür. Robz DPI bu sitelerin sorgularını
   seçtiğin sunucuya (Quad9, Yandex, AdGuard, OpenDNS ya da kendi yazdığın) yönlendirir. Sorgular şifrelenmez.
-- **Kapatınca tepside kal**, **dil** ve **motoru kaldır** da buradadır.
+- **Kapatınca tepside kal**, **dil** ve **Robz DPI'ı kaldır** da buradadır.
 
 ### Gelişmiş
 
@@ -216,8 +216,12 @@ yalnız seçtiğin sitelere uygulanmasının sebebidir. "Seçtiklerimde"ye dön 
 <details>
 <summary><b>Robz DPI'ı nasıl tümüyle kaldırırım?</b></summary>
 
-Önce Ayarlar → **Motoru kaldır**: Windows servisini, WinDivert sürücüsünü ve `Program Files\RobzDPI` klasörünü
-siler. Sonra Windows'un "Uygulamalar" listesinden Robz DPI'ı kaldır.
+Ayarlar → **Robz DPI'ı kaldır**. Tek adımda her şeyi siler: uygulamayı, arka planda çalışan parçasını (Windows
+servisi, WinDivert sürücüsü, `Program Files\RobzDPI` klasörü) ve ayarlarını. Arka plandaki parça yönetici yetkisiyle
+kurulduğu için Windows bir kez onay ister.
+
+Windows'un "Uygulamalar" listesinden kaldırırsan da aynı şey olur: kaldırma programı arka plandaki parçayı da siler.
+Onay penceresine "Hayır" dersen uygulama yine kaldırılır ama servis yerinde kalır.
 
 </details>
 

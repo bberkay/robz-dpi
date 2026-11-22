@@ -183,6 +183,10 @@ const methods = {
     }),
   apply: () => operate('applying', () => (engine.applied = fingerprint())),
   removeAll: () => operate('removing', () => Object.assign(engine, { installed: false, state: 'stopped', applied: null })),
+  uninstallApp: async () => {
+    await operate('removing', () => Object.assign(engine, { installed: false, state: 'stopped', applied: null }));
+    return true;
+  },
   stopConflicts: () => operate('fixing', () => (conflicts = [])),
   dismissError: () => {
     engine.error = null;

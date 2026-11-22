@@ -81,6 +81,11 @@ impl Dpi {
         settings.save(&self.data_dir.join("settings.json"));
     }
 
+    /// Ayarların ve yardımcı iş dosyalarının durduğu klasör.
+    pub fn data_dir(&self) -> &std::path::Path {
+        &self.data_dir
+    }
+
     pub fn settings(&self) -> Settings {
         self.lock().settings.clone()
     }

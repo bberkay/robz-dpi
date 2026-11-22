@@ -136,7 +136,7 @@ effect (changing settings asks for administrator permission; turning on and off 
   order and check the connection test after each.
 - **DNS:** your provider's DNS returns wrong addresses for blocked sites. Robz DPI redirects the queries for those
   sites to the server you choose (Quad9, Yandex, AdGuard, OpenDNS, or your own). Queries are not encrypted.
-- **Stay in the tray when closed**, **language** and **remove the engine** are here too.
+- **Stay in the tray when closed**, **language** and **Uninstall Robz DPI** are here too.
 
 ### Advanced
 
@@ -213,8 +213,12 @@ applies only to the sites you pick by default. Go back to "Only what I pick" and
 <details>
 <summary><b>How do I remove Robz DPI completely?</b></summary>
 
-First Settings → **Remove the engine**: it deletes the Windows service, the WinDivert driver and the
-`Program Files\RobzDPI` folder. Then uninstall Robz DPI from the Windows "Apps" list.
+Settings → **Uninstall Robz DPI**. It removes everything in one step: the app, its background part (the Windows
+service, the WinDivert driver, the `Program Files\RobzDPI` folder) and your settings. Because the background part was
+installed with administrator privileges, Windows asks for approval once.
+
+Uninstalling from the Windows "Apps" list does the same: the uninstaller removes the background part too. If you
+answer "No" to the approval prompt, the app is still uninstalled but the service stays.
 
 </details>
 
