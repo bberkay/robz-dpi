@@ -9,3 +9,4 @@ src-tauri/engine/
 Thumbs.db
 /RobzDPI-Setup-*.exe
 .claude/
+site/dist/
