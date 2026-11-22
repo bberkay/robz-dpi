@@ -6,6 +6,7 @@
 //   ?on                 motor açık
 //   ?tab=settings       Ayarlar sekmesi
 //   ?advanced           gelişmiş bölüm açık
+//   ?wizard             ilk açılış adımları (isteğe bağlı ?step=2 ya da ?step=3)
 //   ?conflict           başka bir DPI aracı çalışıyor
 //   ?error=<kod>        hata kutusu (örnek: engine-stopped); ?detail=1275 ile motorun çıkış kodu
 const query = new URLSearchParams(location.search);
@@ -51,6 +52,7 @@ const settings = {
   closeToTray: true,
   launchAtLogin: false,
   enabled: query.has('on'),
+  onboarded: !query.has('wizard'),
   scope: 'selected',
   services: ['discord', 'roblox'],
   customDomains: [],
@@ -167,6 +169,11 @@ const LIMITS = { split: [0, 1200], httpSplit: [0, 1200], fakeTtl: [1, 64], fakeR
 const methods = {
   getState: () => snapshot(),
   turnOn: () => {
+    // Gerçek çekirdekteki gibi: ilk açılış adımları bitmeden motor açılmaz.
+    if (!settings.onboarded) {
+      engine.error = { code: 'onboarding-required', detail: null };
+      return emit();
+    }
     if (problem()) {
       engine.error = { code: problem(), detail: null };
       return emit();

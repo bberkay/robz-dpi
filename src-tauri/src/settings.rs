@@ -18,6 +18,8 @@ pub struct Settings {
     pub launch_at_login: bool,
     /// Kullanıcının istediği durum: motor açık mı?
     pub enabled: bool,
+    /// İlk açılış adımları (dil, sorumluluk reddinin kabulü, kapsam) tamamlandı mı? Tamamlanmadan motor açılmaz.
+    pub onboarded: bool,
     /// "selected": yalnız seçilen uygulamalar ve siteler | "all": bütün siteler (GoodbyeDPI-Turkey gibi)
     pub scope: String,
     /// Açık olan hazır uygulamalar (catalog::SERVICES kimlikleri).
@@ -46,6 +48,7 @@ impl Default for Settings {
             close_to_tray: true,
             launch_at_login: false,
             enabled: false,
+            onboarded: false,
             scope: "selected".into(),
             services: catalog::SERVICES.iter().map(|s| s.id.to_string()).collect(),
             custom_domains: Vec::new(),
@@ -125,6 +128,7 @@ impl Settings {
         match (key, value) {
             ("language", Value::String(s)) if matches!(s.as_str(), "auto" | "tr" | "en") => self.language = s.clone(),
             ("closeToTray", Value::Bool(b)) => self.close_to_tray = *b,
+            ("onboarded", Value::Bool(b)) => self.onboarded = *b,
             ("launchAtLogin", Value::Bool(b)) => self.launch_at_login = *b,
             ("scope", Value::String(s)) if matches!(s.as_str(), "selected" | "all") => self.scope = s.clone(),
             ("method", Value::String(s)) if s == catalog::CUSTOM_METHOD || catalog::method(s).is_some() => {
@@ -226,6 +230,9 @@ mod tests {
         assert!(!s.set("dnsCustomPort", &json!(0)));
         assert!(!s.set("dnsCustomPort", &json!(70000)));
         assert!(!s.set("enabled", &json!(true)), "motor durumu yalnız aç/kapa ile değişir");
+        assert!(!s.onboarded, "ilk açılış adımları varsayılan olarak tamamlanmamıştır");
+        assert!(s.set("onboarded", &json!(true)) && s.onboarded);
+        assert!(!s.set("onboarded", &json!("yes")));
         assert!(!s.set("customDomains", &json!(["x.com"])));
         assert!(!s.set("custom", &json!({ "split": 9 })), "strateji alan alan değişir");
         assert!(s.set("dnsAll", &json!(true)));

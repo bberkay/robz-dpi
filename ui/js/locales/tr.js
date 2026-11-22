@@ -190,7 +190,38 @@ export default {
   'link.discord': 'Discord',
   'link.disclaimer': 'Sorumluluk reddi',
 
+  // İlk açılış adımları
+  'wizard.step': 'Adım {n} / {total}',
+  'wizard.next': 'İleri',
+  'wizard.back': 'Geri',
+  'wizard.agree': 'Kabul ediyorum',
+  'wizard.finish': 'Başla',
+  'wizard.welcome.title': 'Hoş geldin',
+  'wizard.welcome.body':
+    'Robz DPI, seçtiğin sitelere giden bağlantının yalnız ilk paketini değiştiren, eğitim ve test amaçlı açık kaynak bir ağ aracıdır. Üç kısa adımdan sonra hazır.',
+  'wizard.welcome.point1': 'Tek düğmeyle açılır ve kapanır.',
+  'wizard.welcome.point2': 'Yalnız seçtiğin uygulamalarda ve sitelerde çalışır.',
+  'wizard.welcome.point3': 'Hesap istemez, veri toplamaz.',
+  'wizard.welcome.language': 'Dil',
+  'wizard.terms.title': 'Kullanmadan önce',
+  'wizard.terms.body': 'Devam etmek için aşağıdakileri okuyup kabul etmen gerekir.',
+  'wizard.terms.point1': 'Robz DPI eğitim, araştırma ve test amaçlıdır; ticari bir ürün ya da hizmet değildir.',
+  'wizard.terms.point2': 'Hiçbir garanti vermez. Çalışmayabilir ya da bağlantını aksatabilir.',
+  'wizard.terms.point3':
+    'Kullanımından doğan her sonuç sana aittir. Bulunduğun yerin yasalarına ve kurallarına aykırı biçimde kullanma.',
+  'wizard.terms.point4': 'VPN değildir: IP adresini gizlemez, anonimlik ya da güvenlik sağlamaz.',
+  'wizard.terms.point5':
+    'Yönetici yetkisiyle çalışan bir Windows servisi ve sürücü kurar; antivirüslerle ve oyunların hile korumasıyla çakışabilir.',
+  'wizard.terms.full': 'Sorumluluk reddinin tam metni',
+  'wizard.terms.accept': 'Okudum, anladım ve kabul ediyorum.',
+  'wizard.scope.title': 'Nerede çalışsın?',
+  'wizard.scope.body': 'Sonradan Genel sekmesinden değiştirebilir, başka siteler de ekleyebilirsin.',
+  'wizard.scope.admin': "Robz DPI'ı ilk açtığında Windows bir kez yönetici izni ister.",
+  'wizard.scope.conflict':
+    "{name} şu anda çalışıyor. Robz DPI'ı açmadan önce onu kapat; Genel sekmesindeki uyarıdan da durdurabilirsin.",
+
   'error.detail': 'Ayrıntı: {detail}',
+  'error.onboarding-required': 'Önce ilk açılış adımlarını tamamla.',
   'error.unknown': 'Bir şeyler ters gitti.',
   'error.bad-request': 'Bu işlem yapılamadı.',
   'error.unsupported': "Robz DPI şimdilik yalnız Windows'ta çalışır.",

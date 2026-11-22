@@ -190,7 +190,38 @@ export default {
   'link.discord': 'Discord',
   'link.disclaimer': 'Disclaimer',
 
+  // First-run steps
+  'wizard.step': 'Step {n} of {total}',
+  'wizard.next': 'Next',
+  'wizard.back': 'Back',
+  'wizard.agree': 'I accept',
+  'wizard.finish': 'Start',
+  'wizard.welcome.title': 'Welcome',
+  'wizard.welcome.body':
+    'Robz DPI is an open source network tool for education and testing that changes only the first packet of connections to the sites you pick. It is ready after three short steps.',
+  'wizard.welcome.point1': 'One button turns it on and off.',
+  'wizard.welcome.point2': 'It works only on the apps and sites you pick.',
+  'wizard.welcome.point3': 'No account, no data collection.',
+  'wizard.welcome.language': 'Language',
+  'wizard.terms.title': 'Before you use it',
+  'wizard.terms.body': 'To continue, you need to read and accept the following.',
+  'wizard.terms.point1': 'Robz DPI is for education, research and testing; it is not a commercial product or service.',
+  'wizard.terms.point2': 'It comes with no warranty. It may not work, or may disrupt your connection.',
+  'wizard.terms.point3':
+    'Every consequence of using it is yours. Do not use it in a way that violates the laws and rules where you are.',
+  'wizard.terms.point4': 'It is not a VPN: it does not hide your IP address or provide anonymity or security.',
+  'wizard.terms.point5':
+    'It installs a Windows service and a driver that run with administrator privileges; they may conflict with antivirus software and the anti-cheat of games.',
+  'wizard.terms.full': 'Full text of the disclaimer',
+  'wizard.terms.accept': 'I have read, understood and accept this.',
+  'wizard.scope.title': 'Where should it work?',
+  'wizard.scope.body': 'You can change this later on the General tab and add other sites too.',
+  'wizard.scope.admin': 'The first time you turn Robz DPI on, Windows asks for administrator permission once.',
+  'wizard.scope.conflict':
+    '{name} is running right now. Close it before turning Robz DPI on; you can also stop it from the notice on the General tab.',
+
   'error.detail': 'Details: {detail}',
+  'error.onboarding-required': 'Finish the first-run steps first.',
   'error.unknown': 'Something went wrong.',
   'error.bad-request': 'That could not be done.',
   'error.unsupported': 'Robz DPI works only on Windows for now.',

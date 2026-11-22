@@ -243,6 +243,10 @@ impl Dpi {
 
     /// Motoru açar. Ayarlar daha önce uygulandıysa servis doğrudan başlar; değilse yönetici onayı istenir.
     pub async fn turn_on(self: &Arc<Self>) {
+        // Sorumluluk reddi kabul edilmeden (ilk açılış adımları bitmeden) motor açılmaz; tepsi menüsünden de.
+        if !self.lock().settings.onboarded {
+            return self.fail(DpiError::new("onboarding-required"));
+        }
         if !engine::available() {
             return self.fail(DpiError::new(if engine::SUPPORTED { "engine-missing" } else { "unsupported" }));
         }
@@ -297,7 +301,10 @@ impl Dpi {
 
     /// Açılışta: kullanıcı motoru açık bıraktıysa ve ayarlar uygulanmışsa servisi (onay gerekmeden) başlatır.
     pub async fn resume(self: &Arc<Self>) {
-        let wanted = self.lock().settings.enabled;
+        let wanted = {
+            let inner = self.lock();
+            inner.settings.enabled && inner.settings.onboarded
+        };
         let running = self.lock().status.running();
         if !wanted || running {
             return;

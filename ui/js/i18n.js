@@ -5,11 +5,20 @@ import en from './locales/en.js';
 
 const DICTS = { tr, en };
 
+// Arayüz dilleri, seçim kutularında görünecekleri sırayla. Her birinin adı sözlükte `lang.<kod>` anahtarındadır.
+export const LANGUAGES = Object.keys(DICTS);
+
+// Dil seçim kutusunun seçenekleri: [{ value, label, flag }]
+export function languageOptions() {
+  return LANGUAGES.map((code) => ({ value: code, label: t(`lang.${code}`), flag: code }));
+}
+
 export function lang() {
   const data = store.data;
   if (!data) return 'tr';
   const setting = data.settings.language;
-  return setting === 'auto' ? data.systemLanguage : setting;
+  const code = setting === 'auto' ? data.systemLanguage : setting;
+  return code in DICTS ? code : 'en';
 }
 
 // t('tab.home') ya da t('test.ms', { ms: 120 }). Sözlükte yoksa anahtarın kendisi döner.

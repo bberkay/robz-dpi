@@ -2,12 +2,13 @@
 import './bridge.js';
 import { html, render, useEffect, useRef } from '../vendor/preact-htm.js';
 import { Icon } from './icons.js';
-import { lang, t } from './i18n.js';
+import { lang, languageOptions, t } from './i18n.js';
 import { closeDialog, dismissToast, showTab, update, useStore } from './store.js';
 import * as actions from './actions.js';
 import { LanguageSelect, Spinner } from './components.js';
 import { Home } from './views/home.js';
 import { Settings } from './views/settings.js';
+import { Wizard } from './views/wizard.js';
 
 function Topbar() {
   const { data } = useStore();
@@ -22,10 +23,7 @@ function Topbar() {
         label=${t('settings.language')}
         value=${lang()}
         onChange=${(value) => actions.set('language', value)}
-        options=${[
-          { value: 'tr', label: t('lang.tr'), flag: 'tr' },
-          { value: 'en', label: t('lang.en'), flag: 'en' },
-        ]}
+        options=${languageOptions()}
       />
       <a class="icon-link" href=${data.links.github} title=${t('link.github')} aria-label=${t('link.github')}>
         <${Icon} name="github" />
@@ -103,6 +101,8 @@ function App() {
     if (data) document.documentElement.lang = lang();
   });
   if (!data) return html`<div class="loading"><${Spinner} size=${20} /></div>`;
+  // İlk açılış: kısa kurulum adımları bitmeden uygulamanın geri kalanı gösterilmez.
+  if (!data.settings.onboarded) return html`<${Wizard} /><${Toasts} />`;
   return html`<div class="app">
     <${Topbar} />
     <${Tabs} />

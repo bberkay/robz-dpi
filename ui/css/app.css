@@ -920,3 +920,131 @@ dialog::backdrop {
     transform: translateY(8px);
   }
 }
+
+/* ==== ilk açılış adımları ======================================================================================== */
+
+.wizard {
+  display: grid;
+  grid-template-rows: var(--titlebar-height) minmax(0, 1fr) auto;
+  height: 100vh;
+}
+.wizard-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border-default);
+  background: var(--bg-inset);
+}
+.wizard-steps {
+  display: flex;
+  gap: 6px;
+}
+.wizard-dot {
+  width: 24px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--bg-neutral-hover);
+}
+.wizard-dot.is-done {
+  background: var(--brand-fg);
+}
+.wizard-body {
+  overflow-y: auto;
+  scrollbar-gutter: stable both-edges;
+}
+.wizard-inner {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 28px 12px 24px;
+}
+.wizard-inner h1 {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+.wizard-lead {
+  margin-top: 8px;
+  color: var(--fg-muted);
+  text-wrap: pretty;
+}
+.wizard-label {
+  margin: 24px 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.wizard-gap {
+  margin-top: 16px;
+}
+.wizard-points {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+}
+.wizard-points li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  text-wrap: pretty;
+}
+.wizard-points .icon {
+  margin-top: 3px;
+  color: var(--success-fg);
+}
+.wizard-points-info .icon {
+  color: var(--fg-muted);
+}
+.wizard-link {
+  margin-top: 16px;
+}
+.wizard-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.wizard-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--border-default);
+  background: var(--bg-inset);
+}
+.wizard-count {
+  font-size: 12px;
+}
+.wizard-actions {
+  display: flex;
+  gap: 8px;
+}
+.choice-center {
+  align-items: center;
+}
+.choice-center .choice-mark {
+  margin-top: 0;
+}
+
+/* Onay kutusu */
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  background: var(--bg-muted);
+  font-weight: 600;
+  cursor: pointer;
+}
+.check input {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 3px 0 0;
+  accent-color: var(--brand-emphasis);
+  cursor: pointer;
+}

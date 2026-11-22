@@ -1,7 +1,7 @@
 // Ayarlar: yöntem, DNS, uygulama davranışı, meraklısı için gelişmiş bölüm ve hakkında.
 import { html, useEffect, useState } from '../../vendor/preact-htm.js';
 import { Icon } from '../icons.js';
-import { list, t } from '../i18n.js';
+import { languageOptions, list, t } from '../i18n.js';
 import { toast, useStore } from '../store.js';
 import * as actions from '../actions.js';
 import { LanguageSelect, NumberField, Toggle } from '../components.js';
@@ -272,11 +272,7 @@ function AppSettings() {
           label=${t('settings.language')}
           value=${settings.language}
           onChange=${(value) => actions.set('language', value)}
-          options=${[
-            { value: 'auto', label: t('settings.language.auto'), flag: 'auto' },
-            { value: 'tr', label: t('lang.tr'), flag: 'tr' },
-            { value: 'en', label: t('lang.en'), flag: 'en' },
-          ]}
+          options=${[{ value: 'auto', label: t('settings.language.auto'), flag: 'auto' }, ...languageOptions()]}
         />
       <//>
       <${Row} title=${t('settings.uninstall')} desc=${t('settings.uninstall.desc')}>
