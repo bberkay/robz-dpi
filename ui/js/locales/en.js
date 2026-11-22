@@ -180,7 +180,6 @@ export default {
     'Experimental, with no warranty. You use it at your own risk and are responsible for following the laws of your country.',
   'link.github': 'GitHub',
   'link.discord': 'Discord',
-  'link.kick': 'Kick',
 
   'error.detail': 'Details: {detail}',
   'error.unknown': 'Something went wrong.',

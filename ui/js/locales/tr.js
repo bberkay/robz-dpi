@@ -180,7 +180,6 @@ export default {
     'Deneyseldir ve hiçbir garanti vermez. Kullanım sorumluluğu ve bulunduğun ülkenin yasalarına uymak sana aittir.',
   'link.github': 'GitHub',
   'link.discord': 'Discord',
-  'link.kick': 'Kick',
 
   'error.detail': 'Ayrıntı: {detail}',
   'error.unknown': 'Bir şeyler ters gitti.',

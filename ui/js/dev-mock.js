@@ -125,7 +125,6 @@ function snapshot() {
     links: {
       github: 'https://github.com/kutsalkiremitci/robz-dpi',
       discord: 'https://discord.gg/UyyEn7SHm4',
-      kick: 'https://kick.com/robzsogood',
     },
     engine: {
       installed: engine.installed,

@@ -21,7 +21,6 @@
   <br>
   <a href="README.en.md"><img src="https://img.shields.io/badge/ENGLISH-21262d?style=for-the-badge&amp;logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSAzMCI%2BCiAgPHJlY3Qgd2lkdGg9IjQ1IiBoZWlnaHQ9IjMwIiBmaWxsPSIjMDEyMTY5Ii8%2BCiAgPHBhdGggZD0iTTAsMCBMNDUsMzAgTTQ1LDAgTDAsMzAiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSI2Ii8%2BCiAgPHBhdGggZD0iTTAsMCBMNDUsMzAgTTQ1LDAgTDAsMzAiIHN0cm9rZT0iI0M4MTAyRSIgc3Ryb2tlLXdpZHRoPSIyLjIiLz4KICA8cGF0aCBkPSJNMjIuNSwwIFYzMCBNMCwxNSBINDUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSI5Ii8%2BCiAgPHBhdGggZD0iTTIyLjUsMCBWMzAgTTAsMTUgSDQ1IiBzdHJva2U9IiNDODEwMkUiIHN0cm9rZS13aWR0aD0iNS40Ii8%2BCjwvc3ZnPgo%3D" alt="English"></a>
   <a href="https://discord.gg/UyyEn7SHm4"><img src="https://img.shields.io/badge/DISCORD-%C3%9CCRETS%C4%B0Z%20DESTEK-5865F2?style=for-the-badge&amp;logo=discord&amp;logoColor=white&amp;labelColor=4752C4" alt="Discord: ücretsiz destek"></a>
-  <a href="https://kick.com/robzsogood"><img src="https://img.shields.io/badge/KICK-CANLI%20YAYINLAR-53FC18?style=for-the-badge&amp;logo=kick&amp;logoColor=53FC18&amp;labelColor=0B0E0F" alt="Kick: canlı yayınlar"></a>
 </p>
 
 <h3 align="center">Tek düğmeyle aç. Yalnız seçtiğin sitelerde çalışsın.</h3>
@@ -394,7 +393,6 @@ Lisans ayrıntıları: [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 - **Kurulumda takıldın mı?** [Discord](https://discord.gg/UyyEn7SHm4) sunucusunda ücretsiz destek var.
 - **Çalışmadı mı, bir fikrin mi var?** [Sorun bildir](https://github.com/kutsalkiremitci/robz-dpi/issues). Servis
   sağlayıcını, denediğin yöntemleri ve motor günlüğünü eklersen çok daha hızlı çözülür.
-- **Yeni sürümler** önce [Kick'teki yayınlarda](https://kick.com/robzsogood) duyurulur.
 - **Beğendiysen** depoya ⭐ vermen projeyi daha çok kişinin bulmasını sağlar.
 
 Katkılar açık: kod, çeviri, yeni bir yöntem ya da bir servis sağlayıcıda neyin çalıştığı bilgisi için pull request

@@ -21,7 +21,6 @@
   <br>
   <a href="README.md"><img src="https://img.shields.io/badge/T%C3%9CRK%C3%87E-21262d?style=for-the-badge" alt="Türkçe"></a>
   <a href="https://discord.gg/UyyEn7SHm4"><img src="https://img.shields.io/badge/DISCORD-FREE%20SUPPORT-5865F2?style=for-the-badge&amp;logo=discord&amp;logoColor=white&amp;labelColor=4752C4" alt="Discord: free support"></a>
-  <a href="https://kick.com/robzsogood"><img src="https://img.shields.io/badge/KICK-LIVE%20STREAMS-53FC18?style=for-the-badge&amp;logo=kick&amp;logoColor=53FC18&amp;labelColor=0B0E0F" alt="Kick: live streams"></a>
 </p>
 
 <h3 align="center">One button to turn it on. It works only on the sites you pick.</h3>
@@ -397,7 +396,6 @@ License details: [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 - **Stuck during setup?** There is free support on the [Discord](https://discord.gg/UyyEn7SHm4) server.
 - **Did it not work, or do you have an idea?** [Open an issue](https://github.com/kutsalkiremitci/robz-dpi/issues).
   Including your provider, the methods you tried and the engine log makes it much faster to solve.
-- **New versions** are announced first on the [Kick streams](https://kick.com/robzsogood).
 - **If you like it,** starring the repository helps more people find the project.
 
 Contributions are welcome: send a pull request for code, translations, a new method, or what works on a given

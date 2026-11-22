@@ -297,7 +297,6 @@ function About() {
         <ul class="about-links">
           <li><a href=${links.github}><${Icon} name="github" />${t('link.github')}</a></li>
           <li><a href=${links.discord}><${Icon} name="chat" />${t('link.discord')}</a></li>
-          <li><a href=${links.kick}><${Icon} name="live" />${t('link.kick')}</a></li>
         </ul>
       </div>
     </div>
