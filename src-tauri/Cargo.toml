@@ -1,0 +1,51 @@
+[package]
+name = "robz-dpi"
+version = "0.1.0"
+description = "Discord, Roblox ve seçtiğin siteler için basit, açık kaynak DPI aşma aracı."
+authors = ["Robz DPI katkıda bulunanları"]
+license = "MIT"
+repository = "https://github.com/kutsalkiremitci/robz-dpi"
+edition = "2021"
+rust-version = "1.85"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+sha2 = "0.10"
+hex = "0.4"
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon"] }
+tauri-plugin-single-instance = "2"
+tauri-plugin-autostart = "2"
+tauri-plugin-opener = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# native-tls: Windows'un kendi TLS'i (SChannel) ve sertifika deposu; ikili dosya daha küçük.
+reqwest = { version = "0.12", default-features = false, features = ["native-tls"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time"] }
+sha2 = "0.10"
+hex = "0.4"
+idna = "1"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61", features = [
+  "Win32_Foundation",
+  "Win32_Globalization",
+  "Win32_Security",
+  "Win32_Security_Authorization",
+  "Win32_Storage_FileSystem",
+  "Win32_System_Com",
+  "Win32_System_Diagnostics_ToolHelp",
+  "Win32_System_Registry",
+  "Win32_System_Services",
+  "Win32_System_Threading",
+  "Win32_UI_Shell",
+  "Win32_UI_WindowsAndMessaging",
+] }
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+panic = "abort"
+strip = true

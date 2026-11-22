@@ -1,0 +1,26 @@
+{
+  "name": "robz-dpi",
+  "productName": "Robz DPI",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Discord, Roblox ve seçtiğin siteler için basit, açık kaynak DPI aşma aracı.",
+  "license": "MIT",
+  "homepage": "https://github.com/kutsalkiremitci/robz-dpi",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kutsalkiremitci/robz-dpi.git"
+  },
+  "scripts": {
+    "postinstall": "node scripts/vendor.js && node scripts/fetch-engine.mjs --optional",
+    "engine": "node scripts/fetch-engine.mjs",
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "test": "node --test \"test/*.test.mjs\" && cargo test --manifest-path src-tauri/Cargo.toml",
+    "icons": "tauri icon assets/logo.svg -o src-tauri/icons"
+  },
+  "devDependencies": {
+    "@fontsource-variable/mona-sans": "^5.3.0",
+    "@tauri-apps/cli": "^2.12.6",
+    "htm": "^3.1.1"
+  }
+}

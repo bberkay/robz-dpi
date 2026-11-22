@@ -1,0 +1,11 @@
+node_modules/
+ui/vendor/
+src-tauri/target/
+src-tauri/gen/
+# Motor dosyaları depoya girmez: `npm run engine` resmi sürümden indirir ve SHA-256 ile doğrular (engine.lock.json).
+src-tauri/engine/
+*.log
+.DS_Store
+Thumbs.db
+/RobzDPI-Setup-*.exe
+.claude/
