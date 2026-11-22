@@ -110,8 +110,17 @@ fn install_engine(dir: &Path) -> DpiResult<()> {
         if std::fs::read(&target).is_ok_and(|current| current == bytes) {
             return Ok(());
         }
-        // Yazılamıyorsa dosya kullanımdadır (sürücü yüklü ya da motor hâlâ kapanıyor).
-        std::fs::write(&target, bytes).map_err(|error| DpiError::with("engine-busy", format!("{name}: {error}")))
+        // Yazılamıyorsa dosya kullanımdadır. Motor "durdu" dedikten sonra süreci birkaç yüz milisaniye daha
+        // yaşayabilir: kısa aralıklarla yeniden dene. Hâlâ yazılamıyorsa sürücü bu dosyadan yüklüdür.
+        let mut last = None;
+        for _ in 0..15 {
+            match std::fs::write(&target, bytes) {
+                Ok(()) => return Ok(()),
+                Err(error) => last = Some(error),
+            }
+            std::thread::sleep(Duration::from_millis(200));
+        }
+        Err(DpiError::with("engine-busy", format!("{name}: {}", last.map(|e| e.to_string()).unwrap_or_default())))
     };
 
     let source = source_dir().ok_or_else(|| DpiError::new("engine-missing"))?;

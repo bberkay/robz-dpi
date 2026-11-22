@@ -140,7 +140,7 @@ impl Engine {
         }
         let Some(p) = packet::parse(packet) else { return Verdict::Pass };
         match (p.proto, outbound) {
-            (TCP, true) if p.payload_len() > 0 => self.outbound_tcp(packet, &p),
+            (TCP, true) if p.payload_len() > 0 => self.outbound_tcp(packet, &p, now),
             (TCP, false) => {
                 self.inbound_tcp(&p, now);
                 Verdict::Pass
@@ -153,6 +153,15 @@ impl Engine {
 
     fn targets(&self, host: &str) -> bool {
         self.hosts.as_ref().is_none_or(|hosts| hosts.matches(host))
+    }
+
+    /// Bir hedefe ait olduğu anlaşılan adresi hatırlar: DNS yanıtından ya da alan adı görünen bir bağlantıdan.
+    /// Yalnız seçili siteler kipinde gerekir; "bütün siteler"de her bağlantı zaten işlenir.
+    fn learn(&mut self, address: IpAddr, now: Instant) {
+        if self.hosts.is_some() && (self.known.len() < MAX_ENTRIES || self.known.contains_key(&address)) {
+            self.known.insert(address, now + KNOWN_LIFETIME);
+            self.stats.known = self.known.len();
+        }
     }
 
     fn note(&mut self, host: String) {
@@ -171,7 +180,7 @@ impl Engine {
         }
     }
 
-    fn outbound_tcp(&mut self, packet: &[u8], p: &Parsed) -> Verdict {
+    fn outbound_tcp(&mut self, packet: &[u8], p: &Parsed, now: Instant) -> Verdict {
         let payload = &packet[p.payload..p.end];
 
         if p.dst_port == 80 {
@@ -181,6 +190,7 @@ impl Engine {
             }
             self.stats.http += 1;
             self.note(host);
+            self.learn(p.dst, now);
             return self.treat(packet, p, None, true);
         }
 
@@ -192,6 +202,8 @@ impl Engine {
                 }
                 self.stats.tls += 1;
                 self.note(host);
+                // Bu adres bir hedefe ait: aynı adrese giden, alan adı görünmeyen bağlantılar da tanınsın.
+                self.learn(p.dst, now);
                 self.treat(packet, p, Some(offset), false)
             }
             // Alan adı görünmüyor. "Bütün siteler" kipinde zaten her bağlantıya uygulanır; seçili sitelerde
@@ -323,15 +335,12 @@ impl Engine {
         let payload = &packet[p.payload..p.end];
 
         // Hedef bir alan adının yanıtıysa adreslerini öğren.
-        if let (Some(hosts), Some((name, addresses))) = (&self.hosts, dnsmsg::answers(payload)) {
-            if hosts.matches(&name) {
-                for address in addresses {
-                    if self.known.len() < MAX_ENTRIES || self.known.contains_key(&address) {
-                        self.known.insert(address, now + KNOWN_LIFETIME);
-                    }
-                }
-                self.stats.known = self.known.len();
-            }
+        let learned = match (&self.hosts, dnsmsg::answers(payload)) {
+            (Some(hosts), Some((name, addresses))) if hosts.matches(&name) => addresses,
+            _ => Vec::new(),
+        };
+        for address in learned {
+            self.learn(address, now);
         }
 
         // Yönlendirdiğimiz sorgunun yanıtı: uygulamanın sorduğu sunucudan gelmiş gibi geri çevir.
@@ -424,6 +433,10 @@ mod tests {
             Verdict::Send(packets) => packets,
             other => panic!("gönderim bekleniyordu: {other:?}"),
         }
+    }
+
+    fn sent_none(verdict: Verdict) {
+        assert_eq!(verdict, Verdict::Pass);
     }
 
     fn payload_of(packet: &[u8]) -> &[u8] {
@@ -600,6 +613,17 @@ mod tests {
         assert_eq!(sent(engine.handle(&packet, true, now)).len(), 3);
         // Başka bir adrese giden gizli ClientHello'ya yine dokunulmaz.
         assert_eq!(engine.handle(&client_hello_to(OTHER, first_segment), true, now), Verdict::Pass);
+
+        // Alan adı görünen bir bağlantı da adresi öğretir (DNS yanıtını göremediğimiz durumlar için:
+        // uygulamanın kendi DNS önbelleği, tarayıcıdaki güvenli DNS).
+        let (mut fresh, _) = start("m1", Some(&["discord.com"]));
+        assert_eq!(fresh.handle(&packet, true, now), Verdict::Pass);
+        sent(fresh.handle(&client_hello_to(DISCORD, &real), true, now));
+        assert_eq!(fresh.stats.known, 1);
+        assert_eq!(sent(fresh.handle(&packet, true, now)).len(), 3);
+        // Hedef olmayan sitenin görünen alan adı adres öğretmez.
+        sent_none(fresh.handle(&client_hello_to(OTHER, &hello("example.org")), true, now));
+        assert_eq!(fresh.stats.known, 1);
 
         // Hedef olmayan bir alan adının yanıtı adres öğretmez.
         let unrelated = udp(ROUTER, CLIENT, 53, 61001, &dns::response(2, "example.org", &[OTHER]));
