@@ -41,9 +41,14 @@
 ```
 
 > [!WARNING]
-> **Deneyseldir.** Robz DPI yeni bir projedir ve motoru her servis sağlayıcıda denenmemiştir. Sende çalışmazsa
+> **Eğitim ve test amaçlıdır; deneyseldir.** Robz DPI, ağ protokollerinin ve DPI sistemlerinin nasıl çalıştığını
+> öğrenmek, incelemek ve kendi ağında denemek için yazılmış açık kaynak bir projedir. Hiçbir garanti vermez;
+> kullanımından doğan her sonuç ve bulunduğun yerin yasalarına uymak sana aittir. Kullanmadan önce
+> **[sorumluluk reddini](DISCLAIMER.md)** oku.
+>
+> Motoru her servis sağlayıcıda denenmedi. Sende çalışmazsa
 > [sorun bildir](https://github.com/kutsalkiremitci/robz-dpi/issues): hangi yöntemin hangi bağlantıda çalıştığını
-> öğrenmenin tek yolu budur. Kullanım sorumluluğu ve bulunduğun ülkenin yasalarına uymak sana aittir.
+> öğrenmenin tek yolu budur.
 
 ## İçindekiler
 
@@ -58,6 +63,7 @@
 - [Geliştirme](#geliştirme)
 - [Teşekkür](#teşekkür)
 - [Destek ve katkı](#destek-ve-katkı)
+- [Sorumluluk reddi](#sorumluluk-reddi)
 
 ## Neler yapar
 
@@ -333,8 +339,10 @@ sistemlerde paketleri yakalayan katmandır. macOS sıradaki hedeftir.
 <details>
 <summary><b>Yasal mı?</b></summary>
 
-Robz DPI bir ağ aracıdır; nasıl ve nerede kullanıldığı kullanıcının sorumluluğundadır. Bulunduğun ülkenin
-yasalarını bilmek ve onlara uymak sana aittir. Bu depo hukuki tavsiye vermez.
+Bu, bulunduğun ülkeye ve yazılımı ne için kullandığına bağlıdır; bu depo hukuki tavsiye vermez. Robz DPI eğitim ve
+test amaçlı bir ağ aracıdır: nasıl ve nerede kullanıldığı kullanıcının sorumluluğundadır. Bulunduğun yerin
+yasalarını, mahkeme ve idari makam kararlarını bilmek ve onlara uymak sana aittir. Emin değilsen kullanma ve bir
+hukukçuya danış. Ayrıntılar: [sorumluluk reddi](DISCLAIMER.md).
 
 </details>
 
@@ -398,11 +406,28 @@ Lisans ayrıntıları: [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 Katkılar açık: kod, çeviri, yeni bir yöntem ya da bir servis sağlayıcıda neyin çalıştığı bilgisi için pull request
 gönderebilirsin.
 
+## Sorumluluk reddi
+
+Tam metin: **[DISCLAIMER.md](DISCLAIMER.md)** (Türkçe, İngilizce, Rusça). Robz DPI'ı indirmek, kurmak ya da kullanmak
+o metni kabul ettiğin anlamına gelir; uygulama ilk açılışta da onayını ister. Özeti:
+
+- **Eğitim, araştırma ve test amaçlıdır.** Ağ protokollerinin ve DPI sistemlerinin nasıl çalıştığını öğrenmek ve
+  kendi ağında denemek için yazılmıştır. Ticari bir ürün ya da hizmet değildir.
+- **Hiçbir garanti vermez.** Olduğu gibi sunulur; çalışacağı, bir siteye erişim sağlayacağı ya da zarar vermeyeceği
+  garanti edilmez.
+- **Sorumluluk kullanıcıdadır.** Kullanımından doğan hukuki, idari, cezai, mali ve teknik bütün sonuçlar kullanıcıya
+  aittir. Bulunduğun yerin yasalarına, mahkeme ve idari makam kararlarına aykırı biçimde kullanma.
+- **Kimseyi teşvik etmez.** Proje sahibi ve katkıda bulunanlar hiç kimseyi yasaları, erişim kısıtlamalarını ya da
+  üçüncü taraf hizmetlerin kullanım koşullarını ihlal etmeye yönlendirmez. Yazılım bir "yasaklı siteler" listesi
+  içermez; hangi alan adlarına uygulanacağını kullanıcı belirler.
+- **Bir hizmet değildir.** VPN, vekil sunucu ya da erişim hizmeti değildir; trafik projeye ait hiçbir sunucudan
+  geçmez, hiçbir içerik barındırılmaz. IP adresini gizlemez, anonimlik ya da güvenlik sağlamaz.
+- **Teknik riskleri vardır.** Yönetici yetkili bir servis ve çekirdek sürücüsü kullanır; bağlantı kesintisi, başka
+  yazılımlarla çakışma ve oyunların hile koruma sistemleriyle sorun yaşanabilir.
+- **Üçüncü taraflarla bağı yoktur.** Discord ve Roblox kendi sahiplerinin markalarıdır; bu proje onlarla bağlantılı
+  değildir ve onlar tarafından onaylanmamıştır.
+
 ## Lisans
 
 [MIT](LICENSE). WinDivert kendi lisansıyla (LGPL-3.0 ya da GPL-2.0) dağıtılır; yöntemlerin kaynağı GoodbyeDPI
 Apache-2.0 lisanslıdır. Ayrıntılar: [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
-
-Robz DPI olduğu gibi, hiçbir garanti verilmeden sunulur. Kullanımından doğan sonuçlar ve bulunduğun ülkenin
-yasalarına uymak kullanıcıya aittir. Discord ve Roblox kendi sahiplerinin markalarıdır; bu proje onlarla bağlantılı
-değildir.

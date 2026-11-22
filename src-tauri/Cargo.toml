@@ -1,7 +1,7 @@
 [package]
 name = "robz-dpi"
 version = "0.1.0"
-description = "Discord, Roblox ve seçtiğin siteler için basit, açık kaynak DPI aşma aracı."
+description = "Eğitim ve test amaçlı, açık kaynak DPI aracı: yalnız seçtiğin sitelerde çalışır, motoru Rust ile yazıldı."
 authors = ["Robz DPI katkıda bulunanları"]
 license = "MIT"
 repository = "https://github.com/kutsalkiremitci/robz-dpi"

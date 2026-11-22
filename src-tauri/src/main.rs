@@ -1,4 +1,4 @@
-//! Robz DPI — Discord, Roblox ve seçtiğin siteler için basit, açık kaynak DPI aşma aracı.
+//! Robz DPI — eğitim ve test amaçlı, açık kaynak DPI aracı: yalnız seçilen sitelerde çalışır.
 //!
 //! Arayüz (ui/) WebView2'de çalışır ve bu süreçle tek bir komutla konuşur: dpi_call(method, args).
 //! Aynı exe `--helper …` ile çağrılırsa pencere açmaz: yönetici yardımcısı olarak çalışır (engine/helper.rs).

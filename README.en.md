@@ -41,10 +41,14 @@
 ```
 
 > [!WARNING]
-> **Experimental.** Robz DPI is a new project and its engine has not been tried on every internet provider. If it
-> does not work for you, [open an issue](https://github.com/kutsalkiremitci/robz-dpi/issues): that is the only way
-> to learn which method works on which connection. You use it at your own risk and are responsible for following
-> the laws of your country.
+> **For education and testing; experimental.** Robz DPI is an open source project written to learn and study how
+> network protocols and DPI systems work, and to try this on your own network. It comes with no warranty; every
+> consequence of using it, and following the laws where you are, is your responsibility. Read the
+> **[disclaimer](DISCLAIMER.md#english)** before using it.
+>
+> Its engine has not been tried on every internet provider. If it does not work for you,
+> [open an issue](https://github.com/kutsalkiremitci/robz-dpi/issues): that is the only way to learn which method
+> works on which connection.
 
 ## Contents
 
@@ -59,6 +63,7 @@
 - [Development](#development)
 - [Thanks](#thanks)
 - [Support and contributing](#support-and-contributing)
+- [Disclaimer](#disclaimer)
 
 ## What it does
 
@@ -336,8 +341,10 @@ is the layer that captures packets on those systems. macOS is the next target.
 <details>
 <summary><b>Is it legal?</b></summary>
 
-Robz DPI is a network tool; how and where it is used is the user's responsibility. Knowing and following the laws of
-your country is up to you. This repository does not give legal advice.
+That depends on where you are and what you use the software for; this repository does not give legal advice. Robz
+DPI is a network tool for education and testing: how and where it is used is the user's responsibility. Knowing and
+following the laws and the court and administrative decisions where you are is up to you. If in doubt, do not use it
+and consult a lawyer. Details: [disclaimer](DISCLAIMER.md#english).
 
 </details>
 
@@ -401,11 +408,30 @@ License details: [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 Contributions are welcome: send a pull request for code, translations, a new method, or what works on a given
 provider.
 
+## Disclaimer
+
+Full text: **[DISCLAIMER.md](DISCLAIMER.md#english)** (Turkish, English, Russian). Downloading, installing or using
+Robz DPI means you accept that text; the app also asks for your acceptance the first time it opens. In short:
+
+- **For education, research and testing.** It was written to learn how network protocols and DPI systems work and to
+  try this on your own network. It is not a commercial product or service.
+- **No warranty.** It is provided as is; there is no guarantee that it works, gives access to any site, or does no
+  harm.
+- **The user is responsible.** All legal, administrative, criminal, financial and technical consequences of using it
+  belong to the user. Do not use it in a way that violates the laws or the court and administrative decisions where
+  you are.
+- **It encourages no one.** The project owner and contributors do not direct anyone to violate laws, access
+  restrictions or the terms of service of third-party services. The software contains no list of "blocked sites";
+  the user decides which domain names it applies to.
+- **It is not a service.** It is not a VPN, proxy or access service; traffic does not pass through any server
+  belonging to the project and no content is hosted. It does not hide your IP address or provide anonymity or
+  security.
+- **It has technical risks.** It uses a service with administrator privileges and a kernel driver; connection
+  interruptions, conflicts with other software and trouble with the anti-cheat systems of games are possible.
+- **No affiliation with third parties.** Discord and Roblox are trademarks of their owners; this project is not
+  affiliated with or endorsed by them.
+
 ## License
 
 [MIT](LICENSE). WinDivert is distributed under its own license (LGPL-3.0 or GPL-2.0); GoodbyeDPI, the source of the
 techniques, is licensed under Apache-2.0. Details: [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
-
-Robz DPI is provided as is, with no warranty. The consequences of using it and following the laws of your country
-are the user's responsibility. Discord and Roblox are trademarks of their owners; this project is not affiliated
-with them.

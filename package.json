@@ -3,7 +3,7 @@
   "productName": "Robz DPI",
   "version": "0.1.0",
   "private": true,
-  "description": "Discord, Roblox ve seçtiğin siteler için basit, açık kaynak DPI aşma aracı.",
+  "description": "Eğitim ve test amaçlı, açık kaynak DPI aracı: yalnız seçtiğin sitelerde çalışır, motoru Rust ile yazıldı.",
   "license": "MIT",
   "homepage": "https://github.com/kutsalkiremitci/robz-dpi",
   "repository": {

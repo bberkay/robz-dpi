@@ -16,8 +16,11 @@ use std::sync::{Arc, Mutex, MutexGuard};
 use tauri::{AppHandle, Emitter};
 
 /// Arayüzün "Hakkında" bölümündeki bağlantılar.
-const LINKS: [(&str, &str); 2] =
-    [("github", "https://github.com/kutsalkiremitci/robz-dpi"), ("discord", "https://discord.gg/UyyEn7SHm4")];
+const LINKS: [(&str, &str); 3] = [
+    ("github", "https://github.com/kutsalkiremitci/robz-dpi"),
+    ("discord", "https://discord.gg/UyyEn7SHm4"),
+    ("disclaimer", "https://github.com/kutsalkiremitci/robz-dpi/blob/main/DISCLAIMER.md"),
+];
 
 /// Test edilecek en fazla özel site sayısı.
 const MAX_PROBED_DOMAINS: usize = 6;

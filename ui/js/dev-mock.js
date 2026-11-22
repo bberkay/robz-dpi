@@ -125,6 +125,7 @@ function snapshot() {
     links: {
       github: 'https://github.com/kutsalkiremitci/robz-dpi',
       discord: 'https://discord.gg/UyyEn7SHm4',
+      disclaimer: 'https://github.com/kutsalkiremitci/robz-dpi/blob/main/DISCLAIMER.md',
     },
     engine: {
       installed: engine.installed,

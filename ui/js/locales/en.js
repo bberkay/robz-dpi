@@ -177,9 +177,10 @@ export default {
   'settings.about.body':
     'Robz DPI is open source and free; it collects no data. The engine is its own code (Rust); the techniques come from GoodbyeDPI by ValdikSS, and the driver that captures packets is WinDivert by basil00.',
   'settings.about.disclaimer':
-    'Experimental, with no warranty. You use it at your own risk and are responsible for following the laws of your country.',
+    'For education and testing; experimental, with no warranty. Every consequence of using it, and following the laws where you are, is your responsibility.',
   'link.github': 'GitHub',
   'link.discord': 'Discord',
+  'link.disclaimer': 'Disclaimer',
 
   'error.detail': 'Details: {detail}',
   'error.unknown': 'Something went wrong.',

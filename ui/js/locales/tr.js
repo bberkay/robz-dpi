@@ -177,9 +177,10 @@ export default {
   'settings.about.body':
     "Robz DPI açık kaynak ve ücretsizdir; veri toplamaz. Motoru kendi kodudur (Rust); yöntemler ValdikSS'in GoodbyeDPI'ından, paketleri yakalayan sürücü basil00'ın WinDivert'idir.",
   'settings.about.disclaimer':
-    'Deneyseldir ve hiçbir garanti vermez. Kullanım sorumluluğu ve bulunduğun ülkenin yasalarına uymak sana aittir.',
+    'Eğitim ve test amaçlıdır; deneyseldir ve hiçbir garanti vermez. Kullanımından doğan her sonuç ve bulunduğun yerin yasalarına uymak sana aittir.',
   'link.github': 'GitHub',
   'link.discord': 'Discord',
+  'link.disclaimer': 'Sorumluluk reddi',
 
   'error.detail': 'Ayrıntı: {detail}',
   'error.unknown': 'Bir şeyler ters gitti.',
