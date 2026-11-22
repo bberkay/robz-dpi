@@ -56,12 +56,12 @@
 
   --done-fg: #ab7df8;
 
-  /* Robz ailesinin rengi: logodaki turuncu. Ana düğmeler ve seçili sekme çizgisi bu renktedir; yeşil yalnız
-     anlam taşıdığı yerlerde (motor açık, bağlantı açılıyor) kalır. */
-  --brand-fg: #fb8f44;
-  --brand-emphasis: #bd561d;
-  --brand-hover: #c9611f;
-  --brand-active: #d06a26;
+  /* Robz DPI'ın rengi: logodaki mor (GitHub'ın "done" moru). Ana düğmeler ve seçili sekme çizgisi bu renktedir;
+     yeşil yalnız anlam taşıdığı yerlerde (motor açık, bağlantı açılıyor) kalır. */
+  --brand-fg: #ab7df8;
+  --brand-emphasis: #8957e5;
+  --brand-hover: #9364e8;
+  --brand-active: #9d70ec;
   --tab-underline: var(--brand-fg);
 
   --diff-del-bg: rgba(248, 81, 73, 0.15);
