@@ -86,7 +86,7 @@ sağlamaz ve bir "engelli siteler" listesi içermez; hangi alan adlarında çal�
   </tr>
   <tr>
     <td valign="top"><b>Bütün siteler kipi</b><br>
-      İsterseniz liste tutmadan her bağlantıya uygulanır (GoodbyeDPI'ın varsayılan davranışı).</td>
+      İsterseniz liste tutmadan her bağlantıya uygulanır.</td>
     <td valign="top"><b>Dört hazır yöntem</b><br>
       Servis sağlayıcılar farklı yöntemler kullanır. Biri sonuç vermezse sıradakini seçebilir, bağlantı testiyle
       sonucu hemen görebilirsiniz.</td>

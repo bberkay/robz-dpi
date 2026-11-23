@@ -86,7 +86,7 @@ security, and contains no list of "blocked sites"; the user decides which domain
   </tr>
   <tr>
     <td valign="top"><b>All sites mode</b><br>
-      Optionally applies to every connection without a list (the default behavior of GoodbyeDPI).</td>
+      Optionally applies to every connection without a list.</td>
     <td valign="top"><b>Four ready-made methods</b><br>
       Providers work in different ways. If one method gives no result, pick the next; the connection test shows the
       outcome right away.</td>

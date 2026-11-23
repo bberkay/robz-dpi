@@ -10,21 +10,20 @@
 //!   EXIT_NO_DLL            WinDivert.dll yüklenemedi
 //!   diğer                  WinDivert'in verdiği Windows hata kodu (5 yetki yok, 577 imza, 1275 engellendi …)
 
+use super::common::{describe, seed, Log, StatsFile, EXIT_BAD_CONFIG, EXIT_BAD_FILTER, EXIT_NO_DLL};
 use super::divert::{Divert, Filter};
 use super::filter;
-use super::logic::{Engine, Stats, Verdict};
+use super::logic::{Engine, Verdict};
 use super::scm::wide;
 use super::windows::SERVICE_NAME;
 use crate::plan::EngineRequest;
-use serde_json::json;
 use std::ffi::c_void;
 use std::fs;
-use std::io::Write;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::ptr::null_mut;
 use std::sync::atomic::{AtomicBool, AtomicPtr, Ordering};
 use std::sync::OnceLock;
-use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
+use std::time::Instant;
 use windows_sys::Win32::Foundation::{ERROR_CALL_NOT_IMPLEMENTED, ERROR_SERVICE_SPECIFIC_ERROR};
 use windows_sys::Win32::System::LibraryLoader::{GetProcAddress, LoadLibraryExW, LOAD_LIBRARY_SEARCH_SYSTEM32};
 use windows_sys::Win32::System::Services::{
@@ -32,17 +31,9 @@ use windows_sys::Win32::System::Services::{
     SERVICE_CONTROL_INTERROGATE, SERVICE_CONTROL_SHUTDOWN, SERVICE_CONTROL_STOP, SERVICE_RUNNING, SERVICE_START_PENDING,
     SERVICE_STATUS, SERVICE_STOPPED, SERVICE_STOP_PENDING, SERVICE_TABLE_ENTRYW, SERVICE_WIN32_OWN_PROCESS,
 };
-use windows_sys::Win32::System::SystemInformation::GetLocalTime;
-
-pub const EXIT_BAD_CONFIG: u32 = 9001;
-pub const EXIT_NO_DLL: u32 = 9002;
-/// Süzgeç derlenemedi (programlama hatası; nedeni günlükte yazar).
-pub const EXIT_BAD_FILTER: u32 = 9003;
 
 /// En büyük IP paketi (ağ kartına bölme devredildiğinde sürücü böyle büyük paketler verebilir).
 const BUFFER: usize = 40 + 0xffff;
-const LOG_LIMIT: u64 = 512 * 1024;
-const STATS_EVERY: Duration = Duration::from_secs(2);
 
 static STOP: AtomicBool = AtomicBool::new(false);
 static STATUS: AtomicPtr<c_void> = AtomicPtr::new(null_mut());
@@ -147,21 +138,10 @@ fn run() -> Result<(), u32> {
     // yeniden sorulup öğrenilsin.
     flush_dns_cache();
     report(SERVICE_RUNNING, 0);
-    log.line(&format!(
-        "çalışıyor: {}, DNS {}",
-        match &request.domains {
-            Some(domains) => format!("{} alan adı", domains.len()),
-            None => "bütün siteler".to_string(),
-        },
-        match &request.dns {
-            Some(dns) => format!("{}:{}{}", dns.v4, dns.port, if dns.all { " (bütün sorgular)" } else { " (yalnız hedefler)" }),
-            None => "değiştirilmiyor".to_string(),
-        }
-    ));
+    log.line(&describe(&request));
 
     let started = Instant::now();
-    let seed = SystemTime::now().duration_since(UNIX_EPOCH).map(|d| d.as_nanos() as u64).unwrap_or(1) ^ u64::from(std::process::id());
-    let mut engine = Engine::new(&request, seed, started);
+    let mut engine = Engine::new(&request, seed(), started);
     let mut stats = StatsFile::new(&dir);
     stats.write(&engine.stats);
     let mut buffer = vec![0u8; BUFFER];
@@ -210,72 +190,6 @@ fn flush_dns_cache() {
         }
         if let Some(flush) = GetProcAddress(module, c"DnsFlushResolverCache".as_ptr().cast()) {
             flush();
-        }
-    }
-}
-
-// ---- günlük ve sayaç dosyaları --------------------------------------------------------------------------------------
-
-struct Log {
-    path: PathBuf,
-}
-
-impl Log {
-    fn open(dir: &Path) -> Self {
-        let path = dir.join("engine.log");
-        // Büyüdüyse eskisini bir kez sakla, yenisine başla.
-        if fs::metadata(&path).is_ok_and(|meta| meta.len() > LOG_LIMIT) {
-            let _ = fs::rename(&path, dir.join("engine.old.log"));
-        }
-        Self { path }
-    }
-
-    fn line(&mut self, text: &str) {
-        // SAFETY: time düz veridir.
-        let time = unsafe {
-            let mut time = std::mem::zeroed();
-            GetLocalTime(&mut time);
-            time
-        };
-        if let Ok(mut file) = fs::OpenOptions::new().create(true).append(true).open(&self.path) {
-            let _ = writeln!(
-                file,
-                "{:04}-{:02}-{:02} {:02}:{:02}:{:02}  {text}",
-                time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond
-            );
-        }
-    }
-}
-
-struct StatsFile {
-    path: PathBuf,
-    since: u64,
-    written: Stats,
-    at: Instant,
-}
-
-impl StatsFile {
-    fn new(dir: &Path) -> Self {
-        Self {
-            path: dir.join("stats.json"),
-            since: SystemTime::now().duration_since(UNIX_EPOCH).map(|d| d.as_secs()).unwrap_or(0),
-            written: Stats::default(),
-            at: Instant::now(),
-        }
-    }
-
-    fn write(&mut self, stats: &Stats) {
-        let mut value = json!(stats);
-        value["since"] = json!(self.since);
-        let _ = fs::write(&self.path, value.to_string());
-        self.written = stats.clone();
-        self.at = Instant::now();
-    }
-
-    /// Sayaçlar değiştiyse ve son yazımın üstünden biraz geçtiyse dosyayı yeniler.
-    fn maybe_write(&mut self, stats: &Stats) {
-        if self.at.elapsed() >= STATS_EVERY && *stats != self.written {
-            self.write(stats);
         }
     }
 }

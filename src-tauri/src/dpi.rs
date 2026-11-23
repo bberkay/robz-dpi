@@ -115,6 +115,8 @@ impl Dpi {
             "version": env!("CARGO_PKG_VERSION"),
             "packaged": !cfg!(debug_assertions),
             "systemLanguage": self.system_language,
+            // "windows" | "linux" | "macos": arayüz sisteme göre değişen metinleri buna göre seçer.
+            "platform": std::env::consts::OS,
             "supported": engine::SUPPORTED,
             "engineReady": engine::available(),
             "settings": inner.settings.public(),

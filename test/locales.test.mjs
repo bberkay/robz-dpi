@@ -68,14 +68,14 @@ test('çalışma anında kurulan anahtarlar sözlükte var', () => {
     ...['m1', 'm2', 'm3', 'm4'].map((id) => `method.${id}`),
     ...['nothing-selected', 'bad-dns', 'empty-strategy', 'bad-strategy'].map((code) => `problem.${code}`),
     ...['home', 'settings'].map((tab) => `tab.${tab}`),
-    // Motorun çıkış kodları: WinDivert'in bilinen hataları ve engine/service.rs'teki EXIT_* sabitleri.
-    ...[2, 5, 577, 654, 1275, 1753, 9001, 9002, 9003].map((code) => `engineCode.${code}`),
+    // Motorun çıkış kodları: WinDivert'in bilinen hataları ve engine/common.rs'teki EXIT_* sabitleri.
+    ...[2, 5, 577, 654, 1275, 1753, 9001, 9002, 9003, 9004, 9005].map((code) => `engineCode.${code}`),
   ];
   assert.deepEqual(dynamic.filter((key) => !(key in tr)), []);
 });
 
 test('motorun çıkış kodlarının metni var', () => {
-  const service = readFileSync(fileURLToPath(new URL('../src-tauri/src/engine/service.rs', import.meta.url)), 'utf8');
+  const service = readFileSync(fileURLToPath(new URL('../src-tauri/src/engine/common.rs', import.meta.url)), 'utf8');
   const codes = [...service.matchAll(/pub const EXIT_[A-Z_]+: u32 = ([0-9]+);/g)].map((m) => m[1]);
   assert.ok(codes.length >= 3, `yalnız ${codes.length} sabit bulundu`);
   assert.deepEqual(codes.filter((code) => !(`engineCode.${code}` in tr)), []);
@@ -95,4 +95,12 @@ test('Rust kodundaki hata kodlarının metni var', () => {
   codes.delete('cancelled'); // yönetici onayı reddedildi: hata olarak gösterilmez
   assert.ok(codes.size > 10, `yalnız ${codes.size} kod bulundu`);
   assert.deepEqual([...codes].filter((code) => !(`error.${code}` in tr)).sort(), []);
+});
+
+// Linux'ta farklı olan metinler "anahtar@linux" ile verilir; her birinin sisteme bağlı olmayan bir karşılığı olmalı.
+test('sisteme özel metinlerin asıl anahtarı var', () => {
+  const variants = Object.keys(tr).filter((key) => key.includes('@'));
+  assert.ok(variants.length > 5, `yalnız ${variants.length} sisteme özel metin bulundu`);
+  assert.deepEqual(variants.filter((key) => !(key.split('@')[0] in tr)), []);
+  assert.deepEqual(variants.filter((key) => !/@linux$/.test(key)), []);
 });

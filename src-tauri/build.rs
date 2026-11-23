@@ -11,11 +11,15 @@ const ENGINE_FILES: [(&str, &str); 2] = [("WinDivert.dll", "ROBZDPI_SHA_DLL"), (
 fn main() {
     println!("cargo:rerun-if-changed=engine");
     let engine = Path::new(env!("CARGO_MANIFEST_DIR")).join("engine");
+    // WinDivert yalnız Windows'ta kullanılır; Linux çekirdeğin kendi paket kuyruğunu kullanır.
+    let windows = std::env::var("CARGO_CFG_TARGET_OS").is_ok_and(|os| os == "windows");
     for (name, variable) in ENGINE_FILES {
         let digest = match std::fs::read(engine.join(name)) {
             Ok(bytes) => hex::encode(Sha256::digest(&bytes)),
             Err(_) => {
-                println!("cargo:warning=WinDivert dosyası yok: engine/{name} (önce `npm run engine`)");
+                if windows {
+                    println!("cargo:warning=WinDivert dosyası yok: engine/{name} (önce `npm run engine`)");
+                }
                 String::new()
             }
         };

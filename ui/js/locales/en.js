@@ -32,7 +32,7 @@ export default {
   'scope.all': 'All sites',
   'scope.selected.desc': 'Applies only to the apps you turn on and the sites you add. Other sites are left alone.',
   'scope.all.desc':
-    'Applies to every site, like GoodbyeDPI Turkey. Some sites may stop loading; if that happens, switch back to "Only what I pick".',
+    'Applies to every connection, without a list. Some sites may stop loading; if that happens, switch back to "Only what I pick".',
   'scope.sites': '{n} sites',
   'service.domains': '{n} addresses',
 
@@ -55,7 +55,7 @@ export default {
   'test.adviceOff': 'Robz DPI is off. Turn it on and test again.',
   'test.openSettings': 'Open settings',
 
-  'notice.unsupported': 'Robz DPI works only on Windows for now.',
+  'notice.unsupported': 'Robz DPI works only on Windows and Linux for now.',
   'notice.pending': 'You changed the settings. They take effect once applied.',
   'notice.conflict': '{name} is running right now. Two DPI tools running together break connections.',
   'notice.conflict.fix': 'Stop it',
@@ -225,7 +225,7 @@ export default {
   'error.onboarding-required': 'Finish the first-run steps first.',
   'error.unknown': 'Something went wrong.',
   'error.bad-request': 'That could not be done.',
-  'error.unsupported': 'Robz DPI works only on Windows for now.',
+  'error.unsupported': 'Robz DPI works only on Windows and Linux for now.',
   'error.nothing-selected': 'Nothing is selected. Turn on an app or add a site.',
   'error.bad-dns': 'The DNS address is not valid.',
   'error.bad-strategy': 'A setting of the method is not valid.',
@@ -257,4 +257,32 @@ export default {
   'engineCode.9001': 'The engine could not read its settings. Turn it off and on again.',
   'engineCode.9002': 'The WinDivert library could not be loaded. Reinstall Robz DPI.',
   'engineCode.9003': 'The engine could not prepare its filter. Share the log on GitHub and we will fix it.',
+  'engineCode.9004': 'The kernel packet queue could not be opened. Your kernel needs nfnetlink_queue support.',
+  'engineCode.9005': 'The rules could not be loaded. nftables must be installed and working; details are in the engine log.',
+
+  // Texts that differ on Linux: "@linux" is appended to the key (i18n.js looks for it first).
+  'dialog.conflict.title@linux': 'Stop the other DPI tool?',
+  'power.admin@linux': 'The system asks for the administrator password once.',
+  'always.desc@linux': 'Robz DPI starts in the tray when you sign in. If you left it on, it turns on by itself.',
+  'dialog.conflict.body@linux':
+    'The running DPI tool (such as zapret) is stopped; your files are not deleted. The system asks for the administrator password.',
+  'dialog.remove.body@linux':
+    'The systemd unit, the rules and the /opt/robzdpi folder are deleted. The app and your settings stay. The system asks for the administrator password.',
+  'dialog.uninstall.body@linux':
+    'The background part (the systemd unit and the rules) is removed from this computer; the system may ask for the administrator password. You remove the app itself with your package manager.',
+  'toast.uninstalledDev@linux':
+    'The engine was removed. You can remove the app itself with your package manager (for example: sudo apt remove robz-dpi).',
+  'adv.removeEngine.desc@linux':
+    'Deletes the systemd unit and the rules; the app and your settings stay. The engine is installed again the next time you turn it on.',
+  'settings.language.auto@linux': 'System language',
+  'settings.uninstall.desc@linux':
+    'Removes the background part from this computer; you remove the app itself with your package manager.',
+  'settings.about.body@linux':
+    "Robz DPI is open source and free; it collects no data. The engine is its own code; the methods come from ValdikSS's GoodbyeDPI. On Linux, packets are captured by the kernel's own packet queue (nfqueue).",
+  'wizard.terms.point5@linux':
+    'It installs a system service that runs with administrator rights and adds a firewall rule; it may conflict with other network tools.',
+  'wizard.scope.admin@linux': 'The first time you turn Robz DPI on, the system asks for the administrator password once.',
+  'error.engine-missing@linux': 'Required system tools are missing: systemd, nftables and polkit (pkexec) must be installed.',
+  'error.access-denied@linux': 'The system did not allow this action.',
+  'error.conflict-stop-failed@linux': 'The other tool could not be stopped. Try closing it yourself.',
 };

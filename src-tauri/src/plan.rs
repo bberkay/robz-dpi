@@ -335,6 +335,7 @@ pub fn parse_domains(text: &str) -> (Vec<String>, Vec<String>) {
 }
 
 /// Windows komut satırı: program yolu ve bağımsız değişkenler, CommandLineToArgvW kurallarıyla tırnaklanır.
+#[cfg_attr(not(windows), allow(dead_code))]
 pub fn command_line(exe: &Path, args: &[&str]) -> String {
     let mut line = quote_arg(&exe.to_string_lossy());
     for arg in args {
@@ -344,6 +345,7 @@ pub fn command_line(exe: &Path, args: &[&str]) -> String {
     line
 }
 
+#[cfg_attr(not(windows), allow(dead_code))]
 pub fn quote_arg(arg: &str) -> String {
     if !arg.is_empty() && !arg.contains([' ', '\t', '"']) {
         return arg.to_string();

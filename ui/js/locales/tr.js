@@ -32,7 +32,7 @@ export default {
   'scope.all': 'Bütün sitelerde',
   'scope.selected.desc': 'Yalnız açtığın uygulamalara ve eklediğin sitelere uygulanır. Diğer sitelere dokunmaz.',
   'scope.all.desc':
-    'GoodbyeDPI Türkiye gibi bütün sitelere uygulanır. Bazı siteler açılmayabilir; öyle olursa "Seçtiklerimde"ye dön.',
+    'Liste tutmadan her bağlantıya uygulanır. Bazı siteler açılmayabilir; öyle olursa "Seçtiklerimde"ye dön.',
   'scope.sites': '{n} site',
   'service.domains': '{n} adres',
 
@@ -55,7 +55,7 @@ export default {
   'test.adviceOff': 'Robz DPI kapalı. Açıp yeniden dene.',
   'test.openSettings': 'Ayarları aç',
 
-  'notice.unsupported': "Robz DPI şimdilik yalnız Windows'ta çalışır.",
+  'notice.unsupported': "Robz DPI şimdilik yalnız Windows ve Linux'ta çalışır.",
   'notice.pending': 'Ayarları değiştirdin. Yeni ayarlar uygulanınca geçerli olur.',
   'notice.conflict': '{name} şu anda çalışıyor. İki DPI aracı aynı anda çalışırsa bağlantılar bozulur.',
   'notice.conflict.fix': 'Durdur',
@@ -225,7 +225,7 @@ export default {
   'error.onboarding-required': 'Önce ilk açılış adımlarını tamamla.',
   'error.unknown': 'Bir şeyler ters gitti.',
   'error.bad-request': 'Bu işlem yapılamadı.',
-  'error.unsupported': "Robz DPI şimdilik yalnız Windows'ta çalışır.",
+  'error.unsupported': "Robz DPI şimdilik yalnız Windows ve Linux'ta çalışır.",
   'error.nothing-selected': 'Hiçbir şey seçili değil. Bir uygulamayı aç ya da bir site ekle.',
   'error.bad-dns': 'DNS adresi geçersiz.',
   'error.bad-strategy': 'Yöntemin bir ayarı geçersiz.',
@@ -257,4 +257,32 @@ export default {
   'engineCode.9001': 'Motor ayarlarını okuyamadı. Kapatıp yeniden aç.',
   'engineCode.9002': "WinDivert kitaplığı yüklenemedi. Robz DPI'ı yeniden kur.",
   'engineCode.9003': "Motor süzgecini hazırlayamadı. Günlüğü GitHub'da paylaşırsan düzeltiriz.",
+  'engineCode.9004': 'Çekirdeğin paket kuyruğu açılamadı. Çekirdeğinde nfnetlink_queue desteği olmalı.',
+  'engineCode.9005': 'Kurallar yüklenemedi. nftables kurulu ve çalışır durumda olmalı; ayrıntı motor günlüğünde.',
+
+  // Linux'ta farklı olan metinler: anahtarın sonuna "@linux" eklenir (i18n.js önce bunu arar).
+  'dialog.conflict.title@linux': 'Diğer DPI aracı durdurulsun mu?',
+  'power.admin@linux': 'Sistem bir kez yönetici parolası ister.',
+  'always.desc@linux': 'Robz DPI oturum açılınca tepside başlar. En son açık bıraktıysan kendiliğinden açılır.',
+  'dialog.conflict.body@linux':
+    'Çalışan DPI aracı (zapret gibi) durdurulur; dosyaların silinmez. Sistem yönetici parolası ister.',
+  'dialog.remove.body@linux':
+    'systemd birimi, kurallar ve /opt/robzdpi klasörü silinir. Uygulama ve ayarların kalır. Sistem yönetici parolası ister.',
+  'dialog.uninstall.body@linux':
+    'Arka planda çalışan parça (systemd birimi ve kurallar) bu bilgisayardan silinir; sistem yönetici parolası isteyebilir. Uygulamanın kendisini paket yöneticinle kaldırırsın.',
+  'toast.uninstalledDev@linux':
+    'Motor kaldırıldı. Uygulamanın kendisini paket yöneticinle kaldırabilirsin (örneğin: sudo apt remove robz-dpi).',
+  'adv.removeEngine.desc@linux':
+    'systemd birimini ve kuralları siler; uygulama ve ayarların kalır. Yeniden açınca motor yeniden kurulur.',
+  'settings.language.auto@linux': 'Sistem dili',
+  'settings.uninstall.desc@linux':
+    'Arka planda çalışan parçayı bu bilgisayardan siler; uygulamanın kendisini paket yöneticinle kaldırırsın.',
+  'settings.about.body@linux':
+    "Robz DPI açık kaynak ve ücretsizdir; veri toplamaz. Motoru kendi kodudur; yöntemler ValdikSS'in GoodbyeDPI'ından alınmıştır. Linux'ta paketleri çekirdeğin kendi paket kuyruğu (nfqueue) yakalar.",
+  'wizard.terms.point5@linux':
+    'Yönetici yetkisiyle çalışan bir sistem servisi kurar ve güvenlik duvarı kuralı ekler; başka ağ araçlarıyla çakışabilir.',
+  'wizard.scope.admin@linux': "Robz DPI'ı ilk açtığında sistem bir kez yönetici parolası ister.",
+  'error.engine-missing@linux': 'Gerekli sistem araçları eksik: systemd, nftables ve polkit (pkexec) kurulu olmalı.',
+  'error.access-denied@linux': 'Sistem bu işleme izin vermedi.',
+  'error.conflict-stop-failed@linux': 'Diğer araç durdurulamadı. Elle kapatmayı dene.',
 };

@@ -19,10 +19,14 @@
 //!   * Yardımcı ve motor, arayüzden gelen isteği yeniden doğrular (`EngineRequest::validate`).
 
 pub mod dnsmsg;
+#[cfg(windows)]
 pub mod filter;
 pub mod logic;
 pub mod packet;
 pub mod tls;
+
+#[cfg(any(windows, target_os = "linux"))]
+mod common;
 
 #[cfg(windows)]
 pub mod divert;
@@ -38,9 +42,23 @@ mod windows;
 #[cfg(windows)]
 pub use windows::*;
 
-#[cfg(not(windows))]
+// Linux: WinDivert'in yerinde çekirdeğin paket kuyruğu (nfqueue), Windows servisinin yerinde systemd birimi,
+// UAC'nin yerinde polkit (pkexec) vardır.
+#[cfg(target_os = "linux")]
+mod linux;
+#[cfg(target_os = "linux")]
+mod linux_helper;
+#[cfg(target_os = "linux")]
+mod linux_service;
+#[cfg(target_os = "linux")]
+mod nfqueue;
+
+#[cfg(target_os = "linux")]
+pub use linux::*;
+
+#[cfg(not(any(windows, target_os = "linux")))]
 mod unsupported;
-#[cfg(not(windows))]
+#[cfg(not(any(windows, target_os = "linux")))]
 pub use unsupported::*;
 
 use serde::Serialize;

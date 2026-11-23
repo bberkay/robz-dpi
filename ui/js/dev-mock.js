@@ -120,6 +120,7 @@ function snapshot() {
     version: '0.1.0',
     packaged: true,
     systemLanguage: 'tr',
+    platform: query.get('platform') || 'windows', // ?platform=linux
     supported: true,
     engineReady: true,
     settings,

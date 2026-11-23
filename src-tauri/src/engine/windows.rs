@@ -1,21 +1,20 @@
 //! Windows: arayüz sürecinin (yönetici yetkisi olmadan) kullandığı işlemler ve yönetici onayıyla yardımcıyı
 //! çalıştırma. Yönetici tarafı helper.rs'te, motorun kendisi service.rs'tedir.
 
+pub(super) use super::common::{sha256_hex, Applied, Job, JobResult};
+use super::common::{nonce, tail};
 use super::scm::{self, State};
 use super::{helper, service, Conflict, Status};
 use crate::error::{DpiError, DpiResult};
 use crate::plan::{quote_arg, EngineRequest};
-use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use sha2::{Digest, Sha256};
 use std::ffi::OsString;
-use std::io::{Read, Seek, SeekFrom};
 use std::mem::{size_of, zeroed};
 use std::os::windows::ffi::{OsStrExt, OsStringExt};
 use std::path::{Path, PathBuf};
 use std::ptr::null_mut;
 use std::sync::OnceLock;
-use std::time::{Duration, SystemTime, UNIX_EPOCH};
+use std::time::Duration;
 use windows_sys::Win32::Foundation::{
     CloseHandle, GetLastError, ERROR_ACCESS_DENIED, ERROR_CANCELLED, ERROR_SERVICE_DOES_NOT_EXIST, ERROR_SERVICE_SPECIFIC_ERROR,
 };
@@ -46,26 +45,6 @@ pub(super) const DRIVER_FILES: [(&str, &str); 2] =
 /// Aynı anda çalışırsa paketleri iki kez değiştirecek başka araçlar.
 pub(super) const FOREIGN_ENGINES: [&str; 2] = ["goodbyedpi.exe", "winws.exe"];
 
-/// Yönetici yardımcısının yazdığı kayıt: en son hangi ayar uygulandı.
-#[derive(Debug, Serialize, Deserialize)]
-pub(super) struct Applied {
-    pub fingerprint: String,
-}
-
-/// Arayüz sürecinden yardımcıya giden iş.
-#[derive(Debug, Default, Serialize, Deserialize)]
-pub(super) struct Job {
-    pub nonce: String,
-    pub request: Option<EngineRequest>,
-}
-
-/// Yardımcının başarısız olduğunda bıraktığı sonuç.
-#[derive(Debug, Serialize, Deserialize)]
-pub(super) struct JobResult {
-    pub nonce: String,
-    pub error: DpiError,
-}
-
 /// Bu sürecin çalışan exe'sinin yolu. Yol, sürecin açık tuttuğu dosyadan sorulur: süreç başladıktan sonra dosya
 /// yeniden adlandırılıp yerine başkası konmuş olsa bile gerçekten çalışan dosyayı verir.
 pub(super) fn image_path() -> Option<PathBuf> {
@@ -74,10 +53,6 @@ pub(super) fn image_path() -> Option<PathBuf> {
     // SAFETY: tampon ve boyu birlikte verilir; sözde tutamak kapatılmaz.
     let ok = unsafe { QueryFullProcessImageNameW(GetCurrentProcess(), 0, buffer.as_mut_ptr(), &mut length) };
     (ok != 0).then(|| PathBuf::from(OsString::from_wide(&buffer[..length as usize])))
-}
-
-pub(super) fn sha256_hex(bytes: &[u8]) -> String {
-    hex::encode(Sha256::digest(bytes))
 }
 
 /// Motorun kimliği: bu exe'nin ve WinDivert dosyalarının özetleri. Uygulama güncellenince değişir; arayüz o zaman
@@ -171,18 +146,7 @@ pub fn stats() -> Option<Value> {
 
 /// Motor günlüğünün (engine.log) son `max_bytes` baytı.
 pub fn log_tail(max_bytes: usize) -> String {
-    let Some(path) = protected_dir().map(|dir| dir.join("engine.log")) else { return String::new() };
-    let Ok(mut file) = std::fs::File::open(path) else { return String::new() };
-    let length = file.metadata().map(|meta| meta.len()).unwrap_or(0);
-    let _ = file.seek(SeekFrom::Start(length.saturating_sub(max_bytes as u64)));
-    let mut bytes = Vec::new();
-    let _ = file.take(max_bytes as u64).read_to_end(&mut bytes);
-    let text = String::from_utf8_lossy(&bytes);
-    // Ortadan başladıysak yarım kalan ilk satırı at.
-    match text.split_once('\n') {
-        Some((_, rest)) if length > max_bytes as u64 => rest.to_string(),
-        _ => text.into_owned(),
-    }
+    protected_dir().map(|dir| tail(&dir.join("engine.log"), max_bytes)).unwrap_or_default()
 }
 
 /// Kurulu servisi başlatır. Yönetici yetkisi gerekmez (servisin erişim listesi buna izin verir).
@@ -223,11 +187,7 @@ pub fn conflicts(own_pid: u32) -> Vec<Conflict> {
 /// Yardımcıyı Windows'un yönetici onayıyla (UAC) çalıştırır ve bitmesini bekler.
 /// `action`: "apply" (request gerekir) | "stop" | "remove" | "conflicts". Kullanıcı onayı reddederse "cancelled".
 pub fn elevated(action: &str, request: Option<&EngineRequest>, jobs_dir: &Path) -> DpiResult<()> {
-    let nonce = format!(
-        "{:x}-{:x}",
-        std::process::id(),
-        SystemTime::now().duration_since(UNIX_EPOCH).map(|d| d.as_nanos()).unwrap_or_default()
-    );
+    let nonce = nonce();
     let job = Job { nonce: nonce.clone(), request: request.cloned() };
     let job_path = jobs_dir.join("job.json");
     std::fs::create_dir_all(jobs_dir).map_err(|e| DpiError::with("write-failed", e))?;

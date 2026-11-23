@@ -11,6 +11,7 @@ use tauri::{AppHandle, Manager, WebviewUrl, WebviewWindowBuilder, WindowEvent};
 use tauri_plugin_autostart::ManagerExt as _;
 
 /// tauri.conf.json'daki kimlik; uygulamanın veri klasörünün adıdır.
+#[cfg_attr(not(windows), allow(dead_code))]
 const APP_IDENTIFIER: &str = "com.robz.dpi";
 const TRAY_ID: &str = "main";
 const WINDOW: &str = "main";
@@ -95,9 +96,21 @@ pub fn system_language() -> &'static str {
     }
 }
 
+/// Windows dışında: ortamın dili (LC_ALL, LC_MESSAGES, LANG: "tr_TR.UTF-8" gibi).
 #[cfg(not(windows))]
 pub fn system_language() -> &'static str {
-    "en"
+    let locale = ["LC_ALL", "LC_MESSAGES", "LANG"]
+        .iter()
+        .find_map(|name| std::env::var(name).ok().filter(|value| !value.is_empty()))
+        .unwrap_or_default()
+        .to_lowercase();
+    if locale.starts_with("tr") {
+        "tr"
+    } else if locale.starts_with("ru") {
+        "ru"
+    } else {
+        "en"
+    }
 }
 
 // ---- pencere --------------------------------------------------------------------------------------------------------
