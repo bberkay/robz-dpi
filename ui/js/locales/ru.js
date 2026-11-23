@@ -297,4 +297,11 @@ export default {
   'error.engine-missing@linux': 'Не хватает системных инструментов: должны быть установлены systemd, nftables и polkit (pkexec).',
   'error.access-denied@linux': 'Система не разрешила это действие.',
   'error.conflict-stop-failed@linux': 'Не удалось остановить другую программу. Попробуйте закрыть её вручную.',
+
+  // Портативная версия: "ключ@portable".
+  'settings.uninstall.desc@portable':
+    'Удаляет фоновую часть (службу Windows и драйвер) с этого компьютера. Саму портативную версию и её настройки удаляют, удалив её папку.',
+  'dialog.uninstall.body@portable':
+    'Фоновая часть (служба Windows и драйвер) будет удалена с этого компьютера; Windows попросит разрешение администратора. Затем просто удалите папку Robz DPI: настройки находятся в ней.',
+  'toast.uninstalledDev@portable': 'Движок удалён. Само приложение можно удалить, удалив папку Robz DPI.',
 };

@@ -14,6 +14,7 @@
 
 <p align="center">
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Setup.exe"><img src="https://img.shields.io/badge/СКАЧАТЬ%20БЕСПЛАТНО-WINDOWS%2010%20%C2%B7%2011-8957e5?style=for-the-badge&amp;labelColor=6e40c9" alt="Скачать бесплатно: RobzDPI-Setup.exe, Windows 10 и 11"></a>
+  <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Portable.zip"><img src="https://img.shields.io/badge/WINDOWS-PORTABLE%20.ZIP-21262d?style=for-the-badge" alt="Скачать для Windows: портативная версия (.zip)"></a>
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-amd64.deb"><img src="https://img.shields.io/badge/LINUX-.DEB-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Скачать для Linux: .deb"></a>
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.rpm"><img src="https://img.shields.io/badge/LINUX-.RPM-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Скачать для Linux: .rpm"></a>
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.AppImage"><img src="https://img.shields.io/badge/LINUX-APPIMAGE-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Скачать для Linux: AppImage"></a>
@@ -136,6 +137,12 @@ Robz DPI — не VPN, не прокси и не сервис доступа. О
 Установщик не подписан платным сертификатом, поэтому Windows SmartScreen может показать «Система Windows защитила
 ваш компьютер». Продолжить можно через **Подробнее** → **Выполнить в любом случае**. Чтобы убедиться, что файл взят
 из этого репозитория, сравните его с `SHA256SUMS.txt` на странице выпуска.
+
+**Портативная версия (без установки):** скачайте [RobzDPI-Portable.zip](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Portable.zip), распакуйте в папку и
+запустите `RobzDPI.exe`. Настройки хранятся в папке `data` рядом с ним; программа не оставляет следов на
+компьютере. Чтобы удалить её, сначала удалите фоновую часть (службу Windows и драйвер) через Настройки →
+**Удалить Robz DPI**, затем удалите папку. Интерфейсу нужен Microsoft Edge WebView2: он есть в Windows 11 и в
+обновлённой Windows 10 (установщик добавляет его при необходимости, портативная версия — нет).
 
 ### Linux
 

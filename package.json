@@ -1,7 +1,7 @@
 {
   "name": "robz-dpi",
   "productName": "Robz DPI",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "description": "Yalnız seçtiğiniz sitelerde çalışan, Windows için açık kaynak DPI aracı.",
   "license": "MIT",
@@ -20,7 +20,8 @@
     "screenshots": "node scripts/screenshots.mjs",
     "banners": "node scripts/render-banners.mjs",
     "site": "node site/build.mjs",
-    "build:linux": "cargo build --release --manifest-path src-tauri/engine-bin/Cargo.toml && tauri build"
+    "build:linux": "cargo build --release --manifest-path src-tauri/engine-bin/Cargo.toml && tauri build",
+    "portable": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/portable.ps1 -Version %npm_package_version%"
   },
   "devDependencies": {
     "@fontsource-variable/mona-sans": "^5.3.0",

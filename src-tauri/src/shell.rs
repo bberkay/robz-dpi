@@ -2,7 +2,7 @@
 
 use crate::dpi::Dpi;
 use std::path::{Path, PathBuf};
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, Mutex, OnceLock};
 use std::time::Duration;
 use tauri::menu::{Menu, MenuItem, PredefinedMenuItem};
 use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
@@ -113,6 +113,31 @@ pub fn system_language() -> &'static str {
     }
 }
 
+// ---- taşınabilir sürüm ----------------------------------------------------------------------------------------------
+
+/// Taşınabilir sürümün işareti: programın yanındaki bu dosya (sürüm iş akışı zip'e koyar).
+const PORTABLE_MARKER: &str = "portable.txt";
+
+/// Taşınabilir sürümde ayarların ve arayüz önbelleğinin klasörü: programın yanındaki "data". Böylece uygulama
+/// bilgisayarda iz bırakmaz; klasörü silmek uygulamayı siler. İşaret yoksa ya da klasöre yazılamıyorsa (örneğin
+/// salt okunur bir yerden çalıştırıldıysa) None: olağan yer (%LOCALAPPDATA%\com.robz.dpi) kullanılır.
+pub fn portable() -> Option<&'static Path> {
+    static DIR: OnceLock<Option<PathBuf>> = OnceLock::new();
+    DIR.get_or_init(|| {
+        let dir = std::env::current_exe().ok()?.parent()?.to_path_buf();
+        if !dir.join(PORTABLE_MARKER).is_file() {
+            return None;
+        }
+        let data = dir.join("data");
+        std::fs::create_dir_all(&data).ok()?;
+        let probe = data.join(".yazma-denemesi");
+        std::fs::write(&probe, b"").ok()?;
+        let _ = std::fs::remove_file(probe);
+        Some(data)
+    })
+    .as_deref()
+}
+
 // ---- pencere --------------------------------------------------------------------------------------------------------
 
 pub fn show_window(app: &AppHandle) {
@@ -126,7 +151,12 @@ pub fn show_window(app: &AppHandle) {
 }
 
 pub fn create_window(app: &AppHandle) -> tauri::Result<()> {
-    let window = WebviewWindowBuilder::new(app, WINDOW, WebviewUrl::App("index.html".into()))
+    let mut builder = WebviewWindowBuilder::new(app, WINDOW, WebviewUrl::App("index.html".into()));
+    // Taşınabilir sürümde arayüzün önbelleği de programın yanındaki klasörde durur.
+    if let Some(data) = portable() {
+        builder = builder.data_directory(data.join("EBWebView"));
+    }
+    let window = builder
         .title("Robz DPI")
         .inner_size(520.0, 800.0)
         .min_inner_size(440.0, 600.0)

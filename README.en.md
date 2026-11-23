@@ -14,6 +14,7 @@
 
 <p align="center">
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Setup.exe"><img src="https://img.shields.io/badge/FREE%20DOWNLOAD-WINDOWS%2010%20%C2%B7%2011-8957e5?style=for-the-badge&amp;logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIuNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgM3YxMiIvPjxwYXRoIGQ9Im02LjUgOS41IDUuNSA1LjUgNS41LTUuNSIvPjxwYXRoIGQ9Ik00IDIwLjVoMTYiLz48L3N2Zz4%3D&amp;labelColor=6e40c9" alt="Free download: RobzDPI-Setup.exe, Windows 10 and 11"></a>
+  <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Portable.zip"><img src="https://img.shields.io/badge/WINDOWS-PORTABLE%20.ZIP-21262d?style=for-the-badge" alt="Download for Windows: portable version (.zip)"></a>
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-amd64.deb"><img src="https://img.shields.io/badge/LINUX-.DEB-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Download for Linux: .deb"></a>
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.rpm"><img src="https://img.shields.io/badge/LINUX-.RPM-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Download for Linux: .rpm"></a>
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.AppImage"><img src="https://img.shields.io/badge/LINUX-APPIMAGE-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Download for Linux: AppImage"></a>
@@ -133,6 +134,12 @@ security, and contains no list of "blocked sites"; the user decides which domain
 The installer is not signed with a paid certificate, so Windows SmartScreen may show "Windows protected your PC".
 Continue with **More info** → **Run anyway**. To verify that the file comes from this repository, compare it with
 `SHA256SUMS.txt` on the release page.
+
+**Portable version (no installation):** download [RobzDPI-Portable.zip](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Portable.zip), extract it to a folder
+and run `RobzDPI.exe` inside. Settings are kept in the `data` folder next to it; the app leaves no trace on the
+computer. To remove it, first remove the background part (the Windows service and the driver) with Settings →
+**Uninstall Robz DPI**, then delete the folder. The interface needs Microsoft Edge WebView2, which comes with
+Windows 11 and up-to-date Windows 10 (the installer adds it if missing; the portable version does not).
 
 ### Linux
 

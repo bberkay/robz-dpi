@@ -97,10 +97,10 @@ test('Rust kodundaki hata kodlarının metni var', () => {
   assert.deepEqual([...codes].filter((code) => !(`error.${code}` in tr)).sort(), []);
 });
 
-// Linux'ta farklı olan metinler "anahtar@linux" ile verilir; her birinin sisteme bağlı olmayan bir karşılığı olmalı.
+// Sürüme göre farklı metinler "anahtar@linux" ya da "anahtar@portable" ile verilir; her birinin asıl anahtarı olmalı.
 test('sisteme özel metinlerin asıl anahtarı var', () => {
   const variants = Object.keys(tr).filter((key) => key.includes('@'));
   assert.ok(variants.length > 5, `yalnız ${variants.length} sisteme özel metin bulundu`);
   assert.deepEqual(variants.filter((key) => !(key.split('@')[0] in tr)), []);
-  assert.deepEqual(variants.filter((key) => !/@linux$/.test(key)), []);
+  assert.deepEqual(variants.filter((key) => !/@(linux|portable)$/.test(key)), []);
 });

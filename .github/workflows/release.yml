@@ -5,7 +5,7 @@
 #   3. git tag vX.Y.Z && git push origin vX.Y.Z
 #
 # Robz Hub bu sürümdeki "RobzDPI-Setup-X.Y.Z.exe" dosyasını kurar; dosya adını değiştirme. README'deki indirme
-# bağlantısı sabit adlı "RobzDPI-Setup.exe" dosyasına gider.
+# bağlantıları sabit adlı "RobzDPI-Setup.exe" ve "RobzDPI-Portable.zip" dosyalarına gider.
 
 name: Sürüm
 
@@ -48,15 +48,37 @@ jobs:
       - run: npm test
       - run: npx tauri build
 
-      - name: Kurulum dosyasını adlandır ve özetini çıkar
+      - name: Kurulum dosyasını ve taşınabilir sürümü adlandır, özetlerini çıkar
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force out | Out-Null
           $setup = Get-ChildItem src-tauri/target/release/bundle/nsis/*-setup.exe | Select-Object -First 1
-          $names = "RobzDPI-Setup-$env:VERSION.exe", "RobzDPI-Setup.exe"
-          foreach ($name in $names) { Copy-Item $setup.FullName "out/$name" }
-          $names | ForEach-Object { "$((Get-FileHash "out/$_" -Algorithm SHA256).Hash.ToLower())  $_" } |
+          foreach ($name in "RobzDPI-Setup-$env:VERSION.exe", "RobzDPI-Setup.exe") { Copy-Item $setup.FullName "out/$name" }
+          ./scripts/portable.ps1 -Version $env:VERSION -Out out
+          Get-ChildItem out -File | Where-Object Extension -in '.exe', '.zip' | Sort-Object Name |
+            ForEach-Object { "$((Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower())  $($_.Name)" } |
             Out-File out/SHA256SUMS.txt -Encoding ascii
+          Get-Content out/SHA256SUMS.txt
+
+      # Taşınabilir sürüm açılınca ayarlarını programın yanındaki "data" klasörüne yazmalı, bilgisayara iz bırakmamalı.
+      - name: Taşınabilir sürümü dene
+        shell: pwsh
+        run: |
+          $dir = Join-Path $env:RUNNER_TEMP 'portable'
+          Expand-Archive out/RobzDPI-Portable.zip $dir
+          $app = Join-Path $dir 'Robz DPI'
+          foreach ($file in 'RobzDPI.exe', 'portable.txt', 'engine/WinDivert.dll', 'engine/WinDivert64.sys') {
+            if (-not (Test-Path (Join-Path $app $file))) { throw "zip'te yok: $file" }
+          }
+          $process = Start-Process (Join-Path $app 'RobzDPI.exe') -PassThru
+          Start-Sleep -Seconds 15
+          if ($process.HasExited) { throw "uygulama açılmadı (çıkış kodu $($process.ExitCode))" }
+          Stop-Process $process -Force
+          Start-Sleep -Seconds 2
+          # Ayarlar ilk değişiklikte yazılır; arayüzün önbelleği açılışta oluşur ve aynı klasöre gitmelidir.
+          if (-not (Test-Path (Join-Path $app 'data/EBWebView'))) { throw "veriler programın yanına yazılmadı" }
+          if (Test-Path (Join-Path $env:LOCALAPPDATA 'com.robz.dpi')) { throw "taşınabilir sürüm %LOCALAPPDATA% altına yazdı" }
+          Get-ChildItem (Join-Path $app 'data') | Select-Object -ExpandProperty Name
 
       - name: Sürüm notlarını CHANGELOG.md'den al
         shell: pwsh
@@ -71,7 +93,7 @@ jobs:
       - name: GitHub sürümünü oluştur
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "${{ github.ref_name }}" out/RobzDPI-Setup-${{ env.VERSION }}.exe out/RobzDPI-Setup.exe out/SHA256SUMS.txt --title "Robz DPI ${{ env.VERSION }}" --notes-file out/notes.md
+        run: gh release create "${{ github.ref_name }}" out/RobzDPI-Setup-${{ env.VERSION }}.exe out/RobzDPI-Setup.exe out/RobzDPI-Portable-${{ env.VERSION }}-x64.zip out/RobzDPI-Portable.zip out/SHA256SUMS.txt --title "Robz DPI ${{ env.VERSION }}" --notes-file out/notes.md
 
   # Linux paketleri (.deb, .rpm ve AppImage) aynı sürüme eklenir. Motor önce uçtan uca denenir.
   # Ubuntu 22.04'te derlenir: paketler bu sürümün C kitaplığıyla (glibc 2.35) ve daha yenileriyle çalışır.

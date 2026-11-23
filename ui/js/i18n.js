@@ -23,13 +23,18 @@ export function lang() {
 }
 
 // t('tab.home') ya da t('test.ms', { ms: 120 }). Sözlükte yoksa anahtarın kendisi döner.
-// Windows dışında bir sistemde önce "anahtar@sistem" aranır ('power.admin@linux'): yönetici onayı, servis ve
-// kaldırma gibi sisteme göre değişen metinler böyle ayrılır.
+// Sürüme göre değişen metinler anahtarın sonuna eklenen bir adla ayrılır ve önce onlar aranır:
+//   'anahtar@portable'  taşınabilir sürüm (kaldırma ve ayarların yeri farklıdır)
+//   'anahtar@linux'     Windows dışındaki sistem (yönetici onayı, servis, kaldırma)
 export function t(key, vars) {
-  const platform = store.data?.platform;
+  const data = store.data;
   const dict = DICTS[lang()];
-  const own = platform && platform !== 'windows' ? `${key}@${platform}` : null;
-  let value = (own && (dict[own] ?? DICTS.tr[own])) ?? dict[key] ?? DICTS.tr[key] ?? key;
+  const variants = [];
+  if (data?.portable) variants.push(`${key}@portable`);
+  if (data?.platform && data.platform !== 'windows') variants.push(`${key}@${data.platform}`);
+  let value;
+  for (const variant of variants) value ??= dict[variant] ?? DICTS.tr[variant];
+  value ??= dict[key] ?? DICTS.tr[key] ?? key;
   if (typeof value === 'function') return value(vars || {});
   if (vars) value = value.replace(/\{(\w+)\}/g, (_, name) => (name in vars ? vars[name] : `{${name}}`));
   return value;

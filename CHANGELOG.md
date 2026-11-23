@@ -2,6 +2,15 @@
 
 Her başlık bir sürümdür; sürüm iş akışı GitHub'daki sürüm notunu buradan alır.
 
+## 0.4.0
+
+Windows için taşınabilir sürüm.
+
+- **Taşınabilir sürüm:** `RobzDPI-Portable.zip`; kurulum gerektirmez. Bir klasöre çıkarılıp çalıştırılır; ayarlar ve
+  arayüzün önbelleği programın yanındaki `data` klasöründe tutulur, bilgisayarda iz kalmaz. Motor yine Windows
+  hizmeti olarak kurulur (yönetici onayıyla); Ayarlar → "Robz DPI'ı kaldır" onu kaldırır, uygulamanın kendisi klasör
+  silinerek kaldırılır.
+
 ## 0.3.0
 
 AppImage ve daha geniş Linux uyumu.

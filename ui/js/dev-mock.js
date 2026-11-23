@@ -121,6 +121,7 @@ function snapshot() {
     packaged: true,
     systemLanguage: 'tr',
     platform: query.get('platform') || 'windows', // ?platform=linux
+    portable: query.has('portable'), // ?portable
     supported: true,
     engineReady: true,
     settings,

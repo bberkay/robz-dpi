@@ -42,6 +42,7 @@ export default {
     heroLead:
       'Robz DPI, bağlantının ilk paketini servis sağlayıcının derin paket inceleme (DPI) cihazının tanıyamayacağı biçimde gönderir. Tek düğmeyle açılır; yalnız Discord, Roblox ve senin eklediğin sitelerde çalışır.',
     download: 'Windows için indir',
+    portableLabel: 'Windows, kurulumsuz (taşınabilir):',
     linuxLabel: 'Linux için:',
     star: 'Yıldız ver',
     starTitle: "GitHub'da yıldız ver",
@@ -100,7 +101,7 @@ export default {
     steps: [
       {
         title: 'İndir ve kur',
-        text: "Windows'ta RobzDPI-Setup.exe dosyasını çalıştır; kurulum yönetici izni istemez. Linux'ta .deb ya da .rpm paketini kur ya da AppImage dosyasını çalıştır. İlk açılışta bir kez üç kısa adım sorulur: dil, sorumluluk reddinin kabulü ve nerede çalışacağı.",
+        text: "Windows'ta RobzDPI-Setup.exe dosyasını çalıştır (kurulum yönetici izni istemez) ya da taşınabilir zip'i bir klasöre çıkar. Linux'ta .deb ya da .rpm paketini kur ya da AppImage dosyasını çalıştır. İlk açılışta bir kez üç kısa adım sorulur: dil, sorumluluk reddinin kabulü ve nerede çalışacağı.",
         note: 'Dosya imzalı olmadığı için Windows "kişisel bilgisayarınızı korudu" uyarısı gösterebilir: Ek bilgi › Yine de çalıştır.',
         shot: '06-terms.png',
         shotAlt: 'İlk açılış: sorumluluk reddinin özeti ve onay kutusu',
@@ -212,6 +213,7 @@ export default {
     heroLead:
       "Robz DPI sends the first packet of a connection in a form your provider's deep packet inspection (DPI) box cannot recognize. One button turns it on, and it works only for Discord, Roblox and the sites you add.",
     download: 'Download for Windows',
+    portableLabel: 'Windows, no installation (portable):',
     linuxLabel: 'For Linux:',
     star: 'Star',
     starTitle: 'Star on GitHub',
@@ -270,7 +272,7 @@ export default {
     steps: [
       {
         title: 'Download and install',
-        text: 'On Windows, run RobzDPI-Setup.exe; installing needs no administrator rights. On Linux, install the .deb or .rpm package or run the AppImage. The first run asks three short steps, once: language, accepting the disclaimer and where it should work.',
+        text: 'On Windows, run RobzDPI-Setup.exe (installing needs no administrator rights) or extract the portable zip to a folder. On Linux, install the .deb or .rpm package or run the AppImage. The first run asks three short steps, once: language, accepting the disclaimer and where it should work.',
         note: 'The file is not signed, so Windows may show "Windows protected your PC": More info › Run anyway.',
         shot: '06-terms.png',
         shotAlt: 'First run: the disclaimer summary and the acceptance checkbox',
@@ -382,6 +384,7 @@ export default {
     heroLead:
       'Robz DPI отправляет первый пакет соединения в таком виде, что устройство глубокой инспекции пакетов (DPI) у провайдера его не распознаёт. Включается одной кнопкой и работает только для Discord, Roblox и добавленных вами сайтов.',
     download: 'Скачать для Windows',
+    portableLabel: 'Windows без установки (портативная):',
     linuxLabel: 'Для Linux:',
     star: 'Звезда',
     starTitle: 'Поставить звезду на GitHub',
@@ -440,7 +443,7 @@ export default {
     steps: [
       {
         title: 'Скачайте и установите',
-        text: 'В Windows запустите RobzDPI-Setup.exe; установка не требует прав администратора. В Linux установите пакет .deb или .rpm либо запустите AppImage. При первом запуске один раз задаются три коротких шага: язык, согласие с отказом от ответственности и где программа должна работать.',
+        text: 'В Windows запустите RobzDPI-Setup.exe (установка не требует прав администратора) или распакуйте портативный zip в папку. В Linux установите пакет .deb или .rpm либо запустите AppImage. При первом запуске один раз задаются три коротких шага: язык, согласие с отказом от ответственности и где программа должна работать.',
         note: 'Файл не подписан, поэтому Windows может показать «Система Windows защитила ваш компьютер»: Подробнее › Выполнить в любом случае.',
         shot: '06-terms.png',
         shotAlt: 'Первый запуск: краткий отказ от ответственности и флажок согласия',

@@ -18,7 +18,8 @@ const SITE = 'https://kutsalkiremitci.github.io/robz-dpi/';
 const REPO_URL = `https://github.com/${REPO}`;
 const SETUP = 'RobzDPI-Setup.exe';
 const DOWNLOAD = `${REPO_URL}/releases/latest/download/${SETUP}`;
-// Linux paketleri: sürüm iş akışı her sürüme bu sabit adlarla da yükler.
+// Windows'un taşınabilir sürümü ve Linux paketleri: sürüm iş akışı her sürüme bu sabit adlarla da yükler.
+const PORTABLE = `${REPO_URL}/releases/latest/download/RobzDPI-Portable.zip`;
 const LINUX = [
   ['.deb', `${REPO_URL}/releases/latest/download/RobzDPI-Linux-amd64.deb`, 'Debian, Ubuntu, Mint'],
   ['.rpm', `${REPO_URL}/releases/latest/download/RobzDPI-Linux-x86_64.rpm`, 'Fedora, openSUSE'],
@@ -191,7 +192,8 @@ function page(t) {
         ${icon('star', 18)}<span>${esc(t.star)}</span><span class="btn-count" data-stars ${live.stars == null ? 'hidden' : ''}>${live.stars ?? ''}</span>
       </a>
     </div>
-    <p class="cta-linux">${esc(t.linuxLabel)} ${LINUX.map(([label, href, distros]) => `<a href="${href}" title="${esc(distros)}">${label}</a> <span>(${esc(distros)})</span>`).join(' · ')}</p>`;
+    <p class="cta-linux">${esc(t.portableLabel)} <a href="${PORTABLE}">.zip</a></p>
+    <p class="cta-linux cta-linux-next">${esc(t.linuxLabel)} ${LINUX.map(([label, href, distros]) => `<a href="${href}" title="${esc(distros)}">${label}</a> <span>(${esc(distros)})</span>`).join(' · ')}</p>`;
 
   const diff = () => {
     const n = t.diff.del.length;

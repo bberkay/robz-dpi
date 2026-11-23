@@ -285,4 +285,11 @@ export default {
   'error.engine-missing@linux': 'Gerekli sistem araçları eksik: systemd, nftables ve polkit (pkexec) kurulu olmalı.',
   'error.access-denied@linux': 'Sistem bu işleme izin vermedi.',
   'error.conflict-stop-failed@linux': 'Diğer araç durdurulamadı. Elle kapatmayı dene.',
+
+  // Taşınabilir sürüm: "anahtar@portable".
+  'settings.uninstall.desc@portable':
+    'Arka planda çalışan parçayı (Windows servisi ve sürücü) bu bilgisayardan siler. Taşınabilir sürümün kendisini ve ayarlarını, klasörünü silerek kaldırırsın.',
+  'dialog.uninstall.body@portable':
+    'Arka planda çalışan parça (Windows servisi ve sürücü) bu bilgisayardan silinir; Windows yönetici izni ister. Ardından Robz DPI klasörünü silmen yeterli: ayarlar da o klasörün içindedir.',
+  'toast.uninstalledDev@portable': 'Motor kaldırıldı. Robz DPI klasörünü silerek uygulamayı da kaldırabilirsin.',
 };

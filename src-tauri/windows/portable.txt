@@ -1,0 +1,19 @@
+Robz DPI — taşınabilir sürüm · portable version · портативная версия
+
+TR
+Bu dosya Robz DPI'ın taşınabilir sürümde çalıştığını gösterir; silmeyin. Ayarlar bu klasördeki "data" klasöründe
+tutulur. Kaldırmak için önce Robz DPI'da Ayarlar → "Robz DPI'ı kaldır" ile arka planda çalışan parçayı (Windows
+servisi ve sürücü) kaldırın, sonra bu klasörü silin.
+
+EN
+This file tells Robz DPI that it runs as the portable version; do not delete it. Settings are kept in the "data"
+folder here. To remove it, first remove the background part (the Windows service and the driver) with Settings →
+"Uninstall Robz DPI", then delete this folder.
+
+RU
+Этот файл сообщает Robz DPI, что он работает как портативная версия; не удаляйте его. Настройки хранятся в папке
+"data" рядом. Чтобы удалить программу, сначала удалите фоновую часть (службу Windows и драйвер) через Настройки →
+«Удалить Robz DPI», затем удалите эту папку.
+
+Eğitim ve test amaçlıdır · For education and testing · Для обучения и тестирования:
+https://github.com/kutsalkiremitci/robz-dpi/blob/main/DISCLAIMER.md

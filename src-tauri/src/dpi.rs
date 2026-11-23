@@ -117,6 +117,8 @@ impl Dpi {
             "systemLanguage": self.system_language,
             // "windows" | "linux": arayüz sisteme göre değişen metinleri buna göre seçer.
             "platform": std::env::consts::OS,
+            // Taşınabilir sürüm: kaldırma ve ayarların yeri farklıdır (shell::portable).
+            "portable": crate::shell::portable().is_some(),
             "supported": engine::SUPPORTED,
             "engineReady": engine::available(),
             "settings": inner.settings.public(),

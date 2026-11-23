@@ -117,9 +117,12 @@ fn main() {
         .plugin(tauri_plugin_autostart::init(tauri_plugin_autostart::MacosLauncher::LaunchAgent, Some(vec!["--hidden"])))
         .invoke_handler(tauri::generate_handler![dpi_call])
         .setup(move |app| {
-            let data_dir = match std::env::var_os("ROBZDPI_DATA_DIR") {
-                Some(dir) => PathBuf::from(dir),
-                None => app.path().app_local_data_dir()?,
+            // Ayarların yeri: geliştirme için ortam değişkeni, taşınabilir sürümde programın yanı, yoksa
+            // %LOCALAPPDATA%\com.robz.dpi.
+            let data_dir = match (std::env::var_os("ROBZDPI_DATA_DIR"), shell::portable()) {
+                (Some(dir), _) => PathBuf::from(dir),
+                (None, Some(dir)) => dir.to_path_buf(),
+                (None, None) => app.path().app_local_data_dir()?,
             };
             let dpi = Dpi::new(app.handle().clone(), data_dir);
             app.manage(dpi.clone());

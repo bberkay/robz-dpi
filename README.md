@@ -14,6 +14,7 @@
 
 <p align="center">
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Setup.exe"><img src="https://img.shields.io/badge/%C3%9CCRETS%C4%B0Z%20%C4%B0ND%C4%B0R-WINDOWS%2010%20%C2%B7%2011-8957e5?style=for-the-badge&amp;logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIuNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgM3YxMiIvPjxwYXRoIGQ9Im02LjUgOS41IDUuNSA1LjUgNS41LTUuNSIvPjxwYXRoIGQ9Ik00IDIwLjVoMTYiLz48L3N2Zz4%3D&amp;labelColor=6e40c9" alt="Ücretsiz indir: RobzDPI-Setup.exe, Windows 10 ve 11"></a>
+  <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Portable.zip"><img src="https://img.shields.io/badge/WINDOWS-TA%C5%9EINAB%C4%B0L%C4%B0R%20.ZIP-21262d?style=for-the-badge" alt="Windows için indir: taşınabilir sürüm (.zip)"></a>
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-amd64.deb"><img src="https://img.shields.io/badge/LINUX-.DEB-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Linux için indir: .deb"></a>
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.rpm"><img src="https://img.shields.io/badge/LINUX-.RPM-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Linux için indir: .rpm"></a>
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.AppImage"><img src="https://img.shields.io/badge/LINUX-APPIMAGE-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Linux için indir: AppImage"></a>
@@ -133,6 +134,12 @@ sağlamaz ve bir "engelli siteler" listesi içermez; hangi alan adlarında çal�
 Kurulum dosyası ücretli bir sertifikayla imzalanmadığı için Windows SmartScreen "Windows kişisel bilgisayarınızı
 korudu" uyarısı gösterebilir. **Ek bilgi** → **Yine de çalıştır** ile devam edebilirsiniz. Dosyanın bu depodan
 geldiğini doğrulamak için sürüm sayfasındaki `SHA256SUMS.txt` dosyasıyla karşılaştırınız.
+
+**Taşınabilir sürüm (kurulumsuz):** [RobzDPI-Portable.zip](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Portable.zip) dosyasını indirip bir klasöre
+çıkarınız ve içindeki `RobzDPI.exe`'yi çalıştırınız. Ayarlar aynı klasördeki `data` klasöründe tutulur; uygulama
+bilgisayarda iz bırakmaz. Kaldırmak için önce Ayarlar → **Robz DPI'ı kaldır** ile arka planda çalışan parçayı
+(Windows hizmeti ve sürücü) kaldırınız, sonra klasörü siliniz. Arayüz için Microsoft Edge WebView2 gerekir; Windows 11'de
+ve güncel Windows 10'da hazır gelir (kurulum dosyası eksikse kendisi kurar, taşınabilir sürüm kurmaz).
 
 ### Linux
 

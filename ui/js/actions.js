@@ -70,7 +70,8 @@ export function uninstallApp() {
     danger: true,
     onConfirm: async () => {
       const removed = await run('uninstallApp');
-      // Kurulu sürümde uygulama buraya gelmeden kapanır; geliştirme kipinde yalnız motor kaldırılır.
+      // Kurulu sürümde uygulama buraya gelmeden kapanır; taşınabilir sürümde ve geliştirme kipinde yalnız motor
+      // kaldırılır (uygulamanın klasörünü kullanıcı siler).
       if (removed === true) toast(t('toast.uninstalledDev'));
     },
   });
