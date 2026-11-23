@@ -121,8 +121,8 @@ impl Dpi {
             "portable": crate::shell::portable().is_some(),
             // Linux'ta AppImage: paketin tersine uygulama kendini kaldırabilir (shell::remove_appimage).
             "appImage": crate::shell::appimage().is_some(),
-            // Linux'ta uygulamanın kendi kaldırabildiği sistem paketi (rpm): shell::remove_rpm.
-            "systemPackage": crate::shell::rpm_package().is_some(),
+            // Linux'ta uygulamanın kendi kaldırabildiği sistem paketi (.rpm, .deb): shell::remove_package.
+            "systemPackage": crate::shell::system_package().is_some(),
             "supported": engine::SUPPORTED,
             "engineReady": engine::available(),
             "settings": inner.settings.public(),

@@ -409,52 +409,85 @@ fn system_program(name: &str) -> Option<PathBuf> {
     ["/usr/bin", "/bin", "/usr/sbin", "/sbin"].iter().map(|dir| Path::new(dir).join(name)).find(|path| path.is_file())
 }
 
-/// `rpm -qf --qf '%{NAME}\n'` çıktısından paketin adı: tek satır, yalnız paket adında geçen karakterler.
-#[cfg_attr(not(target_os = "linux"), allow(dead_code))]
-fn package_name(output: &str) -> Option<String> {
-    let mut lines = output.lines();
-    let name = lines.next()?.trim();
-    let plain = name.starts_with(|c: char| c.is_ascii_alphanumeric())
-        && name.chars().all(|c| c.is_ascii_alphanumeric() || matches!(c, '.' | '_' | '+' | '-'));
-    (plain && lines.next().is_none()).then(|| name.to_string())
+/// Paket adı mı: yalnız paket adlarında geçen karakterler (yönetici olarak çalışacak komuta argüman olur).
+fn plain_package_name(name: &str) -> bool {
+    name.starts_with(|c: char| c.is_ascii_alphanumeric())
+        && name.chars().all(|c| c.is_ascii_alphanumeric() || matches!(c, '.' | '_' | '+' | '-'))
 }
 
-/// Uygulama rpm paketi olarak kuruluysa (Fedora, openSUSE) paketin adı: çalışan programın sahibi olan paket.
-/// AppImage'da, geliştirme kipinde ve başka yoldan kurulu sürümde None. Bir kez sorulur.
+/// `rpm -qf --qf '%{NAME}\n'` çıktısından paketin adı: tek satır.
+#[cfg_attr(not(target_os = "linux"), allow(dead_code))]
+fn rpm_owner(output: &str) -> Option<String> {
+    let mut lines = output.lines();
+    let name = lines.next()?.trim();
+    (plain_package_name(name) && lines.next().is_none()).then(|| name.to_string())
+}
+
+/// `dpkg -S <dosya>` çıktısından paketin adı: "robz-dpi: /usr/bin/robz-dpi" ya da "robz-dpi:amd64: /usr/bin/robz-dpi".
+/// Dosya birden çok paketinse ("a, b: /yol") None.
+#[cfg_attr(not(target_os = "linux"), allow(dead_code))]
+fn dpkg_owner(output: &str) -> Option<String> {
+    let mut lines = output.lines();
+    let (owner, _) = lines.next()?.split_once(": ")?;
+    let name = owner.split(':').next()?.trim();
+    (plain_package_name(name) && lines.next().is_none()).then(|| name.to_string())
+}
+
+/// Sistem paketinin türü: kaldıran program buna göre seçilir.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(not(target_os = "linux"), allow(dead_code))]
+pub enum PackageKind {
+    Rpm,
+    Deb,
+}
+
+/// Uygulama sistem paketi olarak kuruluysa (.rpm: Fedora, openSUSE; .deb: Debian, Ubuntu) paketin türü ve adı:
+/// çalışan programın sahibi olan paket. AppImage'da ve geliştirme kipinde None. Bir kez sorulur.
 #[cfg(target_os = "linux")]
-pub fn rpm_package() -> Option<&'static str> {
-    static NAME: OnceLock<Option<String>> = OnceLock::new();
-    NAME.get_or_init(|| {
-        if appimage().is_some() {
-            return None;
-        }
+pub fn system_package() -> Option<(PackageKind, &'static str)> {
+    static PACKAGE: OnceLock<Option<(PackageKind, String)>> = OnceLock::new();
+    let owner = |program: &str, arguments: &[&str], parse: fn(&str) -> Option<String>| {
         let exe = std::env::current_exe().ok()?;
-        let output = std::process::Command::new(system_program("rpm")?)
-            .args(["-qf", "--qf", "%{NAME}\n"])
+        let output = std::process::Command::new(system_program(program)?)
+            .args(arguments)
             .arg(exe)
             .stdin(std::process::Stdio::null())
             .output()
             .ok()?;
-        output.status.success().then(|| package_name(&String::from_utf8_lossy(&output.stdout))).flatten()
-    })
-    .as_deref()
+        output.status.success().then(|| parse(&String::from_utf8_lossy(&output.stdout))).flatten()
+    };
+    PACKAGE
+        .get_or_init(|| {
+            if appimage().is_some() {
+                return None;
+            }
+            let rpm = || owner("rpm", &["-qf", "--qf", "%{NAME}\n"], rpm_owner).map(|name| (PackageKind::Rpm, name));
+            let deb = || owner("dpkg", &["-S"], dpkg_owner).map(|name| (PackageKind::Deb, name));
+            rpm().or_else(deb)
+        })
+        .as_ref()
+        .map(|(kind, name)| (*kind, name.as_str()))
 }
 
 #[cfg(not(target_os = "linux"))]
-pub fn rpm_package() -> Option<&'static str> {
+pub fn system_package() -> Option<(PackageKind, &'static str)> {
     None
 }
 
-/// rpm paketini yönetici onayıyla (pkexec) kaldırır ve bitene kadar bekler; paketin kaldırma betiği motoru da
-/// kaldırır (linux/prerm.sh). `rpm -e` yalnız bu paketi siler: `dnf remove` artık kullanılmayan bağımlılıkları da
-/// götürürdü. Ok(false): kullanıcı onay vermedi, hiçbir şey silinmedi.
+/// Paketi yönetici onayıyla (pkexec) kaldırır ve bitene kadar bekler; paketin kaldırma betiği motoru da kaldırır
+/// (linux/prerm.sh). `rpm -e` ve `dpkg -r` yalnız bu paketi siler: `dnf remove` ve `apt autoremove` artık
+/// kullanılmayan bağımlılıkları da götürürdü. Ok(false): kullanıcı onay vermedi, hiçbir şey silinmedi.
 #[cfg(target_os = "linux")]
-pub fn remove_rpm(package: &str) -> std::io::Result<bool> {
+pub fn remove_package(kind: PackageKind, package: &str) -> std::io::Result<bool> {
     use std::process::Stdio;
     let program = |name: &str| system_program(name).ok_or_else(|| std::io::Error::other(format!("{name} bulunamadı")));
+    let (remover, flag) = match kind {
+        PackageKind::Rpm => ("rpm", "-e"),
+        PackageKind::Deb => ("dpkg", "-r"),
+    };
     let status = std::process::Command::new(program("pkexec")?)
-        .arg(program("rpm")?)
-        .args(["-e", "--", package])
+        .arg(program(remover)?)
+        .args([flag, "--", package])
         .stdin(Stdio::null())
         .stdout(Stdio::null())
         .stderr(Stdio::null())
@@ -468,7 +501,7 @@ pub fn remove_rpm(package: &str) -> std::io::Result<bool> {
 }
 
 #[cfg(not(target_os = "linux"))]
-pub fn remove_rpm(_package: &str) -> std::io::Result<bool> {
+pub fn remove_package(_kind: PackageKind, _package: &str) -> std::io::Result<bool> {
     Err(std::io::Error::other("yalnız Linux"))
 }
 
@@ -506,11 +539,17 @@ mod tests {
     }
 
     #[test]
-    fn accepts_only_plain_package_names() {
-        assert_eq!(package_name("robz-dpi\n"), Some("robz-dpi".to_string()));
-        assert_eq!(package_name("lib++x_1.2\n"), Some("lib++x_1.2".to_string()));
+    fn reads_the_owning_package() {
+        assert_eq!(rpm_owner("robz-dpi\n"), Some("robz-dpi".to_string()));
+        assert_eq!(rpm_owner("lib++x_1.2\n"), Some("lib++x_1.2".to_string()));
         for bad in ["", "\n", "-e", "file /x is not owned by any package\n", "a\nb\n"] {
-            assert_eq!(package_name(bad), None, "{bad:?}");
+            assert_eq!(rpm_owner(bad), None, "{bad:?}");
+        }
+
+        assert_eq!(dpkg_owner("robz-dpi: /usr/bin/robz-dpi\n"), Some("robz-dpi".to_string()));
+        assert_eq!(dpkg_owner("robz-dpi:amd64: /usr/bin/robz-dpi\n"), Some("robz-dpi".to_string()));
+        for bad in ["", "robz-dpi\n", "a, b: /usr/bin/x\n", "-r: /usr/bin/x\n", "a: /x\nb: /x\n"] {
+            assert_eq!(dpkg_owner(bad), None, "{bad:?}");
         }
     }
 }

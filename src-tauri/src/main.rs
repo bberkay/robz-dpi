@@ -58,10 +58,10 @@ async fn dispatch(app: &AppHandle, dpi: &Arc<Dpi>, method: &str, args: &[Value])
         // Her şeyi kaldırır: motor (yönetici onayıyla), Windows açılışındaki kayıt, ayarlar ve uygulamanın kendisi.
         // false: motor kaldırılamadı ya da onay verilmedi; hiçbir şey silinmedi.
         "uninstallApp" => {
-            // Linux'ta rpm paketi: tek yönetici onayıyla paket kaldırılır (kaldırma betiği motoru da kaldırır),
-            // sonra ayarlar silinir ve uygulama kapanır.
-            if let Some(package) = shell::rpm_package() {
-                let removed = tauri::async_runtime::spawn_blocking(move || shell::remove_rpm(package))
+            // Linux'ta sistem paketi (.rpm, .deb): tek yönetici onayıyla paket kaldırılır (kaldırma betiği motoru da
+            // kaldırır), sonra ayarlar silinir ve uygulama kapanır.
+            if let Some((kind, package)) = shell::system_package() {
+                let removed = tauri::async_runtime::spawn_blocking(move || shell::remove_package(kind, package))
                     .await
                     .map_err(|e| DpiError::with("unknown", e))?
                     .map_err(|e| DpiError::with("uninstall-failed", e))?;
@@ -84,8 +84,7 @@ async fn dispatch(app: &AppHandle, dpi: &Arc<Dpi>, method: &str, args: &[Value])
                 shell::run_uninstaller(&uninstaller, dpi.data_dir()).map_err(|e| DpiError::with("uninstall-failed", e))?;
                 app.exit(0);
             }
-            // Linux'ta AppImage: dosya, ayarlar ve (Robz Hub kurduysa) menü girişi silinir. .deb ile kuruluysa
-            // uygulamayı paket yöneticisi kaldırır: yalnız motor kaldırılmış olur.
+            // Linux'ta AppImage: dosya, ayarlar ve (Robz Hub kurduysa) menü girişi silinir.
             if let Some(appimage) = shell::appimage() {
                 shell::remove_appimage(&appimage, dpi.data_dir()).map_err(|e| DpiError::with("uninstall-failed", e))?;
                 app.exit(0);
