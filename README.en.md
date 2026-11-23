@@ -8,7 +8,7 @@
   <a href="https://github.com/kutsalkiremitci/robz-dpi/stargazers"><img src="https://img.shields.io/github/stars/kutsalkiremitci/robz-dpi?style=flat-square&amp;logo=github&amp;label=stars&amp;labelColor=0d1117&amp;color=e3b341" alt="GitHub stars"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/kutsalkiremitci/robz-dpi?style=flat-square&amp;label=license&amp;labelColor=0d1117&amp;color=3d444d" alt="License: MIT"></a>
   <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Windows 10 and 11">
-  <img src="https://img.shields.io/badge/Linux-deb%20%7C%20rpm-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Linux: deb and rpm packages">
+  <img src="https://img.shields.io/badge/Linux-deb%20%7C%20rpm%20%7C%20AppImage-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Linux: deb, rpm and AppImage">
   <img src="https://img.shields.io/badge/interface-T%C3%BCrk%C3%A7e%20%7C%20English%20%7C%20%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Interface: Turkish, English and Russian">
 </p>
 
@@ -16,6 +16,7 @@
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Setup.exe"><img src="https://img.shields.io/badge/FREE%20DOWNLOAD-WINDOWS%2010%20%C2%B7%2011-8957e5?style=for-the-badge&amp;logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIuNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgM3YxMiIvPjxwYXRoIGQ9Im02LjUgOS41IDUuNSA1LjUgNS41LTUuNSIvPjxwYXRoIGQ9Ik00IDIwLjVoMTYiLz48L3N2Zz4%3D&amp;labelColor=6e40c9" alt="Free download: RobzDPI-Setup.exe, Windows 10 and 11"></a>
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-amd64.deb"><img src="https://img.shields.io/badge/LINUX-.DEB-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Download for Linux: .deb"></a>
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.rpm"><img src="https://img.shields.io/badge/LINUX-.RPM-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Download for Linux: .rpm"></a>
+  <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.AppImage"><img src="https://img.shields.io/badge/LINUX-APPIMAGE-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Download for Linux: AppImage"></a>
   <a href="https://github.com/kutsalkiremitci/robz-dpi/stargazers"><img src="https://img.shields.io/github/stars/kutsalkiremitci/robz-dpi?style=for-the-badge&amp;logo=github&amp;label=STAR&amp;labelColor=0d1117&amp;color=e3b341" alt="Star on GitHub"></a>
   <br>
   <a href="README.md"><img src="https://img.shields.io/badge/T%C3%9CRK%C3%87E-21262d?style=for-the-badge" alt="Türkçe"></a>
@@ -135,17 +136,28 @@ Continue with **More info** → **Run anyway**. To verify that the file comes fr
 
 ### Linux
 
-**Requirements:** a 64-bit (x86_64) distribution with systemd, nftables and polkit (present on most desktop
-distributions). No extra driver is needed: packets are captured by the Linux kernel's own packet queue.
+**Requirements:** a 64-bit (x86_64) distribution that uses glibc 2.35 or newer (Ubuntu 22.04, Debian 12, Fedora 36
+and later) with systemd, nftables and polkit (present on most desktop distributions). No extra driver is needed: packets are captured by the Linux kernel's own packet queue.
 
 | Distribution | Package | Install |
 |---|---|---|
 | Debian, Ubuntu, Linux Mint | [RobzDPI-Linux-amd64.deb](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-amd64.deb) | `sudo apt install ./RobzDPI-Linux-amd64.deb` |
 | Fedora, openSUSE | [RobzDPI-Linux-x86_64.rpm](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.rpm) | `sudo dnf install ./RobzDPI-Linux-x86_64.rpm` |
+| Other distributions (Arch, Manjaro and similar) | [RobzDPI-Linux-x86_64.AppImage](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.AppImage) | `chmod +x RobzDPI-Linux-x86_64.AppImage && ./RobzDPI-Linux-x86_64.AppImage` |
 
 After installing, open **Robz DPI** from the application menu. The first time you press the button the system asks
 for the administrator password (polkit); on systems that support polkit rules, turning it on and off later asks for
 nothing. The package digests are in `SHA256SUMS-linux.txt` on the release page.
+
+The **AppImage** is a single file that needs no installation and carries the libraries the interface needs. Its
+limits:
+
+- The engine still uses the system's systemd, nftables and polkit; they must be installed.
+- It needs FUSE 2 to start (Ubuntu 22.04: `sudo apt install libfuse2`; 24.04 and later: `libfuse2t64`). Without
+  FUSE it can be started with `./RobzDPI-Linux-x86_64.AppImage --appimage-extract-and-run`.
+- It does not run on musl-based distributions (such as Alpine).
+- If a `.deb` or `.rpm` package exists for your distribution, prefer it: it is smaller and is updated and removed by
+  the package manager.
 
 > [!NOTE]
 > The Linux version is new. The packets the engine produces are verified by automated tests, but it has not been
@@ -208,7 +220,8 @@ administrator rights, so Windows asks for approval once. Uninstalling from the W
 background part too.
 
 On Linux, remove the package with your package manager (`sudo apt remove robz-dpi` or `sudo dnf remove robz-dpi`);
-the background part (the systemd unit, the rules, `/opt/robzdpi` and `/var/lib/robzdpi`) is removed with it.
+the background part (the systemd unit, the rules, `/opt/robzdpi` and `/var/lib/robzdpi`) is removed with it. If you
+use the AppImage, first remove the background part with Settings → **Uninstall Robz DPI**, then delete the file.
 
 ## About antivirus software
 
@@ -426,7 +439,8 @@ do not use it and consult a lawyer. Details: [disclaimer](DISCLAIMER.md#english)
 npm install          # copies the interface libraries, downloads and verifies WinDivert
 npm run dev          # runs in development mode
 npm test             # interface (node --test) and engine (cargo test) tests
-npm run build        # installer: src-tauri/target/release/bundle/ (Windows: nsis, Linux: deb and rpm)
+npm run build        # Windows installer: src-tauri/target/release/bundle/nsis/
+npm run build:linux  # Linux: the engine program (robzdpi-engine) first, then deb, rpm and AppImage
 ```
 
 - **The engine is tested without the network.** `logic.rs` is pure logic: tests feed hand-built packets and check the
@@ -455,6 +469,7 @@ src-tauri/src/
   shell.rs           window, tray, start with Windows, uninstall
   engine/            the engine (table above) + helper.rs (administrator helper), scm.rs (Windows services),
                      linux.rs and linux_helper.rs (their Linux counterparts)
+  engine-bin/        the GUI-free program of the engine and the administrator helper on Linux (same source, own package)
 ```
 
 **Releasing:** set the same version number in `package.json`, `src-tauri/Cargo.toml` and

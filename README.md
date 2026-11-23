@@ -8,7 +8,7 @@
   <a href="https://github.com/kutsalkiremitci/robz-dpi/stargazers"><img src="https://img.shields.io/github/stars/kutsalkiremitci/robz-dpi?style=flat-square&amp;logo=github&amp;label=y%C4%B1ld%C4%B1z&amp;labelColor=0d1117&amp;color=e3b341" alt="GitHub yıldızları"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/kutsalkiremitci/robz-dpi?style=flat-square&amp;label=lisans&amp;labelColor=0d1117&amp;color=3d444d" alt="Lisans: MIT"></a>
   <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Windows 10 ve 11">
-  <img src="https://img.shields.io/badge/Linux-deb%20%7C%20rpm-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Linux: deb ve rpm paketleri">
+  <img src="https://img.shields.io/badge/Linux-deb%20%7C%20rpm%20%7C%20AppImage-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Linux: deb, rpm ve AppImage">
   <img src="https://img.shields.io/badge/aray%C3%BCz-T%C3%BCrk%C3%A7e%20%7C%20English%20%7C%20%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Arayüz: Türkçe, İngilizce ve Rusça">
 </p>
 
@@ -16,6 +16,7 @@
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Setup.exe"><img src="https://img.shields.io/badge/%C3%9CCRETS%C4%B0Z%20%C4%B0ND%C4%B0R-WINDOWS%2010%20%C2%B7%2011-8957e5?style=for-the-badge&amp;logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIuNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgM3YxMiIvPjxwYXRoIGQ9Im02LjUgOS41IDUuNSA1LjUgNS41LTUuNSIvPjxwYXRoIGQ9Ik00IDIwLjVoMTYiLz48L3N2Zz4%3D&amp;labelColor=6e40c9" alt="Ücretsiz indir: RobzDPI-Setup.exe, Windows 10 ve 11"></a>
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-amd64.deb"><img src="https://img.shields.io/badge/LINUX-.DEB-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Linux için indir: .deb"></a>
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.rpm"><img src="https://img.shields.io/badge/LINUX-.RPM-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Linux için indir: .rpm"></a>
+  <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.AppImage"><img src="https://img.shields.io/badge/LINUX-APPIMAGE-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Linux için indir: AppImage"></a>
   <a href="https://github.com/kutsalkiremitci/robz-dpi/stargazers"><img src="https://img.shields.io/github/stars/kutsalkiremitci/robz-dpi?style=for-the-badge&amp;logo=github&amp;label=YILDIZ%20VER&amp;labelColor=0d1117&amp;color=e3b341" alt="GitHub'da yıldız ver"></a>
   <br>
   <a href="README.en.md"><img src="https://img.shields.io/badge/ENGLISH-21262d?style=for-the-badge&amp;logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSAzMCI%2BCiAgPHJlY3Qgd2lkdGg9IjQ1IiBoZWlnaHQ9IjMwIiBmaWxsPSIjMDEyMTY5Ii8%2BCiAgPHBhdGggZD0iTTAsMCBMNDUsMzAgTTQ1LDAgTDAsMzAiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSI2Ii8%2BCiAgPHBhdGggZD0iTTAsMCBMNDUsMzAgTTQ1LDAgTDAsMzAiIHN0cm9rZT0iI0M4MTAyRSIgc3Ryb2tlLXdpZHRoPSIyLjIiLz4KICA8cGF0aCBkPSJNMjIuNSwwIFYzMCBNMCwxNSBINDUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSI5Ii8%2BCiAgPHBhdGggZD0iTTIyLjUsMCBWMzAgTTAsMTUgSDQ1IiBzdHJva2U9IiNDODEwMkUiIHN0cm9rZS13aWR0aD0iNS40Ii8%2BCjwvc3ZnPgo%3D" alt="English"></a>
@@ -135,17 +136,28 @@ geldiğini doğrulamak için sürüm sayfasındaki `SHA256SUMS.txt` dosyasıyla 
 
 ### Linux
 
-**Gereksinimler:** 64 bit (x86_64) bir dağıtım; systemd, nftables ve polkit (çoğu masaüstü dağıtımında kuruludur).
+**Gereksinimler:** 64 bit (x86_64), glibc 2.35 ya da daha yenisini kullanan bir dağıtım (Ubuntu 22.04, Debian 12,
+Fedora 36 ve sonrası); systemd, nftables ve polkit (çoğu masaüstü dağıtımında kuruludur).
 Ek sürücü gerekmez: paketleri Linux çekirdeğinin kendi paket kuyruğu yakalar.
 
 | Dağıtım | Paket | Kurulum |
 |---|---|---|
 | Debian, Ubuntu, Linux Mint | [RobzDPI-Linux-amd64.deb](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-amd64.deb) | `sudo apt install ./RobzDPI-Linux-amd64.deb` |
 | Fedora, openSUSE | [RobzDPI-Linux-x86_64.rpm](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.rpm) | `sudo dnf install ./RobzDPI-Linux-x86_64.rpm` |
+| Diğer dağıtımlar (Arch, Manjaro ve benzerleri) | [RobzDPI-Linux-x86_64.AppImage](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.AppImage) | `chmod +x RobzDPI-Linux-x86_64.AppImage && ./RobzDPI-Linux-x86_64.AppImage` |
 
 Kurulumdan sonra uygulama menüsünden **Robz DPI**'ı açınız. Düğmeye ilk basışta sistem yönetici parolasını sorar
 (polkit); polkit kurallarını destekleyen sistemlerde sonraki açıp kapamalar parola istemez. Paketlerin özetleri
 sürüm sayfasındaki `SHA256SUMS-linux.txt` dosyasındadır.
+
+**AppImage** kurulum gerektirmeyen tek bir dosyadır ve arayüzün gereksindiği kitaplıkları içinde taşır. Sınırları:
+
+- Motor yine sistemin systemd, nftables ve polkit araçlarını kullanır; bunlar kurulu olmalıdır.
+- Açılması için FUSE 2 gerekir (Ubuntu 22.04: `sudo apt install libfuse2`; 24.04 ve sonrası: `libfuse2t64`). FUSE
+  yoksa `./RobzDPI-Linux-x86_64.AppImage --appimage-extract-and-run` ile açılabilir.
+- musl tabanlı dağıtımlarda (Alpine gibi) çalışmaz.
+- Dağıtımınız için `.deb` ya da `.rpm` paketi varsa onu yeğleyiniz: daha küçüktür ve paket yöneticisiyle güncellenip
+  kaldırılır.
 
 > [!NOTE]
 > Linux sürümü yenidir. Motorun ürettiği paketler otomatik testlerle doğrulanmıştır; ancak her dağıtımda ve her
@@ -207,6 +219,8 @@ Windows bir kez onay ister. Windows'un "Uygulamalar" listesinden kaldırmak da a
 
 Linux'ta paketi paket yöneticinizle kaldırınız (`sudo apt remove robz-dpi` ya da `sudo dnf remove robz-dpi`); arka
 planda çalışan parça (systemd birimi, kurallar, `/opt/robzdpi` ve `/var/lib/robzdpi`) paketle birlikte silinir.
+AppImage kullanıyorsanız önce Ayarlar → **Robz DPI'ı kaldır** ile arka plandaki parçayı kaldırınız, sonra dosyayı
+siliniz.
 
 ## Antivirüs yazılımları hakkında
 
@@ -425,7 +439,8 @@ bir hukukçuya danışınız. Ayrıntılar: [sorumluluk reddi](DISCLAIMER.md).
 npm install          # arayüz kütüphanelerini kopyalar, WinDivert'i indirip doğrular
 npm run dev          # geliştirme kipinde açar
 npm test             # arayüz (node --test) ve motor (cargo test) testleri
-npm run build        # kurulum dosyası: src-tauri/target/release/bundle/ (Windows: nsis, Linux: deb ve rpm)
+npm run build        # Windows kurulum dosyası: src-tauri/target/release/bundle/nsis/
+npm run build:linux  # Linux: önce motor programı (robzdpi-engine), sonra deb, rpm ve AppImage
 ```
 
 - **Motor ağa dokunmadan test edilir.** `logic.rs` saf mantıktır: testler elle kurulmuş paketleri verir ve çıkan
@@ -453,6 +468,7 @@ src-tauri/src/
   shell.rs           pencere, tepsi, Windows açılışında başlatma, kaldırma
   engine/            motor (yukarıdaki tablo) + helper.rs (yönetici yardımcısı), scm.rs (Windows hizmetleri),
                      linux.rs ve linux_helper.rs (Linux'taki karşılıkları)
+  engine-bin/        Linux'ta motorun ve yönetici yardımcısının arayüzsüz programı (aynı kaynak, ayrı paket)
 ```
 
 **Sürüm yayınlama:** sürüm numarası `package.json`, `src-tauri/Cargo.toml` ve `src-tauri/tauri.conf.json`

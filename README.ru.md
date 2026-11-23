@@ -8,7 +8,7 @@
   <a href="https://github.com/kutsalkiremitci/robz-dpi/stargazers"><img src="https://img.shields.io/github/stars/kutsalkiremitci/robz-dpi?style=flat-square&amp;logo=github&amp;label=звёзды&amp;labelColor=0d1117&amp;color=e3b341" alt="Звёзды на GitHub"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/kutsalkiremitci/robz-dpi?style=flat-square&amp;label=лицензия&amp;labelColor=0d1117&amp;color=3d444d" alt="Лицензия: MIT"></a>
   <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Windows 10 и 11">
-  <img src="https://img.shields.io/badge/Linux-deb%20%7C%20rpm-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Linux: пакеты deb и rpm">
+  <img src="https://img.shields.io/badge/Linux-deb%20%7C%20rpm%20%7C%20AppImage-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Linux: deb, rpm и AppImage">
   <img src="https://img.shields.io/badge/интерфейс-Türkçe%20%7C%20English%20%7C%20Русский-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Интерфейс: турецкий, английский и русский">
 </p>
 
@@ -16,6 +16,7 @@
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Setup.exe"><img src="https://img.shields.io/badge/СКАЧАТЬ%20БЕСПЛАТНО-WINDOWS%2010%20%C2%B7%2011-8957e5?style=for-the-badge&amp;labelColor=6e40c9" alt="Скачать бесплатно: RobzDPI-Setup.exe, Windows 10 и 11"></a>
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-amd64.deb"><img src="https://img.shields.io/badge/LINUX-.DEB-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Скачать для Linux: .deb"></a>
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.rpm"><img src="https://img.shields.io/badge/LINUX-.RPM-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Скачать для Linux: .rpm"></a>
+  <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.AppImage"><img src="https://img.shields.io/badge/LINUX-APPIMAGE-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Скачать для Linux: AppImage"></a>
   <a href="https://github.com/kutsalkiremitci/robz-dpi/stargazers"><img src="https://img.shields.io/github/stars/kutsalkiremitci/robz-dpi?style=for-the-badge&amp;logo=github&amp;label=ЗВЕЗДА&amp;labelColor=0d1117&amp;color=e3b341" alt="Поставить звезду на GitHub"></a>
   <br>
   <a href="README.md"><img src="https://img.shields.io/badge/TÜRKÇE-21262d?style=for-the-badge" alt="Türkçe"></a>
@@ -138,17 +139,28 @@ Robz DPI — не VPN, не прокси и не сервис доступа. О
 
 ### Linux
 
-**Требования:** 64-битный (x86_64) дистрибутив с systemd, nftables и polkit (есть в большинстве настольных
-дистрибутивов). Дополнительный драйвер не нужен: пакеты перехватывает собственная очередь пакетов ядра Linux.
+**Требования:** 64-битный (x86_64) дистрибутив с glibc 2.35 или новее (Ubuntu 22.04, Debian 12, Fedora 36 и новее),
+в котором есть systemd, nftables и polkit (есть в большинстве настольных дистрибутивов). Дополнительный драйвер не нужен: пакеты перехватывает собственная очередь пакетов ядра Linux.
 
 | Дистрибутив | Пакет | Установка |
 |---|---|---|
 | Debian, Ubuntu, Linux Mint | [RobzDPI-Linux-amd64.deb](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-amd64.deb) | `sudo apt install ./RobzDPI-Linux-amd64.deb` |
 | Fedora, openSUSE | [RobzDPI-Linux-x86_64.rpm](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.rpm) | `sudo dnf install ./RobzDPI-Linux-x86_64.rpm` |
+| Другие дистрибутивы (Arch, Manjaro и подобные) | [RobzDPI-Linux-x86_64.AppImage](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.AppImage) | `chmod +x RobzDPI-Linux-x86_64.AppImage && ./RobzDPI-Linux-x86_64.AppImage` |
 
 После установки откройте **Robz DPI** из меню приложений. При первом нажатии кнопки система попросит пароль
 администратора (polkit); в системах, поддерживающих правила polkit, дальнейшие включения и выключения пароля не
 требуют. Контрольные суммы пакетов находятся в `SHA256SUMS-linux.txt` на странице выпуска.
+
+**AppImage** — один файл, не требующий установки; библиотеки, нужные интерфейсу, находятся внутри него.
+Ограничения:
+
+- Движок по-прежнему использует системные systemd, nftables и polkit; они должны быть установлены.
+- Для запуска нужен FUSE 2 (Ubuntu 22.04: `sudo apt install libfuse2`; 24.04 и новее: `libfuse2t64`). Без FUSE
+  можно запустить так: `./RobzDPI-Linux-x86_64.AppImage --appimage-extract-and-run`.
+- Не работает в дистрибутивах на основе musl (например, Alpine).
+- Если для вашего дистрибутива есть пакет `.deb` или `.rpm`, выбирайте его: он меньше, обновляется и удаляется
+  менеджером пакетов.
 
 > [!NOTE]
 > Версия для Linux новая. Пакеты, которые создаёт движок, проверены автоматическими тестами, но версия проверялась
@@ -211,7 +223,8 @@ WinDivert, папка `Program Files\RobzDPI`) и настройки. Фонов
 часть.
 
 В Linux удалите пакет через менеджер пакетов (`sudo apt remove robz-dpi` или `sudo dnf remove robz-dpi`); фоновая
-часть (юнит systemd, правила, `/opt/robzdpi` и `/var/lib/robzdpi`) удаляется вместе с ним.
+часть (юнит systemd, правила, `/opt/robzdpi` и `/var/lib/robzdpi`) удаляется вместе с ним. Если вы используете
+AppImage, сначала удалите фоновую часть через Настройки → **Удалить Robz DPI**, затем удалите файл.
 
 ## Об антивирусных программах
 
@@ -433,7 +446,8 @@ GoodbyeDPI — проверенная программа, которой пол�
 npm install          # копирует библиотеки интерфейса, скачивает и проверяет WinDivert
 npm run dev          # запуск в режиме разработки
 npm test             # тесты интерфейса (node --test) и движка (cargo test)
-npm run build        # установщик: src-tauri/target/release/bundle/ (Windows: nsis, Linux: deb и rpm)
+npm run build        # установщик для Windows: src-tauri/target/release/bundle/nsis/
+npm run build:linux  # Linux: сначала программа движка (robzdpi-engine), затем deb, rpm и AppImage
 ```
 
 - **Движок тестируется без сети.** `logic.rs` — чистая логика: тесты подают вручную собранные пакеты и проверяют

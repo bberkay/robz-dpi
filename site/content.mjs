@@ -100,7 +100,7 @@ export default {
     steps: [
       {
         title: 'İndir ve kur',
-        text: "Windows'ta RobzDPI-Setup.exe dosyasını çalıştır; kurulum yönetici izni istemez. Linux'ta .deb ya da .rpm paketini kur. İlk açılışta bir kez üç kısa adım sorulur: dil, sorumluluk reddinin kabulü ve nerede çalışacağı.",
+        text: "Windows'ta RobzDPI-Setup.exe dosyasını çalıştır; kurulum yönetici izni istemez. Linux'ta .deb ya da .rpm paketini kur ya da AppImage dosyasını çalıştır. İlk açılışta bir kez üç kısa adım sorulur: dil, sorumluluk reddinin kabulü ve nerede çalışacağı.",
         note: 'Dosya imzalı olmadığı için Windows "kişisel bilgisayarınızı korudu" uyarısı gösterebilir: Ek bilgi › Yine de çalıştır.',
         shot: '06-terms.png',
         shotAlt: 'İlk açılış: sorumluluk reddinin özeti ve onay kutusu',
@@ -166,7 +166,7 @@ export default {
       ],
       [
         "Linux'ta ve macOS'ta çalışır mı?",
-        "Windows 10 ve 11 ile Linux'ta çalışır. Linux'ta .deb (Debian, Ubuntu, Mint) ve .rpm (Fedora, openSUSE) paketleri vardır; systemd, nftables ve polkit gerekir. macOS sürümü yoktur: orada paketleri bu biçimde yakalamak Apple'ın imzaladığı bir ağ uzantısı gerektirir.",
+        "Windows 10 ve 11 ile Linux'ta çalışır. Linux'ta .deb (Debian, Ubuntu, Mint) ve .rpm (Fedora, openSUSE) paketleri ile diğer dağıtımlar için AppImage vardır; systemd, nftables ve polkit gerekir. macOS sürümü yoktur: orada paketleri bu biçimde yakalamak Apple'ın imzaladığı bir ağ uzantısı gerektirir.",
       ],
       [
         'Yasal mı?',
@@ -270,7 +270,7 @@ export default {
     steps: [
       {
         title: 'Download and install',
-        text: 'On Windows, run RobzDPI-Setup.exe; installing needs no administrator rights. On Linux, install the .deb or .rpm package. The first run asks three short steps, once: language, accepting the disclaimer and where it should work.',
+        text: 'On Windows, run RobzDPI-Setup.exe; installing needs no administrator rights. On Linux, install the .deb or .rpm package or run the AppImage. The first run asks three short steps, once: language, accepting the disclaimer and where it should work.',
         note: 'The file is not signed, so Windows may show "Windows protected your PC": More info › Run anyway.',
         shot: '06-terms.png',
         shotAlt: 'First run: the disclaimer summary and the acceptance checkbox',
@@ -336,7 +336,7 @@ export default {
       ],
       [
         'Does it work on Linux and macOS?',
-        'It runs on Windows 10 and 11 and on Linux. For Linux there are .deb (Debian, Ubuntu, Mint) and .rpm (Fedora, openSUSE) packages; systemd, nftables and polkit are required. There is no macOS version: capturing packets this way there requires a network extension signed by Apple.',
+        'It runs on Windows 10 and 11 and on Linux. For Linux there are .deb (Debian, Ubuntu, Mint) and .rpm (Fedora, openSUSE) packages and an AppImage for other distributions; systemd, nftables and polkit are required. There is no macOS version: capturing packets this way there requires a network extension signed by Apple.',
       ],
       [
         'Is it legal?',
@@ -440,7 +440,7 @@ export default {
     steps: [
       {
         title: 'Скачайте и установите',
-        text: 'В Windows запустите RobzDPI-Setup.exe; установка не требует прав администратора. В Linux установите пакет .deb или .rpm. При первом запуске один раз задаются три коротких шага: язык, согласие с отказом от ответственности и где программа должна работать.',
+        text: 'В Windows запустите RobzDPI-Setup.exe; установка не требует прав администратора. В Linux установите пакет .deb или .rpm либо запустите AppImage. При первом запуске один раз задаются три коротких шага: язык, согласие с отказом от ответственности и где программа должна работать.',
         note: 'Файл не подписан, поэтому Windows может показать «Система Windows защитила ваш компьютер»: Подробнее › Выполнить в любом случае.',
         shot: '06-terms.png',
         shotAlt: 'Первый запуск: краткий отказ от ответственности и флажок согласия',
@@ -506,7 +506,7 @@ export default {
       ],
       [
         'Работает ли в Linux и macOS?',
-        'Работает в Windows 10 и 11 и в Linux. Для Linux есть пакеты .deb (Debian, Ubuntu, Mint) и .rpm (Fedora, openSUSE); нужны systemd, nftables и polkit. Версии для macOS нет: там такой перехват пакетов требует сетевого расширения, подписанного Apple.',
+        'Работает в Windows 10 и 11 и в Linux. Для Linux есть пакеты .deb (Debian, Ubuntu, Mint) и .rpm (Fedora, openSUSE), а для других дистрибутивов — AppImage; нужны systemd, nftables и polkit. Версии для macOS нет: там такой перехват пакетов требует сетевого расширения, подписанного Apple.',
       ],
       [
         'Это законно?',

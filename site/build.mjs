@@ -22,6 +22,7 @@ const DOWNLOAD = `${REPO_URL}/releases/latest/download/${SETUP}`;
 const LINUX = [
   ['.deb', `${REPO_URL}/releases/latest/download/RobzDPI-Linux-amd64.deb`, 'Debian, Ubuntu, Mint'],
   ['.rpm', `${REPO_URL}/releases/latest/download/RobzDPI-Linux-x86_64.rpm`, 'Fedora, openSUSE'],
+  ['AppImage', `${REPO_URL}/releases/latest/download/RobzDPI-Linux-x86_64.AppImage`, 'Arch, …'],
 ];
 const DISCORD = 'https://discord.gg/UyyEn7SHm4';
 const ROBZ_HUB = 'https://kutsalkiremitci.github.io/robz-hub/';
