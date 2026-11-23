@@ -361,6 +361,11 @@ pub fn remove_appimage(appimage: &Path, data_dir: &Path) -> std::io::Result<()> 
         .map(drop)
 }
 
+#[cfg(not(target_os = "linux"))]
+pub fn remove_appimage(_appimage: &Path, _data_dir: &Path) -> std::io::Result<()> {
+    Err(std::io::Error::other("yalnız Linux"))
+}
+
 // ---- açılışta başlatma ve zamanlayıcı -------------------------------------------------------------------------------
 
 /// Yalnız kurulu sürümde: geliştirme kipinde geçici exe'yi Windows açılışına eklemeyelim.
