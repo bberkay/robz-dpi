@@ -381,6 +381,8 @@ npm run build        # installer: src-tauri/target/release/bundle/nsis/
   design can be tried without touching the computer.
 - `node scripts/screenshots.mjs` regenerates [`docs/screenshots`](docs/screenshots) in three languages; `node
   scripts/render-banners.mjs` redraws the README images.
+- `node site/build.mjs` builds the three-language one-page website into [`site/dist`](site); each language page
+  uses the screenshots in that language.
 
 ```
 engine.lock.json     the official WinDivert release and its SHA-256 digests

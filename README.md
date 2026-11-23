@@ -373,6 +373,8 @@ npm run build        # kurulum dosyası: src-tauri/target/release/bundle/nsis/
   bilgisayara dokunmadan denenir.
 - `node scripts/screenshots.mjs` [`docs/screenshots`](docs/screenshots) görüntülerini (üç dilde), `node
   scripts/render-banners.mjs` README görsellerini yeniden üretir.
+- `node site/build.mjs` üç dilli tek sayfalık web sitesini [`site/dist`](site) klasörüne üretir; her dilin sayfası
+  o dilin ekran görüntülerini kullanır.
 
 ```
 engine.lock.json     WinDivert'in resmi sürümü ve SHA-256 özetleri
