@@ -35,7 +35,6 @@ Bilinen sınırlar (Linux):
 - systemd, nftables ve polkit gerektirir; yalnız x86_64.
 - Motorun ürettiği paketler otomatik testlerle (iki makine arasında ve gerçek bir sitede) doğrulanmıştır; ancak Linux
   sürümü her dağıtımda ve her servis sağlayıcıda denenmemiştir.
-- macOS desteği yoktur.
 
 ## 0.1.0
 

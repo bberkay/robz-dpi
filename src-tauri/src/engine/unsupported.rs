@@ -1,6 +1,5 @@
-//! Windows dışındaki sistemler: motorun sürücü katmanı henüz yok (macOS desteği sonraki sürümde). Arayüz derlenir
-//! ve açılır, motor işlemleri "unsupported" hatası verir. Paket mantığı (logic.rs) her platformda derlenir ve
-//! test edilir.
+//! Windows ve Linux dışındaki sistemler: motor yoktur. Arayüz derlenir, motor işlemleri "unsupported" hatası verir.
+//! Paket mantığı (logic.rs) her platformda derlenir ve test edilir.
 
 use super::{Conflict, Status};
 use crate::error::{DpiError, DpiResult};

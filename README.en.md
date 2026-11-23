@@ -412,14 +412,6 @@ Any site. Robz DPI does not come with a list of sites; Discord and Roblox are on
 </details>
 
 <details>
-<summary><b>Does it work on macOS?</b></summary>
-
-No. Robz DPI runs on Windows 10 and 11 and on Linux. Capturing packets this way on macOS requires a network
-extension signed by Apple, so there is no macOS version.
-
-</details>
-
-<details>
 <summary><b>Is it legal?</b></summary>
 
 That depends on the country you are in and what you use the software for; this repository does not give legal advice.

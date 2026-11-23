@@ -50,7 +50,7 @@
   --del-num: rgba(248, 81, 73, 0.2);
   --del-fg: #ffdcd7;
   /* Mona Sans'ta Kiril harfleri yok: Rusça sayfada sıradaki yazı tipine düşer. */
-  --sans: 'Mona Sans', 'Segoe UI Variable Text', 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --sans: 'Mona Sans', 'Segoe UI Variable Text', 'Segoe UI', system-ui, Arial, sans-serif;
   --mono: 'Cascadia Code', 'Cascadia Mono', ui-monospace, 'SF Mono', Consolas, monospace;
   --radius: 6px;
   --radius-lg: 12px;

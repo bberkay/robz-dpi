@@ -412,14 +412,6 @@ Dilediğiniz site. Robz DPI bir site listesiyle gelmez; Discord ve Roblox yalnı
 </details>
 
 <details>
-<summary><b>macOS'ta çalışır mı?</b></summary>
-
-Hayır. Robz DPI Windows 10 ve 11 ile Linux'ta çalışır. macOS'ta paketleri bu biçimde yakalamak Apple'ın imzaladığı
-bir ağ uzantısı gerektirir; bu nedenle macOS sürümü yoktur.
-
-</details>
-
-<details>
 <summary><b>Yasal mıdır?</b></summary>
 
 Bu, bulunduğunuz ülkeye ve yazılımı ne amaçla kullandığınıza bağlıdır; bu depo hukuki tavsiye vermez. Robz DPI eğitim

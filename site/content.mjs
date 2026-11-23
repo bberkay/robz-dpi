@@ -165,8 +165,8 @@ export default {
         'Ayarlar › "Robz DPI\'ı kaldır". Uygulamayı, arka planda çalışan parçasını (Windows hizmeti ve sürücü) ve ayarlarını tek adımda siler. Windows\'un Uygulamalar listesinden kaldırmak da aynı işi yapar. Linux\'ta paketi paket yöneticinle kaldırırsın; arka plandaki parça da birlikte silinir.',
       ],
       [
-        "Linux'ta ve macOS'ta çalışır mı?",
-        "Windows 10 ve 11 ile Linux'ta çalışır. Linux'ta .deb (Debian, Ubuntu, Mint) ve .rpm (Fedora, openSUSE) paketleri ile diğer dağıtımlar için AppImage vardır; systemd, nftables ve polkit gerekir. macOS sürümü yoktur: orada paketleri bu biçimde yakalamak Apple'ın imzaladığı bir ağ uzantısı gerektirir.",
+        "Linux'ta çalışır mı?",
+        "Windows 10 ve 11 ile Linux'ta çalışır. Linux'ta .deb (Debian, Ubuntu, Mint) ve .rpm (Fedora, openSUSE) paketleri ile diğer dağıtımlar için AppImage vardır; systemd, nftables ve polkit gerekir.",
       ],
       [
         'Yasal mı?',
@@ -335,8 +335,8 @@ export default {
         'Settings › "Uninstall Robz DPI". It removes the app, its background part (the Windows service and the driver) and your settings in one step. Uninstalling from the Windows Apps list does the same. On Linux, remove the package with your package manager; the background part goes with it.',
       ],
       [
-        'Does it work on Linux and macOS?',
-        'It runs on Windows 10 and 11 and on Linux. For Linux there are .deb (Debian, Ubuntu, Mint) and .rpm (Fedora, openSUSE) packages and an AppImage for other distributions; systemd, nftables and polkit are required. There is no macOS version: capturing packets this way there requires a network extension signed by Apple.',
+        'Does it work on Linux?',
+        'It runs on Windows 10 and 11 and on Linux. For Linux there are .deb (Debian, Ubuntu, Mint) and .rpm (Fedora, openSUSE) packages and an AppImage for other distributions; systemd, nftables and polkit are required.',
       ],
       [
         'Is it legal?',
@@ -505,8 +505,8 @@ export default {
         'Настройки › «Удалить Robz DPI». Одним действием удаляются приложение, его фоновая часть (служба Windows и драйвер) и настройки. Удаление через список «Приложения» Windows делает то же самое. В Linux удалите пакет через менеджер пакетов; фоновая часть удалится вместе с ним.',
       ],
       [
-        'Работает ли в Linux и macOS?',
-        'Работает в Windows 10 и 11 и в Linux. Для Linux есть пакеты .deb (Debian, Ubuntu, Mint) и .rpm (Fedora, openSUSE), а для других дистрибутивов — AppImage; нужны systemd, nftables и polkit. Версии для macOS нет: там такой перехват пакетов требует сетевого расширения, подписанного Apple.',
+        'Работает ли в Linux?',
+        'Работает в Windows 10 и 11 и в Linux. Для Linux есть пакеты .deb (Debian, Ubuntu, Mint) и .rpm (Fedora, openSUSE), а для других дистрибутивов — AppImage; нужны systemd, nftables и polkit.',
       ],
       [
         'Это законно?',
