@@ -227,8 +227,13 @@ pub fn run_uninstaller(uninstaller: &Path, data_dir: &Path) -> std::io::Result<(
     const CREATE_NO_WINDOW: u32 = 0x0800_0000;
     let mut script = format!("/d /s /c \"ping -n 3 127.0.0.1 >nul & \"{}\" /S", uninstaller.display());
     // Yalnız uygulamanın kendi veri klasörü silinir (geliştirme için başka bir klasör verilmişse dokunulmaz).
+    // Arayüzün (WebView2) arka plan süreçleri kapanırken dosyalarını bir süre açık tutabilir; klasör tümüyle
+    // gidene kadar birkaç saniye arayla yeniden denenir (en çok ~20 saniye).
     if data_dir.file_name().is_some_and(|name| name == APP_IDENTIFIER) {
-        script.push_str(&format!(" & ping -n 4 127.0.0.1 >nul & rmdir /s /q \"{}\"", data_dir.display()));
+        let dir = data_dir.display();
+        script.push_str(&format!(
+            " & for /l %i in (1,1,8) do @(ping -n 3 127.0.0.1 >nul & if exist \"{dir}\" rmdir /s /q \"{dir}\")"
+        ));
     }
     script.push('"');
     let cmd = std::env::var_os("SystemRoot").map(|root| Path::new(&root).join("System32").join("cmd.exe"));
