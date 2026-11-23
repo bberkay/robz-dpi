@@ -27,13 +27,20 @@ job() { # ad, strateji alanları
 EOF
 }
 
+# Motor üzerinden siteye bağlanır. Sonuç dış bir siteye ve aradaki ağa bağlı olduğu için üç kez denenir: tek bir
+# bağlantının kurulamaması denemeyi düşürmez, üçünün de kurulamaması düşürür.
 check_site() { # ad
-  local before after code
-  before=$(sed -E 's/.*"tls":([0-9]+).*/\1/' "$STATE/stats.json" 2>/dev/null || echo 0)
-  code=$(curl -s -o /dev/null -m 15 -w '%{http_code}' "https://$SITE/" || true)
+  local before after code attempt
+  before=$(sed -E 's/.*"tls":([0-9]+).*//' "$STATE/stats.json" 2>/dev/null || echo 0)
+  for attempt in 1 2 3; do
+    code=$(curl -s -o /dev/null -m 15 -w '%{http_code}' "https://$SITE/" || true)
+    [ "$code" = 200 ] && break
+    echo "$1: $attempt. deneme sonuç vermedi ($code)"
+    sleep 2
+  done
   sleep 2.5 # sayaç dosyası birkaç saniyede bir yazılır
-  after=$(sed -E 's/.*"tls":([0-9]+).*/\1/' "$STATE/stats.json")
-  echo "$1: https://$SITE/ -> $code, işlenen bağlantı $before -> $after"
+  after=$(sed -E 's/.*"tls":([0-9]+).*//' "$STATE/stats.json")
+  echo "$1: https://$SITE/ -> $code ($attempt. denemede), işlenen bağlantı $before -> $after"
   [ "$code" = 200 ] || fail "$1: site açılmadı ($code)"
   [ "$after" -gt "$before" ] || fail "$1: motor bağlantıyı görmedi"
 }
@@ -46,8 +53,10 @@ nft list table inet robzdpi | grep -q "queue" || fail "kurallar yüklenmedi"
 systemctl show robzdpi.service --property MainPID --property ActiveState
 check_site "yalnız bölme"
 
-say "ayar değişikliği: bölme + sunucunun attığı sahte istekler"
-job fakes true true
+# Sahte istek yalnız sağlama toplamı bozuk olanıdır: her alıcı onu sessizce atar. Eski sıra numaralı sahte isteğe
+# bazı sunucular ve ağ geçitleri farklı tepki verdiği için dış bir siteyle yapılan bu denemede kullanılmaz.
+say "ayar değişikliği: bölme + sağlama toplamı bozuk sahte istek"
+job fakes true false
 "$BIN" --helper apply "$WORK/job.json" || fail "yardımcı başarısız: $(cat /run/robzdpi-result.json 2>/dev/null)"
 [ "$(systemctl is-active robzdpi.service)" = active ] || fail "birim çalışmıyor"
 check_site "bölme + sahte istek"
