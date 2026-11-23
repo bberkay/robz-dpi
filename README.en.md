@@ -181,10 +181,13 @@ limits:
   itself.
 - **Where should it work?**
   - **Only what I pick** (recommended): applies only to the apps you switch on and the sites you add.
-  - **All sites:** applies to every connection. Some sites do not accept a split connection and will not load; in
-    that case go back to "Only what I pick".
-- **Your own sites:** type the address (`example.com`, or paste a link) and press **Add**. Subdomains
-  (`cdn.example.com`) are covered automatically; several addresses can be added at once, separated by spaces.
+  - **All sites:** applies to every connection. Some sites do not accept a split connection and will not load; add
+    them with the **Exclude a site** box: Robz DPI leaves them and their subdomains alone and works on every other
+    site.
+- **Add a site:** type the address (`example.com`, or paste a link) and press **Add**. The site is listed under
+  Discord and Roblox with its own switch; turn it off for a while with the switch or remove it with the trash icon.
+  Subdomains (`cdn.example.com`) are covered automatically; several addresses can be added at once, separated by
+  spaces.
 - **Connection test:** tries a real connection to the selected sites from this computer.
 
 If a setting is changed while the engine is running, a blue notice appears; the new setting takes effect when you
@@ -510,7 +513,8 @@ Robz DPI means accepting that text; the app also asks for acceptance on first ru
 - **It has technical risks.** It uses a service with administrator rights and a kernel driver; connection
   interruptions, conflicts with other software and problems with the anti-cheat systems of games are possible.
 - **No affiliation with third parties.** Discord and Roblox are trademarks of their owners; this project is not
-  affiliated with or endorsed by them.
+  affiliated with or endorsed by them. Their logos in the app are used only to show which service is selected in the
+  list.
 
 ## License
 

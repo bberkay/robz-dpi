@@ -4,16 +4,27 @@ import { Icon } from '../icons.js';
 import { list, t } from '../i18n.js';
 import { showTab, useStore } from '../store.js';
 import * as actions from '../actions.js';
-import { Flash, Segmented, ServiceBadge, Spinner, Toggle } from '../components.js';
+import { DomainBadge, Flash, Segmented, ServiceBadge, Spinner, Toggle } from '../components.js';
 
-// "Discord, Roblox ve 2 site": seçili uygulamaların ve eklenen sitelerin kısa özeti.
+// Bir site listesinin kısa adı: tek siteyse adı, birden çoksa "3 site".
+function sitesText(domains) {
+  return domains.length === 1 ? domains[0] : t('scope.sites', { n: domains.length });
+}
+
+// "Discord, Roblox ve 2 site": seçili uygulamaların ve anahtarı açık eklenen sitelerin kısa özeti.
 function scopeList(data) {
   const { settings, catalog } = data;
   const names = catalog.services.filter((s) => settings.services.includes(s.id)).map((s) => s.name);
-  const custom = settings.customDomains;
-  if (custom.length === 1) names.push(custom[0]);
-  else if (custom.length > 1) names.push(t('scope.sites', { n: custom.length }));
+  const custom = settings.customDomains.filter((d) => !settings.disabledDomains.includes(d));
+  if (custom.length) names.push(sitesText(custom));
   return list(names);
+}
+
+// "Bütün sitelerde" kipinin özeti: hariç tutulan varsa onu da söyler.
+function allText(data, on) {
+  const excluded = data.settings.excludedDomains;
+  if (!excluded.length) return on ? t('power.onScope.all') : t('power.offScope.all');
+  return t(on ? 'power.onScope.allExcept' : 'power.offScope.allExcept', { list: sitesText(excluded) });
 }
 
 function PowerCard() {
@@ -26,8 +37,8 @@ function PowerCard() {
   const all = settings.scope === 'all';
 
   let subtitle = '';
-  if (on) subtitle = all ? t('power.onScope.all') : t('power.onScope.selected', { list: scopeList(data) });
-  else if (!engine.problem) subtitle = all ? t('power.offScope.all') : t('power.offScope.selected', { list: scopeList(data) });
+  if (on) subtitle = all ? allText(data, true) : t('power.onScope.selected', { list: scopeList(data) });
+  else if (!engine.problem) subtitle = all ? allText(data, false) : t('power.offScope.selected', { list: scopeList(data) });
 
   return html`<section class=${`power ${on && !busy ? 'is-on' : ''}`}>
     <button
@@ -135,53 +146,111 @@ function AlwaysOn() {
   </div>`;
 }
 
-function CustomDomains() {
-  const { data } = useStore();
+// Adres ekleme satırı: Discord ve Roblox'un altındaki sitelere ya da hariç tutulanlara.
+function DomainForm({ title, desc, placeholder, onAdd }) {
   const [text, setText] = useState('');
-  const domains = data.settings.customDomains;
-
   const submit = async (event) => {
     event.preventDefault();
-    if (await actions.addDomains(text)) setText('');
+    if (await onAdd(text)) setText('');
   };
-
-  return html`<div class="box">
-    <div class="row row-stack">
-      <div class="row-text">
-        <div class="row-title">${t('custom.title')}</div>
-        <p class="muted">${t('custom.desc')}</p>
-      </div>
-      <form class="domain-form" onSubmit=${submit}>
-        <input
-          class="input"
-          type="text"
-          spellcheck=${false}
-          autocomplete="off"
-          aria-label=${t('custom.title')}
-          placeholder=${t('custom.placeholder')}
-          value=${text}
-          onInput=${(event) => setText(event.target.value)}
-        />
-        <button class="btn" type="submit" disabled=${!text.trim()}><${Icon} name="plus" />${t('custom.add')}</button>
-      </form>
-      ${domains.length > 0 &&
-      html`<ul class="chips">
-        ${domains.map(
-          (domain) => html`<li class="chip" key=${domain}>
-            <span>${domain}</span>
-            <button aria-label=${t('custom.remove', { domain })} title=${t('custom.remove', { domain })} onClick=${() => actions.removeDomain(domain)}>
-              <${Icon} name="x" size=${12} />
-            </button>
-          </li>`,
-        )}
-      </ul>`}
+  return html`<div class="row row-stack">
+    <div class="row-text">
+      <div class="row-title">${title}</div>
+      <p class="muted">${desc}</p>
     </div>
+    <form class="domain-form" onSubmit=${submit}>
+      <input
+        class="input"
+        type="text"
+        spellcheck=${false}
+        autocomplete="off"
+        aria-label=${title}
+        placeholder=${placeholder}
+        value=${text}
+        onInput=${(event) => setText(event.target.value)}
+      />
+      <button class="btn" type="submit" disabled=${!text.trim()}><${Icon} name="plus" />${t('custom.add')}</button>
+    </form>
+  </div>`;
+}
+
+function RemoveButton({ label, onClick }) {
+  return html`<button class="icon-btn" aria-label=${label} title=${label} onClick=${onClick}><${Icon} name="trash" size=${15} /></button>`;
+}
+
+// "Seçtiklerimde": hazır uygulamalar ve eklenen siteler aynı listede, her biri kendi anahtarıyla.
+function SelectedList() {
+  const { data } = useStore();
+  const { settings, catalog } = data;
+  return html`<div class="box">
+    ${catalog.services.map(
+      (service) => html`<div class="row" key=${service.id}>
+        <${ServiceBadge} service=${service} />
+        <div class="row-text">
+          <div class="row-title">${service.name}</div>
+          <p class="muted">${t('service.domains', { n: service.domains.length })}</p>
+        </div>
+        <div class="row-control">
+          <${Toggle}
+            checked=${settings.services.includes(service.id)}
+            label=${service.name}
+            onChange=${(value) => actions.setService(service.id, value)}
+          />
+        </div>
+      </div>`,
+    )}
+    ${settings.customDomains.map((domain) => {
+      const on = !settings.disabledDomains.includes(domain);
+      return html`<div class="row" key=${domain}>
+        <${DomainBadge} domain=${domain} muted=${!on} />
+        <div class="row-text">
+          <div class="row-title mono-title">${domain}</div>
+          <p class="muted">${t('custom.row')}</p>
+        </div>
+        <div class="row-control">
+          <${RemoveButton} label=${t('custom.remove', { domain })} onClick=${() => actions.removeDomain(domain)} />
+          <${Toggle} checked=${on} label=${domain} onChange=${(value) => actions.setDomain(domain, value)} />
+        </div>
+      </div>`;
+    })}
+    <${DomainForm}
+      title=${t('custom.title')}
+      desc=${t('custom.desc')}
+      placeholder=${t('custom.placeholder')}
+      onAdd=${actions.addDomains}
+    />
+  </div>`;
+}
+
+// "Bütün sitelerde": dokunulmayacak siteler.
+function ExcludedList() {
+  const { data } = useStore();
+  const excluded = data.settings.excludedDomains;
+  return html`<div class="box">
+    ${excluded.map(
+      (domain) => html`<div class="row" key=${domain}>
+        <${DomainBadge} domain=${domain} />
+        <div class="row-text">
+          <div class="row-title mono-title">${domain}</div>
+          <p class="muted">${t('exclude.row')}</p>
+        </div>
+        <div class="row-control">
+          <${RemoveButton} label=${t('exclude.remove', { domain })} onClick=${() => actions.removeExcluded(domain)} />
+        </div>
+      </div>`,
+    )}
+    <${DomainForm}
+      title=${t('exclude.title')}
+      desc=${t('exclude.desc')}
+      placeholder=${t('custom.placeholder')}
+      onAdd=${actions.addExcluded}
+    />
   </div>`;
 }
 
 function Scope() {
   const { data } = useStore();
-  const { settings, catalog } = data;
+  const { settings } = data;
 
   return html`<section class="section">
     <div class="section-head"><h2 class="section-title">${t('scope.title')}</h2></div>
@@ -195,27 +264,10 @@ function Scope() {
       ]}
     />
     ${settings.scope === 'all'
-      ? html`<${Flash} kind="attention" icon="alert">${t('scope.all.desc')}<//>`
+      ? html`<${Flash} kind="attention" icon="alert">${t('scope.all.desc')}<//>
+          <${ExcludedList} />`
       : html`<p class="muted section-note" style=${{ margin: '10px 0 12px' }}>${t('scope.selected.desc')}</p>
-          <div class="box">
-            ${catalog.services.map(
-              (service) => html`<div class="row" key=${service.id}>
-                <${ServiceBadge} service=${service} />
-                <div class="row-text">
-                  <div class="row-title">${service.name}</div>
-                  <p class="muted">${t('service.domains', { n: service.domains.length })}</p>
-                </div>
-                <div class="row-control">
-                  <${Toggle}
-                    checked=${settings.services.includes(service.id)}
-                    label=${service.name}
-                    onChange=${(value) => actions.setService(service.id, value)}
-                  />
-                </div>
-              </div>`,
-            )}
-          </div>
-          <${CustomDomains} />`}
+          <${SelectedList} />`}
   </section>`;
 }
 

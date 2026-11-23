@@ -178,6 +178,10 @@ pub struct EngineRequest {
     pub dns: Option<DnsTarget>,
     /// None: bütün sitelere uygula. Some: yalnız bu alan adlarına (ve alt alan adlarına).
     pub domains: Option<Vec<String>>,
+    /// Bütün siteler kipinde dokunulmayacak alan adları (ve alt alan adları). Boşsa yazılmaz: eski sürümlerin
+    /// uyguladığı ayarın parmak izi değişmez.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub excluded: Vec<String>,
 }
 
 impl EngineRequest {
@@ -191,7 +195,7 @@ impl EngineRequest {
                     set.extend(service.domains.iter().map(|d| d.to_string()));
                 }
             }
-            set.extend(settings.custom_domains.iter().cloned());
+            set.extend(settings.enabled_domains().cloned());
             if set.is_empty() {
                 return Err(DpiError::new("nothing-selected"));
             }
@@ -223,7 +227,14 @@ impl EngineRequest {
             None => settings.custom.clone(),
         };
 
-        let request = Self { strategy, dns, domains };
+        // Hariç tutulan siteler yalnız "bütün siteler" kipinde anlamlıdır.
+        let excluded = if domains.is_none() {
+            settings.excluded_domains.iter().cloned().collect::<BTreeSet<_>>().into_iter().collect()
+        } else {
+            Vec::new()
+        };
+
+        let request = Self { strategy, dns, domains, excluded };
         request.validate()?;
         Ok(request)
     }
@@ -252,6 +263,14 @@ impl EngineRequest {
                 if normalize_domain(domain).as_deref() != Some(domain.as_str()) {
                     return Err(DpiError::with("bad-request", "domain"));
                 }
+            }
+        }
+        if self.excluded.len() > MAX_DOMAINS {
+            return Err(DpiError::new("too-many-domains"));
+        }
+        for domain in &self.excluded {
+            if normalize_domain(domain).as_deref() != Some(domain.as_str()) {
+                return Err(DpiError::with("bad-request", "excluded"));
             }
         }
         Ok(())

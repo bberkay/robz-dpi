@@ -609,7 +609,7 @@
   font-weight: 600;
 }
 
-/* Hazır uygulama rozeti: adının baş harfi */
+/* Liste rozetleri: hazır uygulamaların logosu, eklenen sitelerin ilk iki harfi */
 .svc {
   display: grid;
   flex: none;
@@ -628,6 +628,40 @@
 .svc-roblox {
   background: #f0f6fc;
   color: #0d1117;
+}
+.svc-domain {
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+.svc-domain.is-muted {
+  filter: grayscale(1);
+  opacity: 0.5;
+}
+.mono-title {
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin-right: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--fg-muted);
+  cursor: pointer;
+}
+.icon-btn:hover {
+  background: var(--bg-neutral-hover);
+  color: var(--fg-danger, #f85149);
 }
 
 .domain-form {

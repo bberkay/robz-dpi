@@ -99,6 +99,11 @@ pub struct Engine {
     strategy: Strategy,
     /// None: bütün siteler
     hosts: Option<HostSet>,
+    /// Bütün siteler kipinde dokunulmayacak alan adları; None: hariç tutulan yok.
+    excluded: Option<HostSet>,
+    /// Hariç tutulan sitelere ait olduğu öğrenilen adresler -> son kullanma. Alan adı görünmeyen bağlantılar ve
+    /// QUIC bu adreslere giderse dokunulmaz.
+    excluded_ips: HashMap<IpAddr, Instant>,
     dns: Option<Resolver>,
     /// (istemci adresi, istemci bağlantı noktası, sorgu kimliği) -> sorgunun asıl gittiği sunucu
     dns_flows: HashMap<(IpAddr, u16, u16), DnsFlow>,
@@ -124,6 +129,8 @@ impl Engine {
         Self {
             strategy: request.strategy.clone(),
             hosts: request.domains.as_deref().map(HostSet::new),
+            excluded: (!request.excluded.is_empty()).then(|| HostSet::new(&request.excluded)),
+            excluded_ips: HashMap::new(),
             dns,
             dns_flows: HashMap::new(),
             ttls: HashMap::new(),
@@ -152,7 +159,18 @@ impl Engine {
     }
 
     fn targets(&self, host: &str) -> bool {
-        self.hosts.as_ref().is_none_or(|hosts| hosts.matches(host))
+        self.hosts.as_ref().is_none_or(|hosts| hosts.matches(host)) && !self.is_excluded(host)
+    }
+
+    fn is_excluded(&self, host: &str) -> bool {
+        self.excluded.as_ref().is_some_and(|excluded| excluded.matches(host))
+    }
+
+    /// Hariç tutulan bir siteye ait olduğu anlaşılan adres.
+    fn exclude_address(&mut self, address: IpAddr, now: Instant) {
+        if self.excluded_ips.len() < MAX_ENTRIES || self.excluded_ips.contains_key(&address) {
+            self.excluded_ips.insert(address, now + KNOWN_LIFETIME);
+        }
     }
 
     /// Bir hedefe ait olduğu anlaşılan adresi hatırlar: DNS yanıtından ya da alan adı görünen bir bağlantıdan.
@@ -185,6 +203,10 @@ impl Engine {
 
         if p.dst_port == 80 {
             let Some(host) = tls::http_host(payload) else { return Verdict::Pass };
+            if self.is_excluded(&host) {
+                self.exclude_address(p.dst, now);
+                return Verdict::Pass;
+            }
             if !self.targets(&host) {
                 return Verdict::Pass;
             }
@@ -197,6 +219,10 @@ impl Engine {
         match tls::inspect(payload) {
             Hello::Other => Verdict::Pass,
             Hello::Sni { host, offset } => {
+                if self.is_excluded(&host) {
+                    self.exclude_address(p.dst, now);
+                    return Verdict::Pass;
+                }
                 if !self.targets(&host) {
                     return Verdict::Pass;
                 }
@@ -209,7 +235,7 @@ impl Engine {
             // Alan adı görünmüyor. "Bütün siteler" kipinde zaten her bağlantıya uygulanır; seçili sitelerde
             // karar stratejideki kurala ve hedefin adresini tanıyıp tanımadığımıza bağlıdır.
             Hello::NoSni | Hello::Truncated => {
-                let apply = self.hosts.is_none()
+                let apply = (self.hosts.is_none() && !self.excluded_ips.contains_key(&p.dst))
                     || match self.strategy.no_sni.as_str() {
                         "always" => true,
                         "known" => self.known.contains_key(&p.dst),
@@ -298,7 +324,7 @@ impl Engine {
         if p.dst_port == 53 {
             let Some(resolver) = &self.dns else { return Verdict::Pass };
             let (Some(name), Some(id)) = (dnsmsg::query_name(payload), dnsmsg::id(payload)) else { return Verdict::Pass };
-            if !(resolver.all || self.targets(&name)) {
+            if self.is_excluded(&name) || !(resolver.all || self.targets(&name)) {
                 return Verdict::Pass;
             }
             let (address, port) = match (p.v6, resolver.v6) {
@@ -317,7 +343,11 @@ impl Engine {
 
         if p.dst_port == 443 && self.strategy.block_quic && is_quic_initial(payload) {
             // QUIC'te alan adı şifrelidir: seçili sitelerde yalnız adresi bilinen hedeflere giden deneme düşürülür.
-            if self.hosts.is_none() || self.known.contains_key(&p.dst) {
+            let applies = match &self.hosts {
+                None => !self.excluded_ips.contains_key(&p.dst),
+                Some(_) => self.known.contains_key(&p.dst),
+            };
+            if applies {
                 self.stats.quic += 1;
                 return Verdict::Drop;
             }
@@ -342,6 +372,14 @@ impl Engine {
         for address in learned {
             self.learn(address, now);
         }
+        // Hariç tutulan bir sitenin yanıtıysa adreslerine dokunulmayacak.
+        if let (Some(excluded), Some((name, addresses))) = (&self.excluded, dnsmsg::answers(payload)) {
+            if excluded.matches(&name) {
+                for address in addresses {
+                    self.exclude_address(address, now);
+                }
+            }
+        }
 
         // Yönlendirdiğimiz sorgunun yanıtı: uygulamanın sorduğu sunucudan gelmiş gibi geri çevir.
         if from_resolver {
@@ -360,6 +398,7 @@ impl Engine {
         self.dns_flows.retain(|_, flow| now.duration_since(flow.at) < FLOW_LIFETIME);
         self.ttls.retain(|_, (_, at)| now.duration_since(*at) < FLOW_LIFETIME);
         self.known.retain(|_, expires| *expires > now);
+        self.excluded_ips.retain(|_, expires| *expires > now);
         self.stats.known = self.known.len();
     }
 }
@@ -412,6 +451,7 @@ mod tests {
             strategy: catalog::method(method).unwrap().strategy(),
             dns: Some(DnsTarget { v4: "9.9.9.9".into(), port: 9953, v6: Some("2620:fe::fe".into()), port6: 9953, all: domains.is_none() }),
             domains: domains.map(|list| list.iter().map(|d| d.to_string()).collect()),
+            excluded: Vec::new(),
         }
     }
 
@@ -769,5 +809,43 @@ mod tests {
             }
             let _ = engine.handle(&noise, round % 2 == 0, now);
         }
+    }
+
+    #[test]
+    fn all_sites_mode_leaves_excluded_sites_alone() {
+        let now = Instant::now();
+        let mut request = request("m1", None);
+        request.excluded = vec!["bank.example".to_string()];
+        let mut engine = Engine::new(&request, 1234, now);
+
+        // Görünen alan adı: hariç tutulan site ve alt alan adı geçer, diğerleri işlenir.
+        sent_none(engine.handle(&client_hello_to(OTHER, &hello("online.bank.example")), true, now));
+        sent(engine.handle(&client_hello_to(DISCORD, &hello("discord.com")), true, now));
+        assert_eq!(engine.stats.tls, 1);
+
+        // Alan adı görünmeyen bağlantı: hariç tutulan sitenin adresine gidiyorsa dokunulmaz.
+        let hidden = client_hello_to(OTHER, &[0x16, 0x03, 0x01, 0x00, 0x05, 0x01, 0x00, 0x00, 0x01, 0x00]);
+        sent_none(engine.handle(&hidden, true, now));
+        let elsewhere = client_hello_to(ROUTER, &[0x16, 0x03, 0x01, 0x00, 0x05, 0x01, 0x00, 0x00, 0x01, 0x00]);
+        assert!(matches!(engine.handle(&elsewhere, true, now), Verdict::Send(_)), "bütün siteler kipinde diğer adresler işlenir");
+
+        // DNS: hariç tutulan sitenin sorgusu yönlendirilmez, diğerleri yönlendirilir; yanıtından adresi öğrenilir.
+        sent_none(engine.handle(&udp(CLIENT, ROUTER, 61000, 53, &dns::query(1, "www.bank.example")), true, now));
+        assert!(matches!(engine.handle(&udp(CLIENT, ROUTER, 61001, 53, &dns::query(2, "a.com")), true, now), Verdict::Send(_)));
+        let new_address = IpAddr::V4(Ipv4Addr::new(203, 0, 113, 7));
+        engine.handle(&udp(ROUTER, CLIENT, 53, 61000, &dns::response(1, "www.bank.example", &[new_address])), false, now);
+        let hidden_to_new = client_hello_to(new_address, &[0x16, 0x03, 0x01, 0x00, 0x05, 0x01, 0x00, 0x00, 0x01, 0x00]);
+        sent_none(engine.handle(&hidden_to_new, true, now));
+    }
+
+    #[test]
+    fn exclusions_do_not_change_old_fingerprints() {
+        let plain = request("m1", None);
+        let mut with_empty = plain.clone();
+        with_empty.excluded = Vec::new();
+        assert_eq!(serde_json::to_string(&plain).unwrap(), serde_json::to_string(&with_empty).unwrap());
+        assert!(!serde_json::to_string(&plain).unwrap().contains("excluded"), "boş liste yazılmaz");
+        let old: EngineRequest = serde_json::from_str(&serde_json::to_string(&plain).unwrap()).unwrap();
+        assert!(old.excluded.is_empty(), "eski engine.json okunabilir");
     }
 }

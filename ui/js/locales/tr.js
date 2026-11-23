@@ -31,16 +31,23 @@ export default {
   'scope.selected': 'Seçtiklerimde',
   'scope.all': 'Bütün sitelerde',
   'scope.selected.desc': 'Yalnız açtığın uygulamalara ve eklediğin sitelere uygulanır. Diğer sitelere dokunmaz.',
+  'exclude.title': 'Site hariç tut',
+  'exclude.desc': 'Robz DPI bu sitelere ve alt adreslerine dokunmaz; diğer bütün sitelerde çalışır.',
+  'exclude.row': 'Robz DPI bu siteye dokunmaz',
+  'exclude.remove': '{domain} adresini hariç tutulanlardan çıkar',
+  'power.onScope.allExcept': '{list} dışında bütün sitelerde çalışıyor.',
+  'power.offScope.allExcept': 'Açınca {list} dışında bütün sitelerde çalışır.',
   'scope.all.desc':
-    'Liste tutmadan her bağlantıya uygulanır. Bazı siteler açılmayabilir; öyle olursa "Seçtiklerimde"ye dön.',
+    'Liste tutmadan her bağlantıya uygulanır. Açılmayan bir site olursa onu aşağıda hariç tutabilir ya da "Seçtiklerimde"ye dönebilirsin.',
   'scope.sites': '{n} site',
   'service.domains': '{n} adres',
 
-  'custom.title': 'Kendi sitelerin',
+  'custom.title': 'Site ekle',
   'custom.desc': 'Başka bir sitede de çalışsın istersen adresini yaz. Alt adresleri de kapsar.',
   'custom.placeholder': 'ornek.com',
   'custom.add': 'Ekle',
-  'custom.remove': '{domain} adresini kaldır',
+  'custom.remove': '{domain} adresini listeden kaldır',
+  'custom.row': 'Eklediğin site · alt adresler dahil',
   'custom.rejected': 'Geçerli bir site adresi değil: {list}',
   'custom.exists': 'Bu adres zaten listede.',
 
@@ -186,7 +193,7 @@ export default {
   'settings.about.body':
     "Robz DPI açık kaynak ve ücretsizdir; veri toplamaz. Motoru kendi kodudur (Rust); yöntemler ValdikSS'in GoodbyeDPI'ından, paketleri yakalayan sürücü basil00'ın WinDivert'idir.",
   'settings.about.disclaimer':
-    'Eğitim ve test amaçlıdır; hiçbir garanti vermez. Kullanımından doğan her sonuç ve bulunduğun yerin yasalarına uymak sana aittir.',
+    'Eğitim ve test amaçlıdır; hiçbir garanti vermez. Kullanımından doğan her sonuç ve bulunduğun yerin yasalarına uymak sana aittir. Discord ve Roblox sahiplerinin markalarıdır; Robz DPI onlarla bağlantılı değildir.',
   'link.github': 'GitHub',
   'link.discord': 'Discord',
   'link.disclaimer': 'Sorumluluk reddi',

@@ -194,7 +194,7 @@ export default {
     issues: 'Sorun bildir',
     footerLicense: 'MIT lisanslı açık kaynak.',
     footerDisclaimer:
-      'Robz DPI bağımsız bir projedir. Discord ve Roblox kendi sahiplerinin ticari markalarıdır; projenin onlarla bir bağlantısı yoktur.',
+      'Robz DPI bağımsız bir projedir. Discord ve Roblox kendi sahiplerinin ticari markalarıdır; projenin onlarla bir bağlantısı yoktur. Uygulamadaki logoları yalnız hangi hizmetin seçildiğini göstermek için kullanılır.',
     footerSibling: 'Diğer Robz uygulamaları: Robz Hub',
   },
 
@@ -365,7 +365,7 @@ export default {
     issues: 'Report an issue',
     footerLicense: 'Open source under the MIT license.',
     footerDisclaimer:
-      'Robz DPI is an independent project. Discord and Roblox are trademarks of their owners; the project is not affiliated with them.',
+      'Robz DPI is an independent project. Discord and Roblox are trademarks of their owners; the project is not affiliated with them. Their logos in the app are used only to show which service is selected.',
     footerSibling: 'Other Robz apps: Robz Hub',
   },
 
@@ -536,7 +536,7 @@ export default {
     issues: 'Сообщить о проблеме',
     footerLicense: 'Открытый код под лицензией MIT.',
     footerDisclaimer:
-      'Robz DPI — независимый проект. Discord и Roblox — товарные знаки их владельцев; проект с ними не связан.',
+      'Robz DPI — независимый проект. Discord и Roblox — товарные знаки их владельцев; проект с ними не связан. Их логотипы в приложении показывают только, какой сервис выбран.',
     footerSibling: 'Другие приложения Robz: Robz Hub',
   },
 };

@@ -49,8 +49,10 @@ metni okuduğun ve kabul ettiğin anlamına gelir. Kabul etmiyorsan yazılımı 
    hesap kısıtlaması dahil doğabilecek sonuçlar kullanıcıya aittir.
 
 9. **Üçüncü taraflar.** Discord, Roblox ve adı geçen diğer markalar sahiplerine aittir. Bu projenin onlarla hiçbir
-   bağı, ortaklığı ya da onayı yoktur; bu hizmetleri kullanırken onların kullanım koşulları geçerlidir. WinDivert ve
-   GoodbyeDPI kendi lisanslarıyla dağıtılan bağımsız projelerdir.
+   bağı, ortaklığı ya da onayı yoktur; bu hizmetleri kullanırken onların kullanım koşulları geçerlidir. Uygulamada
+   görünen Discord ve Roblox logoları sahiplerinin ticari markalarıdır ve yalnız listede hangi hizmetin seçildiğini
+   göstermek için kullanılır; bu kullanım herhangi bir ortaklık ya da onay anlamına gelmez. WinDivert ve GoodbyeDPI
+   kendi lisanslarıyla dağıtılan bağımsız projelerdir.
 
 10. **Sorumluluğun sınırı.** Yürürlükteki hukukun izin verdiği en geniş ölçüde; proje sahibi ve katkıda bulunanlar,
     yazılımın kullanılmasından ya da kullanılamamasından doğan doğrudan, dolaylı, arızi, özel ya da sonuç olarak
@@ -110,8 +112,10 @@ have read and accepted this text. If you do not accept it, do not use the softwa
    suspicious; any consequence, including account restrictions, belongs to the user.
 
 9. **Third parties.** Discord, Roblox and other names mentioned are trademarks of their owners. This project has no
-   affiliation, partnership or endorsement with them; their terms of service apply when you use those services.
-   WinDivert and GoodbyeDPI are independent projects distributed under their own licenses.
+   affiliation, partnership or endorsement with them; their terms of service apply when you use those services. The
+   Discord and Roblox logos shown in the app are trademarks of their owners and are used only to show which service is
+   selected in the list; this use does not imply any partnership or endorsement. WinDivert and GoodbyeDPI are
+   independent projects distributed under their own licenses.
 
 10. **Limitation of liability.** To the fullest extent permitted by applicable law, the project owner and
     contributors shall not be liable for any direct, indirect, incidental, special or consequential damages arising
@@ -173,7 +177,9 @@ warranty and liability.
 
 9. **Третьи стороны.** Discord, Roblox и другие упомянутые названия являются товарными знаками их владельцев.
    Проект не связан с ними, не является их партнёром и не одобрен ими; при использовании этих сервисов действуют их
-   условия использования. WinDivert и GoodbyeDPI — независимые проекты, распространяемые по собственным лицензиям.
+   условия использования. Логотипы Discord и Roblox в приложении являются товарными знаками их владельцев и
+   используются только для того, чтобы показать, какой сервис выбран в списке; это не означает партнёрства или
+   одобрения. WinDivert и GoodbyeDPI — независимые проекты, распространяемые по собственным лицензиям.
 
 10. **Ограничение ответственности.** В максимальной степени, допускаемой применимым правом, владелец проекта и
     участники не несут ответственности за любой прямой, косвенный, случайный, особый или последующий ущерб,

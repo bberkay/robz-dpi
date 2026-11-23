@@ -55,7 +55,9 @@ const settings = {
   onboarded: !query.has('wizard'),
   scope: 'selected',
   services: ['discord', 'roblox'],
-  customDomains: [],
+  customDomains: query.has('sites') ? ['violabot.com', 'example.org'] : [],
+  disabledDomains: query.has('sites') ? ['example.org'] : [],
+  excludedDomains: query.has('sites') ? ['online.bank.example', 'kampus.edu.tr'] : [],
   method: 'm1',
   custom: { ...base },
   advanced: query.has('advanced'),
@@ -71,7 +73,8 @@ const fingerprint = () =>
   JSON.stringify([
     settings.scope,
     settings.services,
-    settings.customDomains,
+    settings.customDomains.filter((d) => !settings.disabledDomains.includes(d)),
+    settings.scope === 'all' ? settings.excludedDomains : [],
     strategy(),
     settings.dnsEnabled,
     settings.dnsAll,
@@ -92,7 +95,8 @@ let conflicts = query.has('conflict') ? [{ name: 'goodbyedpi.exe', pid: 4408 }] 
 const probe = { running: false, results: [] };
 
 function problem() {
-  if (settings.scope === 'selected' && !settings.services.length && !settings.customDomains.length) return 'nothing-selected';
+  const enabled = settings.customDomains.filter((d) => !settings.disabledDomains.includes(d));
+  if (settings.scope === 'selected' && !settings.services.length && !enabled.length) return 'nothing-selected';
   if (settings.dnsEnabled && settings.dnsProvider === 'custom' && !settings.dnsCustomAddr) return 'bad-dns';
   const s = strategy();
   if (!s.split && !s.splitAtSni && s.fakeTtlMode === 'off' && !s.fakeBadChecksum && !s.fakeBadSeq) return 'empty-strategy';
@@ -235,6 +239,30 @@ const methods = {
   },
   removeDomain: (domain) => {
     settings.customDomains = settings.customDomains.filter((d) => d !== domain);
+    settings.disabledDomains = settings.disabledDomains.filter((d) => d !== domain);
+    emit();
+  },
+  setDomain: (domain, on) => {
+    settings.disabledDomains = settings.disabledDomains.filter((d) => d !== domain);
+    if (!on) settings.disabledDomains.push(domain);
+    emit();
+  },
+  addExcluded: (text) => {
+    const added = [];
+    const rejected = [];
+    for (const part of text.split(/[\s,;]+/).filter(Boolean)) {
+      const domain = normalize(part);
+      if (!domain) rejected.push(part);
+      else if (!settings.excludedDomains.includes(domain)) {
+        settings.excludedDomains.push(domain);
+        added.push(domain);
+      }
+    }
+    emit();
+    return { added, rejected };
+  },
+  removeExcluded: (domain) => {
+    settings.excludedDomains = settings.excludedDomains.filter((d) => d !== domain);
     emit();
   },
   test: async () => {

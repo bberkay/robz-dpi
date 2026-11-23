@@ -29,7 +29,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // [dosya adı, adres sorgusu, sayfanın tamamı mı?]
 // "Tamamı" seçilirse görünür alan içeriğin boyuna uzatılır: uzun sayfalar (ayarlar) kaydırmadan tek görüntüde çıkar.
 const SHOTS = [
-  ['01-off.png', '', false],
+  ['01-off.png', 'sites', false],
   ['02-on.png', 'on', false],
   ['03-settings.png', 'on&tab=settings', true],
   ['04-advanced.png', 'on&tab=settings&advanced', true],

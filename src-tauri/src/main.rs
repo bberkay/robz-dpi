@@ -88,6 +88,9 @@ async fn dispatch(app: &AppHandle, dpi: &Arc<Dpi>, method: &str, args: &[Value])
         "getLog" => return Ok(Value::String(engine::log_tail(48 * 1024))),
         "addDomains" => return Ok(dpi.add_domains(&arg_str(args, 0)?)),
         "removeDomain" => dpi.remove_domain(&arg_str(args, 0)?),
+        "setDomain" => dpi.set_domain(&arg_str(args, 0)?, arg_bool(args, 1)?)?,
+        "addExcluded" => return Ok(dpi.add_excluded(&arg_str(args, 0)?)),
+        "removeExcluded" => dpi.remove_excluded(&arg_str(args, 0)?),
         "openExternal" => open_external(app, &arg_str(args, 0)?)?,
         _ => return Err(DpiError::with("bad-request", method)),
     }

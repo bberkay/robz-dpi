@@ -20,12 +20,16 @@ pub struct Settings {
     pub enabled: bool,
     /// İlk açılış adımları (dil, sorumluluk reddinin kabulü, kapsam) tamamlandı mı? Tamamlanmadan motor açılmaz.
     pub onboarded: bool,
-    /// "selected": yalnız seçilen uygulamalar ve siteler | "all": bütün siteler (GoodbyeDPI-Turkey gibi)
+    /// "selected": yalnız seçilen uygulamalar ve siteler | "all": bütün siteler (hariç tutulanlar dışında)
     pub scope: String,
     /// Açık olan hazır uygulamalar (catalog::SERVICES kimlikleri).
     pub services: Vec<String>,
-    /// Kullanıcının eklediği alan adları.
+    /// Kullanıcının eklediği alan adları (eklenme sırasıyla; arayüzde Discord ve Roblox'un altında listelenir).
     pub custom_domains: Vec<String>,
+    /// Eklenen sitelerden anahtarı kapalı olanlar: listede kalırlar, motora gitmezler.
+    pub disabled_domains: Vec<String>,
+    /// "Bütün siteler" kipinde dokunulmayacak alan adları (ve alt alan adları).
+    pub excluded_domains: Vec<String>,
     /// catalog::METHODS kimliği ya da "custom" (aşağıdaki `custom` stratejisi kullanılır).
     pub method: String,
     /// "Gelişmiş" ekranında düzenlenen strateji. Yalnız method "custom" iken motora gider.
@@ -52,6 +56,8 @@ impl Default for Settings {
             scope: "selected".into(),
             services: catalog::SERVICES.iter().map(|s| s.id.to_string()).collect(),
             custom_domains: Vec::new(),
+            disabled_domains: Vec::new(),
+            excluded_domains: Vec::new(),
             method: catalog::DEFAULT_METHOD.into(),
             custom: Strategy::default(),
             advanced: false,
@@ -83,15 +89,11 @@ impl Settings {
         }
         self.services.retain(|id| catalog::service(id).is_some());
         self.services.dedup();
-        let mut domains = Vec::new();
-        for domain in self.custom_domains.drain(..) {
-            if let Some(domain) = normalize_domain(&domain) {
-                if !domains.contains(&domain) && domains.len() < MAX_DOMAINS {
-                    domains.push(domain);
-                }
-            }
-        }
-        self.custom_domains = domains;
+        self.custom_domains = clean_domains(std::mem::take(&mut self.custom_domains));
+        self.excluded_domains = clean_domains(std::mem::take(&mut self.excluded_domains));
+        let custom = &self.custom_domains;
+        self.disabled_domains = clean_domains(std::mem::take(&mut self.disabled_domains));
+        self.disabled_domains.retain(|d| custom.contains(d));
         if self.method != catalog::CUSTOM_METHOD && catalog::method(&self.method).is_none() {
             self.method = defaults.method;
         }
@@ -181,32 +183,80 @@ impl Settings {
         true
     }
 
-    /// Kullanıcının yazdığı ya da yapıştırdığı adresleri ekler. (eklenenler, reddedilenler) döner.
+    /// Kullanıcının yazdığı ya da yapıştırdığı adresleri ekler (anahtarları açık). (eklenenler, reddedilenler) döner.
     pub fn add_domains(&mut self, text: &str) -> (Vec<String>, Vec<String>) {
-        let (parsed, rejected) = parse_domains(text);
-        let mut added = Vec::new();
-        for domain in parsed {
-            if self.custom_domains.len() >= MAX_DOMAINS {
-                break;
-            }
-            if !self.custom_domains.contains(&domain) {
-                self.custom_domains.push(domain.clone());
-                added.push(domain);
-            }
-        }
-        (added, rejected)
+        add_to(&mut self.custom_domains, text)
     }
 
     pub fn remove_domain(&mut self, domain: &str) -> bool {
-        let before = self.custom_domains.len();
-        self.custom_domains.retain(|d| d != domain);
-        before != self.custom_domains.len()
+        self.disabled_domains.retain(|d| d != domain);
+        remove_from(&mut self.custom_domains, domain)
+    }
+
+    /// Eklenen bir sitenin anahtarı: kapalıyken site listede kalır ama motora gitmez.
+    pub fn set_domain(&mut self, domain: &str, on: bool) -> bool {
+        if !self.custom_domains.iter().any(|d| d == domain) {
+            return false;
+        }
+        self.disabled_domains.retain(|d| d != domain);
+        if !on {
+            self.disabled_domains.push(domain.to_string());
+        }
+        true
+    }
+
+    /// Motora gidecek eklenen siteler: anahtarı açık olanlar.
+    pub fn enabled_domains(&self) -> impl Iterator<Item = &String> {
+        self.custom_domains.iter().filter(|d| !self.disabled_domains.contains(d))
+    }
+
+    /// "Bütün siteler" kipinde hariç tutulacak adresleri ekler. (eklenenler, reddedilenler) döner.
+    pub fn add_excluded(&mut self, text: &str) -> (Vec<String>, Vec<String>) {
+        add_to(&mut self.excluded_domains, text)
+    }
+
+    pub fn remove_excluded(&mut self, domain: &str) -> bool {
+        remove_from(&mut self.excluded_domains, domain)
     }
 
     /// Arayüze gönderilen kopya.
     pub fn public(&self) -> Value {
         json!(self)
     }
+}
+
+/// Geçerli, tekrarsız ve en çok MAX_DOMAINS alan adı; sıra korunur.
+fn clean_domains(list: Vec<String>) -> Vec<String> {
+    let mut domains = Vec::new();
+    for domain in list {
+        if let Some(domain) = normalize_domain(&domain) {
+            if !domains.contains(&domain) && domains.len() < MAX_DOMAINS {
+                domains.push(domain);
+            }
+        }
+    }
+    domains
+}
+
+fn add_to(list: &mut Vec<String>, text: &str) -> (Vec<String>, Vec<String>) {
+    let (parsed, rejected) = parse_domains(text);
+    let mut added = Vec::new();
+    for domain in parsed {
+        if list.len() >= MAX_DOMAINS {
+            break;
+        }
+        if !list.contains(&domain) {
+            list.push(domain.clone());
+            added.push(domain);
+        }
+    }
+    (added, rejected)
+}
+
+fn remove_from(list: &mut Vec<String>, domain: &str) -> bool {
+    let before = list.len();
+    list.retain(|d| d != domain);
+    before != list.len()
 }
 
 #[cfg(test)]
@@ -304,5 +354,43 @@ mod tests {
         s.save(&file);
         assert_eq!(Settings::load(&file), s);
         std::fs::remove_dir_all(&dir).unwrap();
+    }
+
+    #[test]
+    fn added_sites_can_be_switched_off_and_excluded_sites_are_kept_apart() {
+        let mut s = Settings::default();
+        assert_eq!(s.add_domains("example.com violabot.com").0.len(), 2);
+        assert!(s.set_domain("example.com", false));
+        assert!(!s.set_domain("unknown.org", false), "listede olmayan site");
+        assert_eq!(s.enabled_domains().collect::<Vec<_>>(), ["violabot.com"]);
+        assert!(s.set_domain("example.com", true));
+        assert_eq!(s.enabled_domains().count(), 2);
+
+        s.set_domain("example.com", false);
+        assert!(s.remove_domain("example.com"));
+        assert!(s.disabled_domains.is_empty(), "kaldırılan site kapalılar listesinde kalmaz");
+
+        let (added, rejected) = s.add_excluded("https://www.Bank.example.com/giris not-a-domain");
+        assert_eq!((added, rejected), (vec!["bank.example.com".to_string()], vec!["not-a-domain".to_string()]));
+        assert!(s.custom_domains.iter().all(|d| d != "bank.example.com"), "hariç tutulanlar ayrı listede");
+        assert!(s.remove_excluded("bank.example.com"));
+        assert!(!s.remove_excluded("bank.example.com"));
+    }
+
+    #[test]
+    fn disabled_sites_outside_the_list_are_dropped_on_load() {
+        let dir = std::env::temp_dir().join(format!("robzdpi-settings-sites-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let path = dir.join("settings.json");
+        std::fs::write(
+            &path,
+            r#"{"customDomains":["a.com","B.com"],"disabledDomains":["b.com","ghost.com"],"excludedDomains":["x.org","x.org","bad value"]}"#,
+        )
+        .unwrap();
+        let s = Settings::load(&path);
+        assert_eq!(s.custom_domains, ["a.com", "b.com"]);
+        assert_eq!(s.disabled_domains, ["b.com"]);
+        assert_eq!(s.excluded_domains, ["x.org"]);
+        let _ = std::fs::remove_dir_all(dir);
     }
 }

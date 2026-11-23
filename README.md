@@ -181,9 +181,12 @@ sürüm sayfasındaki `SHA256SUMS-linux.txt` dosyasındadır.
 - **Nerede çalışsın?**
   - **Seçtiklerimde** (önerilen): yalnız anahtarı açık uygulamalara ve eklediğiniz sitelere uygulanır.
   - **Bütün sitelerde:** her bağlantıya uygulanır. Bazı siteler bölünmüş bağlantıyı kabul etmez ve açılmaz; bu
-    durumda "Seçtiklerimde" kipine dönünüz.
-- **Kendi siteleriniz:** adresi yazıp (`ornek.com` ya da doğrudan bir bağlantı) **Ekle**'ye basınız. Alt alan adları
-  (`cdn.ornek.com`) kendiliğinden kapsanır; birden çok adres boşlukla ayrılarak tek seferde eklenebilir.
+    siteleri **Site hariç tut** kutusuyla listeye ekleyebilirsiniz: Robz DPI onlara ve alt adreslerine dokunmaz, diğer
+    bütün sitelerde çalışır.
+- **Site ekle:** adresi yazıp (`ornek.com` ya da doğrudan bir bağlantı) **Ekle**'ye basınız. Eklenen site Discord ve
+  Roblox'un altında kendi anahtarıyla listelenir; anahtarla geçici olarak kapatabilir, çöp kutusu simgesiyle
+  kaldırabilirsiniz. Alt alan adları (`cdn.ornek.com`) kendiliğinden kapsanır; birden çok adres boşlukla ayrılarak tek
+  seferde eklenebilir.
 - **Bağlantı testi:** seçtiğiniz sitelere bu bilgisayardan ulaşılıp ulaşılamadığını gerçek bir bağlantıyla dener.
 
 Motor çalışırken bir ayar değiştirildiğinde mavi bir bildirim çıkar; yeni ayar **Uygula**'ya basınca geçerli olur.
@@ -510,7 +513,8 @@ bu metnin kabul edildiği anlamına gelir; uygulama ilk açılışta da onay ist
 - **Teknik riskleri vardır.** Yönetici yetkili bir hizmet ve çekirdek sürücüsü kullanır; bağlantı kesintisi, başka
   yazılımlarla çakışma ve oyunların hile koruma sistemleriyle sorun yaşanabilir.
 - **Üçüncü taraflarla bağı yoktur.** Discord ve Roblox kendi sahiplerinin markalarıdır; bu proje onlarla bağlantılı
-  değildir ve onlar tarafından onaylanmamıştır.
+  değildir ve onlar tarafından onaylanmamıştır. Uygulamadaki logoları yalnız listede hangi hizmetin seçildiğini
+  göstermek için kullanılır.
 
 ## Lisans
 

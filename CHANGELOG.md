@@ -2,6 +2,18 @@
 
 Her başlık bir sürümdür; sürüm iş akışı GitHub'daki sürüm notunu buradan alır.
 
+## 0.5.0
+
+Site listesi ve hariç tutulan siteler.
+
+- **Eklenen siteler listede:** "Seçtiklerimde" kipinde eklenen her site Discord ve Roblox'un altında kendi anahtarıyla
+  listelenir; geçici olarak kapatılabilir ya da kaldırılabilir. Kapalı siteler listede kalır, motora gitmez.
+- **Hariç tutulan siteler:** "Bütün sitelerde" kipinde dokunulmayacak siteler eklenebilir. Robz DPI bu sitelere ve
+  alt adreslerine dokunmaz, DNS sorgularını da yönlendirmez; diğer bütün sitelerde çalışır.
+- **Logolar:** Discord ve Roblox listede kendi logolarıyla, eklenen siteler adlarının ilk iki harfiyle görünür.
+  Sorumluluk reddine logoların yalnız seçimi göstermek için kullanıldığı ve projenin bu şirketlerle bağlantılı
+  olmadığı notu eklendi.
+
 ## 0.4.0
 
 Windows için taşınabilir sürüm.

@@ -379,6 +379,28 @@ impl Dpi {
         });
     }
 
+    /// Eklenen bir sitenin anahtarı.
+    pub fn set_domain(&self, domain: &str, on: bool) -> DpiResult<()> {
+        self.change(|settings| settings.set_domain(domain, on))
+    }
+
+    /// "Bütün siteler" kipinde hariç tutulacak adresleri ekler: { added: [...], rejected: [...] }
+    pub fn add_excluded(&self, text: &str) -> Value {
+        let mut outcome = (Vec::new(), Vec::new());
+        let _ = self.change(|settings| {
+            outcome = settings.add_excluded(text);
+            true
+        });
+        json!({ "added": outcome.0, "rejected": outcome.1 })
+    }
+
+    pub fn remove_excluded(&self, domain: &str) {
+        let _ = self.change(|settings| {
+            settings.remove_excluded(domain);
+            true
+        });
+    }
+
     // ---- bağlantı testi -----------------------------------------------------------------------------------------
 
     /// Seçili uygulamaları ve (ilk birkaç) özel siteyi dener. "Bütün siteler" kipinde hazır uygulamaların hepsi denenir.
@@ -395,7 +417,7 @@ impl Dpi {
                 .filter(|s| all || inner.settings.services.iter().any(|id| id == s.id))
                 .map(|s| probe::Target { id: s.id.to_string(), label: s.name.to_string(), url: s.probe.to_string() })
                 .collect();
-            targets.extend(inner.settings.custom_domains.iter().take(MAX_PROBED_DOMAINS).map(|domain| probe::Target {
+            targets.extend(inner.settings.enabled_domains().take(MAX_PROBED_DOMAINS).map(|domain| probe::Target {
                 id: domain.clone(),
                 label: domain.clone(),
                 url: format!("https://{domain}/"),

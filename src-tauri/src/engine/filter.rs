@@ -34,7 +34,8 @@ pub fn build(request: &EngineRequest) -> String {
     }
 
     // Hedef adreslerini DNS yanıtlarından öğrenmek gerekiyor mu?
-    let learns = request.domains.is_some() && (strategy.no_sni == "known" || strategy.block_quic);
+    // Hariç tutulan sitelerin adresleri de DNS yanıtlarından öğrenilir.
+    let learns = (request.domains.is_some() && (strategy.no_sni == "known" || strategy.block_quic)) || !request.excluded.is_empty();
     let mut response_ports = Vec::new();
     if let Some(dns) = &request.dns {
         parts.push("(outbound and udp and udp.DstPort == 53)".to_string());
@@ -76,6 +77,7 @@ mod tests {
             strategy: catalog::method(method).unwrap().strategy(),
             dns: dns.then(|| DnsTarget { v4: "9.9.9.9".into(), port: 9953, v6: Some("2620:fe::fe".into()), port6: 9953, all: !selected }),
             domains: selected.then(|| vec!["discord.com".to_string()]),
+            excluded: Vec::new(),
         }
     }
 

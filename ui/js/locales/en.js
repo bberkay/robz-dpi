@@ -31,16 +31,23 @@ export default {
   'scope.selected': 'Only what I pick',
   'scope.all': 'All sites',
   'scope.selected.desc': 'Applies only to the apps you turn on and the sites you add. Other sites are left alone.',
+  'exclude.title': 'Exclude a site',
+  'exclude.desc': 'Robz DPI leaves these sites and their subdomains alone and works on every other site.',
+  'exclude.row': 'Robz DPI leaves this site alone',
+  'exclude.remove': 'Remove {domain} from the excluded sites',
+  'power.onScope.allExcept': 'Working on every site except {list}.',
+  'power.offScope.allExcept': 'When on, it works on every site except {list}.',
   'scope.all.desc':
-    'Applies to every connection, without a list. Some sites may stop loading; if that happens, switch back to "Only what I pick".',
+    'Applies to every connection, without a list. If a site stops loading, exclude it below or switch back to "Only what I pick".',
   'scope.sites': '{n} sites',
   'service.domains': '{n} addresses',
 
-  'custom.title': 'Your own sites',
+  'custom.title': 'Add a site',
   'custom.desc': 'Type the address of any other site it should work on. Subdomains are included.',
   'custom.placeholder': 'example.com',
   'custom.add': 'Add',
-  'custom.remove': 'Remove {domain}',
+  'custom.remove': 'Remove {domain} from the list',
+  'custom.row': 'A site you added · subdomains included',
   'custom.rejected': 'Not a valid site address: {list}',
   'custom.exists': 'That address is already on the list.',
 
@@ -186,7 +193,7 @@ export default {
   'settings.about.body':
     'Robz DPI is open source and free; it collects no data. The engine is its own code (Rust); the techniques come from GoodbyeDPI by ValdikSS, and the driver that captures packets is WinDivert by basil00.',
   'settings.about.disclaimer':
-    'For education and testing, with no warranty. Every consequence of using it, and following the laws where you are, is your responsibility.',
+    'For education and testing, with no warranty. Every consequence of using it, and following the laws where you are, is your responsibility. Discord and Roblox are trademarks of their owners; Robz DPI is not affiliated with them.',
   'link.github': 'GitHub',
   'link.discord': 'Discord',
   'link.disclaimer': 'Disclaimer',

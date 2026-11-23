@@ -46,3 +46,13 @@ DNS queries and dropping the first QUIC packet. GoodbyeDPI's license text is in
 | Preact + HTM | MIT, Apache-2.0 | https://github.com/developit/htm |
 | Mona Sans (yazı tipi / typeface) | SIL OFL 1.1 | https://github.com/github/mona-sans |
 | Tauri | MIT, Apache-2.0 | https://github.com/tauri-apps/tauri |
+
+## Discord ve Roblox logoları · Discord and Roblox logos
+
+Arayüzdeki iki logonun çizimi [Simple Icons](https://simpleicons.org/) projesinden alınmıştır (CC0 1.0). Logolar
+Discord Inc. ve Roblox Corporation'ın ticari markalarıdır; yalnız listede hangi hizmetin seçildiğini göstermek için
+kullanılır. Robz DPI bu şirketlerle bağlantılı değildir ve onlar tarafından onaylanmamıştır.
+
+The drawings of the two logos in the interface come from [Simple Icons](https://simpleicons.org/) (CC0 1.0). The logos
+are trademarks of Discord Inc. and Roblox Corporation and are used only to show which service is selected in the list.
+Robz DPI is not affiliated with or endorsed by these companies.
