@@ -32,7 +32,7 @@ export default {
     locale: 'tr_TR',
     title: 'Robz DPI: yalnız seçtiğin sitelerde çalışan, tek düğmeli DPI aracı',
     description:
-      'Robz DPI; Discord, Roblox ve eklediğin siteler için tek düğmeyle çalışan açık kaynak DPI aracıdır. Motoru Rust ile yazıldı. Eğitim ve test amaçlıdır, ücretsizdir.',
+      "Robz DPI; Discord, Roblox ve eklediğin siteler için tek düğmeyle çalışan açık kaynak DPI aracıdır. Windows ve Linux'ta çalışır. Eğitim ve test amaçlıdır, ücretsizdir.",
     skip: 'İçeriğe geç',
     langLabel: 'Dil',
     nav: { how: 'Nasıl çalışır', usage: 'Kullanım', faq: 'Sık sorulanlar', github: 'GitHub' },
@@ -42,9 +42,10 @@ export default {
     heroLead:
       'Robz DPI, bağlantının ilk paketini servis sağlayıcının derin paket inceleme (DPI) cihazının tanıyamayacağı biçimde gönderir. Tek düğmeyle açılır; yalnız Discord, Roblox ve senin eklediğin sitelerde çalışır.',
     download: 'Windows için indir',
+    linuxLabel: 'Linux için:',
     star: 'Yıldız ver',
     starTitle: "GitHub'da yıldız ver",
-    facts: ['Windows 10 ve 11', 'VPN değil, hız düşmez', 'Motoru Rust ile yazıldı', 'Ücretsiz ve açık kaynak'],
+    facts: ['Windows ve Linux', 'VPN değil, hız düşmez', 'Veri toplamaz', 'Ücretsiz ve açık kaynak'],
     shotAlt: 'Robz DPI açıkken ana ekran: düğme yeşil, Discord ve Roblox için çalışıyor.',
     shotBackAlt: 'Robz DPI kapalıyken ana ekran.',
 
@@ -99,7 +100,7 @@ export default {
     steps: [
       {
         title: 'İndir ve kur',
-        text: 'RobzDPI-Setup.exe dosyasını çalıştır; kurulum yönetici izni istemez. İlk açılışta bir kez üç kısa adım sorulur: dil, sorumluluk reddinin kabulü ve nerede çalışacağı.',
+        text: "Windows'ta RobzDPI-Setup.exe dosyasını çalıştır; kurulum yönetici izni istemez. Linux'ta .deb ya da .rpm paketini kur. İlk açılışta bir kez üç kısa adım sorulur: dil, sorumluluk reddinin kabulü ve nerede çalışacağı.",
         note: 'Dosya imzalı olmadığı için Windows "kişisel bilgisayarınızı korudu" uyarısı gösterebilir: Ek bilgi › Yine de çalıştır.',
         shot: '06-terms.png',
         shotAlt: 'İlk açılış: sorumluluk reddinin özeti ve onay kutusu',
@@ -126,7 +127,7 @@ export default {
       ['Kendi sitelerin', 'Adresini kutuya yaz, ekle; alt adresler kendiliğinden kapsanır. İstersen "Bütün sitelerde" kipi her bağlantıya uygular.'],
       ['Dört hazır yöntem', 'GoodbyeDPI-Turkey betiklerindeki bayrak takımlarıyla aynı davranır. Meraklısı için alan alan düzenlenen "Özel" yöntem de var.'],
       ["DNS'i de düzeltir", 'Seçili sitelerin DNS sorgularını Quad9, Yandex, AdGuard, OpenDNS ya da yazdığın sunucuya yönlendirir.'],
-      ['Motoru bu depoda', 'Paketleri işleyen kod Rust ile sıfırdan yazıldı ve ağa dokunmadan sınanır. Tek üçüncü taraf dosya, SHA-256 özeti sabitlenmiş WinDivert sürücüsüdür.'],
+      ['Motoru bu depoda', "Paketleri işleyen kod sıfırdan yazıldı ve ağa dokunmadan sınanır. Windows'ta tek üçüncü taraf dosya, SHA-256 özeti sabitlenmiş WinDivert sürücüsüdür; Linux'ta ek sürücü gerekmez."],
       ['Veri toplamaz', 'Hesap, reklam, kullanım istatistiği ya da güncelleme denetimi yok. Paketlerin içeriğini okumaz, saklamaz, bir yere göndermez.'],
     ],
 
@@ -161,11 +162,11 @@ export default {
       ],
       [
         "Robz DPI'ı nasıl kaldırırım?",
-        'Ayarlar › "Robz DPI\'ı kaldır". Uygulamayı, arka planda çalışan parçasını (Windows hizmeti ve sürücü) ve ayarlarını tek adımda siler. Windows\'un Uygulamalar listesinden kaldırmak da aynı işi yapar.',
+        'Ayarlar › "Robz DPI\'ı kaldır". Uygulamayı, arka planda çalışan parçasını (Windows hizmeti ve sürücü) ve ayarlarını tek adımda siler. Windows\'un Uygulamalar listesinden kaldırmak da aynı işi yapar. Linux\'ta paketi paket yöneticinle kaldırırsın; arka plandaki parça da birlikte silinir.',
       ],
       [
-        "macOS ya da Linux'ta çalışır mı?",
-        'Şimdilik yalnız 64 bit Windows 10 ve 11. Paketleri işleyen mantık her platformda derlenir ve sınanır; eksik olan, o sistemlerde paketleri yakalayan katmandır. Sıradaki hedef macOS.',
+        "Linux'ta ve macOS'ta çalışır mı?",
+        "Windows 10 ve 11 ile Linux'ta çalışır. Linux'ta .deb (Debian, Ubuntu, Mint) ve .rpm (Fedora, openSUSE) paketleri vardır; systemd, nftables ve polkit gerekir. macOS sürümü yoktur: orada paketleri bu biçimde yakalamak Apple'ın imzaladığı bir ağ uzantısı gerektirir.",
       ],
       [
         'Yasal mı?',
@@ -201,7 +202,7 @@ export default {
     locale: 'en_US',
     title: 'Robz DPI: a one-button DPI tool that works only on the sites you pick',
     description:
-      'Robz DPI is an open-source, one-button DPI tool for Discord, Roblox and the sites you add. Its engine is written in Rust. For education and testing, free.',
+      'Robz DPI is an open-source, one-button DPI tool for Discord, Roblox and the sites you add. It runs on Windows and Linux. For education and testing, free.',
     skip: 'Skip to content',
     langLabel: 'Language',
     nav: { how: 'How it works', usage: 'How to use', faq: 'FAQ', github: 'GitHub' },
@@ -211,9 +212,10 @@ export default {
     heroLead:
       "Robz DPI sends the first packet of a connection in a form your provider's deep packet inspection (DPI) box cannot recognize. One button turns it on, and it works only for Discord, Roblox and the sites you add.",
     download: 'Download for Windows',
+    linuxLabel: 'For Linux:',
     star: 'Star',
     starTitle: 'Star on GitHub',
-    facts: ['Windows 10 and 11', 'Not a VPN, no slowdown', 'Engine written in Rust', 'Free and open source'],
+    facts: ['Windows and Linux', 'Not a VPN, no slowdown', 'Collects no data', 'Free and open source'],
     shotAlt: 'Robz DPI turned on: the button is green and it is working for Discord and Roblox.',
     shotBackAlt: 'Robz DPI turned off: the main screen.',
 
@@ -268,7 +270,7 @@ export default {
     steps: [
       {
         title: 'Download and install',
-        text: 'Run RobzDPI-Setup.exe; installing needs no administrator rights. The first run asks three short steps, once: language, accepting the disclaimer and where it should work.',
+        text: 'On Windows, run RobzDPI-Setup.exe; installing needs no administrator rights. On Linux, install the .deb or .rpm package. The first run asks three short steps, once: language, accepting the disclaimer and where it should work.',
         note: 'The file is not signed, so Windows may show "Windows protected your PC": More info › Run anyway.',
         shot: '06-terms.png',
         shotAlt: 'First run: the disclaimer summary and the acceptance checkbox',
@@ -295,7 +297,7 @@ export default {
       ['Your own sites', 'Type the address into the box and add it; subdomains are covered automatically. "All sites" mode applies it to every connection if you want.'],
       ['Four ready-made methods', 'They behave like the flag sets in the GoodbyeDPI-Turkey scripts. For the curious there is also a "Custom" method you edit field by field.'],
       ['Fixes DNS too', 'Redirects the DNS lookups of the selected sites to Quad9, Yandex, AdGuard, OpenDNS or a server you type.'],
-      ['The engine is in this repository', 'The code that handles packets was written from scratch in Rust and is tested without touching the network. The only third-party file is the WinDivert driver, pinned by SHA-256.'],
+      ['The engine is in this repository', 'The code that handles packets was written from scratch and is tested without touching the network. On Windows the only third-party file is the WinDivert driver, pinned by SHA-256; on Linux no extra driver is needed.'],
       ['Collects no data', 'No account, ads, usage statistics or update checks. It does not read, store or send the contents of your packets.'],
     ],
 
@@ -330,11 +332,11 @@ export default {
       ],
       [
         'How do I uninstall Robz DPI?',
-        'Settings › "Uninstall Robz DPI". It removes the app, its background part (the Windows service and the driver) and your settings in one step. Uninstalling from the Windows Apps list does the same.',
+        'Settings › "Uninstall Robz DPI". It removes the app, its background part (the Windows service and the driver) and your settings in one step. Uninstalling from the Windows Apps list does the same. On Linux, remove the package with your package manager; the background part goes with it.',
       ],
       [
-        'Does it work on macOS or Linux?',
-        'Only 64-bit Windows 10 and 11 for now. The packet logic builds and is tested on every platform; what is missing is the layer that captures packets on those systems. macOS is next.',
+        'Does it work on Linux and macOS?',
+        'It runs on Windows 10 and 11 and on Linux. For Linux there are .deb (Debian, Ubuntu, Mint) and .rpm (Fedora, openSUSE) packages; systemd, nftables and polkit are required. There is no macOS version: capturing packets this way there requires a network extension signed by Apple.',
       ],
       [
         'Is it legal?',
@@ -370,7 +372,7 @@ export default {
     locale: 'ru_RU',
     title: 'Robz DPI: инструмент DPI с одной кнопкой, который работает только на выбранных сайтах',
     description:
-      'Robz DPI — инструмент DPI с открытым кодом для Discord, Roblox и добавленных вами сайтов. Включается одной кнопкой, движок написан на Rust. Для обучения и тестирования, бесплатно.',
+      'Robz DPI — инструмент DPI с открытым кодом для Discord, Roblox и добавленных вами сайтов. Включается одной кнопкой, работает в Windows и Linux. Для обучения и тестирования, бесплатно.',
     skip: 'Перейти к содержимому',
     langLabel: 'Язык',
     nav: { how: 'Как это работает', usage: 'Как пользоваться', faq: 'Вопросы', github: 'GitHub' },
@@ -380,9 +382,10 @@ export default {
     heroLead:
       'Robz DPI отправляет первый пакет соединения в таком виде, что устройство глубокой инспекции пакетов (DPI) у провайдера его не распознаёт. Включается одной кнопкой и работает только для Discord, Roblox и добавленных вами сайтов.',
     download: 'Скачать для Windows',
+    linuxLabel: 'Для Linux:',
     star: 'Звезда',
     starTitle: 'Поставить звезду на GitHub',
-    facts: ['Windows 10 и 11', 'Не VPN, скорость не падает', 'Движок написан на Rust', 'Бесплатно, открытый код'],
+    facts: ['Windows и Linux', 'Не VPN, скорость не падает', 'Без сбора данных', 'Бесплатно, открытый код'],
     shotAlt: 'Robz DPI включён: кнопка зелёная, работает для Discord и Roblox.',
     shotBackAlt: 'Robz DPI выключен: главный экран.',
 
@@ -437,7 +440,7 @@ export default {
     steps: [
       {
         title: 'Скачайте и установите',
-        text: 'Запустите RobzDPI-Setup.exe; установка не требует прав администратора. При первом запуске один раз задаются три коротких шага: язык, согласие с отказом от ответственности и где программа должна работать.',
+        text: 'В Windows запустите RobzDPI-Setup.exe; установка не требует прав администратора. В Linux установите пакет .deb или .rpm. При первом запуске один раз задаются три коротких шага: язык, согласие с отказом от ответственности и где программа должна работать.',
         note: 'Файл не подписан, поэтому Windows может показать «Система Windows защитила ваш компьютер»: Подробнее › Выполнить в любом случае.',
         shot: '06-terms.png',
         shotAlt: 'Первый запуск: краткий отказ от ответственности и флажок согласия',
@@ -464,7 +467,7 @@ export default {
       ['Свои сайты', 'Введите адрес в поле и добавьте; поддомены включаются автоматически. Режим «Все сайты» при желании применяется к каждому соединению.'],
       ['Четыре готовых метода', 'Ведут себя как наборы флагов из скриптов GoodbyeDPI-Turkey. Для любопытных есть метод «Свой», который настраивается по полям.'],
       ['Исправляет и DNS', 'Перенаправляет DNS-запросы выбранных сайтов на Quad9, Yandex, AdGuard, OpenDNS или указанный вами сервер.'],
-      ['Движок в этом репозитории', 'Код, обрабатывающий пакеты, написан с нуля на Rust и тестируется без сети. Единственный сторонний файл — драйвер WinDivert с закреплённой суммой SHA-256.'],
+      ['Движок в этом репозитории', 'Код, обрабатывающий пакеты, написан с нуля и тестируется без сети. В Windows единственный сторонний файл — драйвер WinDivert с закреплённой суммой SHA-256; в Linux дополнительный драйвер не нужен.'],
       ['Данные не собираются', 'Нет учётной записи, рекламы, статистики и проверки обновлений. Содержимое пакетов не читается, не сохраняется и никуда не отправляется.'],
     ],
 
@@ -499,11 +502,11 @@ export default {
       ],
       [
         'Как удалить Robz DPI?',
-        'Настройки › «Удалить Robz DPI». Одним действием удаляются приложение, его фоновая часть (служба Windows и драйвер) и настройки. Удаление через список «Приложения» Windows делает то же самое.',
+        'Настройки › «Удалить Robz DPI». Одним действием удаляются приложение, его фоновая часть (служба Windows и драйвер) и настройки. Удаление через список «Приложения» Windows делает то же самое. В Linux удалите пакет через менеджер пакетов; фоновая часть удалится вместе с ним.',
       ],
       [
-        'Работает ли в macOS или Linux?',
-        'Пока только 64-битные Windows 10 и 11. Логика работы с пакетами собирается и тестируется на любой платформе; не хватает слоя, который перехватывает пакеты в этих системах. Следующая цель — macOS.',
+        'Работает ли в Linux и macOS?',
+        'Работает в Windows 10 и 11 и в Linux. Для Linux есть пакеты .deb (Debian, Ubuntu, Mint) и .rpm (Fedora, openSUSE); нужны systemd, nftables и polkit. Версии для macOS нет: там такой перехват пакетов требует сетевого расширения, подписанного Apple.',
       ],
       [
         'Это законно?',

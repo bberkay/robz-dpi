@@ -18,6 +18,11 @@ const SITE = 'https://kutsalkiremitci.github.io/robz-dpi/';
 const REPO_URL = `https://github.com/${REPO}`;
 const SETUP = 'RobzDPI-Setup.exe';
 const DOWNLOAD = `${REPO_URL}/releases/latest/download/${SETUP}`;
+// Linux paketleri: sürüm iş akışı her sürüme bu sabit adlarla da yükler.
+const LINUX = [
+  ['.deb', `${REPO_URL}/releases/latest/download/RobzDPI-Linux-amd64.deb`, 'Debian, Ubuntu, Mint'],
+  ['.rpm', `${REPO_URL}/releases/latest/download/RobzDPI-Linux-x86_64.rpm`, 'Fedora, openSUSE'],
+];
 const DISCORD = 'https://discord.gg/UyyEn7SHm4';
 const ROBZ_HUB = 'https://kutsalkiremitci.github.io/robz-hub/';
 
@@ -184,7 +189,8 @@ function page(t) {
       <a class="btn btn-star ${big ? 'btn-xl' : 'btn-lg'}" href="${REPO_URL}" title="${esc(t.starTitle)}">
         ${icon('star', 18)}<span>${esc(t.star)}</span><span class="btn-count" data-stars ${live.stars == null ? 'hidden' : ''}>${live.stars ?? ''}</span>
       </a>
-    </div>`;
+    </div>
+    <p class="cta-linux">${esc(t.linuxLabel)} ${LINUX.map(([label, href, distros]) => `<a href="${href}" title="${esc(distros)}">${label}</a> <span>(${esc(distros)})</span>`).join(' · ')}</p>`;
 
   const diff = () => {
     const n = t.diff.del.length;
@@ -276,7 +282,7 @@ function page(t) {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
     name: 'Robz DPI',
-    operatingSystem: 'Windows 10, Windows 11',
+    operatingSystem: 'Windows 10, Windows 11, Linux',
     applicationCategory: 'UtilitiesApplication',
     description: t.description,
     downloadUrl: DOWNLOAD,

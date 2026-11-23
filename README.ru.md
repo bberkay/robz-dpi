@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/banner-ru.png" alt="Robz DPI: инструмент DPI с открытым кодом для Windows, который работает только на выбранных вами сайтах. Справа главный экран приложения." width="100%">
+  <img src="docs/banner-ru.png" alt="Robz DPI: инструмент DPI с открытым кодом для Windows и Linux, который работает только на выбранных вами сайтах. Справа главный экран приложения." width="100%">
 </p>
 
 <p align="center">
@@ -8,11 +8,14 @@
   <a href="https://github.com/kutsalkiremitci/robz-dpi/stargazers"><img src="https://img.shields.io/github/stars/kutsalkiremitci/robz-dpi?style=flat-square&amp;logo=github&amp;label=звёзды&amp;labelColor=0d1117&amp;color=e3b341" alt="Звёзды на GitHub"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/kutsalkiremitci/robz-dpi?style=flat-square&amp;label=лицензия&amp;labelColor=0d1117&amp;color=3d444d" alt="Лицензия: MIT"></a>
   <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Windows 10 и 11">
+  <img src="https://img.shields.io/badge/Linux-deb%20%7C%20rpm-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Linux: пакеты deb и rpm">
   <img src="https://img.shields.io/badge/интерфейс-Türkçe%20%7C%20English%20%7C%20Русский-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Интерфейс: турецкий, английский и русский">
 </p>
 
 <p align="center">
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Setup.exe"><img src="https://img.shields.io/badge/СКАЧАТЬ%20БЕСПЛАТНО-WINDOWS%2010%20%C2%B7%2011-8957e5?style=for-the-badge&amp;labelColor=6e40c9" alt="Скачать бесплатно: RobzDPI-Setup.exe, Windows 10 и 11"></a>
+  <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-amd64.deb"><img src="https://img.shields.io/badge/LINUX-.DEB-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Скачать для Linux: .deb"></a>
+  <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.rpm"><img src="https://img.shields.io/badge/LINUX-.RPM-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Скачать для Linux: .rpm"></a>
   <a href="https://github.com/kutsalkiremitci/robz-dpi/stargazers"><img src="https://img.shields.io/github/stars/kutsalkiremitci/robz-dpi?style=for-the-badge&amp;logo=github&amp;label=ЗВЕЗДА&amp;labelColor=0d1117&amp;color=e3b341" alt="Поставить звезду на GitHub"></a>
   <br>
   <a href="README.md"><img src="https://img.shields.io/badge/TÜRKÇE-21262d?style=for-the-badge" alt="Türkçe"></a>
@@ -20,7 +23,7 @@
   <a href="https://discord.gg/UyyEn7SHm4"><img src="https://img.shields.io/badge/DISCORD-ПОДДЕРЖКА-5865F2?style=for-the-badge&amp;logo=discord&amp;logoColor=white&amp;labelColor=4752C4" alt="Discord: поддержка"></a>
 </p>
 
-<h3 align="center">Инструмент с открытым кодом для Windows: изучение и тестирование глубокой инспекции пакетов (DPI)</h3>
+<h3 align="center">Инструмент с открытым кодом для Windows и Linux: изучение и тестирование глубокой инспекции пакетов (DPI)</h3>
 
 <p align="center">
   <b>Robz DPI</b> — сетевой инструмент, созданный для изучения того, как работают ограничения доступа,<br>
@@ -112,6 +115,8 @@ Robz DPI — не VPN, не прокси и не сервис доступа. О
 
 ## Установка
 
+### Windows
+
 **Требования:** 64-битная Windows 10 или Windows 11.
 
 1. **Скачайте** [RobzDPI-Setup.exe](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Setup.exe)
@@ -130,6 +135,25 @@ Robz DPI — не VPN, не прокси и не сервис доступа. О
 Установщик не подписан платным сертификатом, поэтому Windows SmartScreen может показать «Система Windows защитила
 ваш компьютер». Продолжить можно через **Подробнее** → **Выполнить в любом случае**. Чтобы убедиться, что файл взят
 из этого репозитория, сравните его с `SHA256SUMS.txt` на странице выпуска.
+
+### Linux
+
+**Требования:** 64-битный (x86_64) дистрибутив с systemd, nftables и polkit (есть в большинстве настольных
+дистрибутивов). Дополнительный драйвер не нужен: пакеты перехватывает собственная очередь пакетов ядра Linux.
+
+| Дистрибутив | Пакет | Установка |
+|---|---|---|
+| Debian, Ubuntu, Linux Mint | [RobzDPI-Linux-amd64.deb](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-amd64.deb) | `sudo apt install ./RobzDPI-Linux-amd64.deb` |
+| Fedora, openSUSE | [RobzDPI-Linux-x86_64.rpm](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.rpm) | `sudo dnf install ./RobzDPI-Linux-x86_64.rpm` |
+
+После установки откройте **Robz DPI** из меню приложений. При первом нажатии кнопки система попросит пароль
+администратора (polkit); в системах, поддерживающих правила polkit, дальнейшие включения и выключения пароля не
+требуют. Контрольные суммы пакетов находятся в `SHA256SUMS-linux.txt` на странице выпуска.
+
+> [!NOTE]
+> Версия для Linux новая. Пакеты, которые создаёт движок, проверены автоматическими тестами, но версия проверялась
+> не во всех дистрибутивах и не у всех провайдеров. Если что-то не работает,
+> [сообщите](https://github.com/kutsalkiremitci/robz-dpi/issues), указав дистрибутив и приложив журнал движка.
 
 ## Использование
 
@@ -186,6 +210,9 @@ WinDivert, папка `Program Files\RobzDPI`) и настройки. Фонов
 поэтому Windows один раз попросит подтверждение. Удаление через список «Приложения» Windows тоже убирает фоновую
 часть.
 
+В Linux удалите пакет через менеджер пакетов (`sudo apt remove robz-dpi` или `sudo dnf remove robz-dpi`); фоновая
+часть (юнит systemd, правила, `/opt/robzdpi` и `/var/lib/robzdpi`) удаляется вместе с ним.
+
 ## Об антивирусных программах
 
 > [!WARNING]
@@ -193,7 +220,9 @@ WinDivert, папка `Program Files\RobzDPI`) и настройки. Фонов
 > помещают его файлы в карантин или не дают драйверу загрузиться. В этом случае движок не запускается или
 > останавливается сам.
 
-Robz DPI перехватывает сетевые пакеты с помощью драйвера с открытым кодом
+Этот раздел относится только к версии для Windows; версия для Linux не использует WinDivert.
+
+В Windows Robz DPI перехватывает сетевые пакеты с помощью драйвера с открытым кодом
 [WinDivert](https://github.com/basil00/WinDivert). WinDivert не является вредоносной программой; но поскольку он
 может перехватывать и изменять сетевой трафик, защитные продукты относят его к «инструментам, которыми можно
 злоупотребить». Такое же предупреждение появляется у всех программ, использующих WinDivert, включая GoodbyeDPI.
@@ -279,8 +308,9 @@ Robz DPI работает только с ограничениями, котор
 
 Остальная часть соединения не затрагивается: скорость не падает, трафик не идёт через другой сервер.
 
-Движок состоит из двух частей. Подписанный драйвер, который берёт пакеты из ядра и возвращает их, — это
-**WinDivert** (basil00, открытый код). Код, решающий, что делать с пакетом, находится в этом репозитории
+Движок состоит из двух частей. Слой, который берёт пакеты из ядра и возвращает их, в Windows — подписанный драйвер
+**WinDivert** (basil00, открытый код), а в Linux — собственная очередь пакетов ядра (nfqueue), и дополнительный
+драйвер не нужен. Код, решающий, что делать с пакетом, одинаков в обеих системах и находится в этом репозитории
 ([`src-tauri/src/engine`](src-tauri/src/engine)):
 
 | Файл | Назначение |
@@ -290,8 +320,8 @@ Robz DPI работает только с ограничениями, котор
 | `dnsmsg.rs` | Читает имя в DNS-запросе и адреса в ответе |
 | `logic.rs` | Решение: что делать с пакетом? (чистая логика, тестируется без сети) |
 | `filter.rs` | Фильтр для драйвера: какие пакеты доходят до движка |
-| `divert.rs` | Привязка к WinDivert |
-| `service.rs` | Служба Windows: берёт пакет, принимает решение, возвращает |
+| `divert.rs`, `service.rs` | Windows: привязка к WinDivert и служба Windows |
+| `nfqueue.rs`, `linux_service.rs` | Linux: правила nftables, очередь пакетов и юнит systemd |
 
 ## Сравнение с GoodbyeDPI
 
@@ -337,6 +367,9 @@ GoodbyeDPI — проверенная программа, которой пол�
 - **Служба запускается из защищённой папки.** Движок копируется в `Program Files\RobzDPI`, изменять которую могут
   только администраторы. Пользователь может запускать и останавливать службу, но не может изменить запускаемую ею
   программу.
+- **В Linux устройство такое же.** Движок запускается из `/opt/robzdpi` как юнит systemd, ограниченный сетевыми
+  привилегиями; установка и смена настроек требуют подтверждения polkit. При остановке движка правила nftables
+  удаляются.
 
 ## Частые вопросы
 
@@ -372,10 +405,10 @@ GoodbyeDPI — проверенная программа, которой пол�
 </details>
 
 <details>
-<summary><b>Работает ли в macOS или Linux?</b></summary>
+<summary><b>Работает ли в macOS?</b></summary>
 
-Пока только 64-битные Windows 10 и 11. Логика работы с пакетами собирается и тестируется на любой платформе; не
-хватает слоя, который перехватывает пакеты в этих системах.
+Нет. Robz DPI работает в Windows 10 и 11 и в Linux. В macOS такой перехват пакетов требует сетевого расширения,
+подписанного Apple, поэтому версии для macOS нет.
 
 </details>
 
@@ -393,18 +426,21 @@ GoodbyeDPI — проверенная программа, которой пол�
 ## Разработка
 
 **Требуется:** [Rust](https://rustup.rs) (MSVC), Node.js 22+, инструменты C++ из Visual Studio и Windows SDK
-([предварительные требования Tauri для Windows](https://tauri.app/start/prerequisites/)).
+([предварительные требования Tauri для Windows](https://tauri.app/start/prerequisites/)). В Linux:
+`libwebkit2gtk-4.1-dev`, `libayatana-appindicator3-dev`, `librsvg2-dev`, `libxdo-dev`, `libssl-dev`.
 
 ```powershell
 npm install          # копирует библиотеки интерфейса, скачивает и проверяет WinDivert
 npm run dev          # запуск в режиме разработки
 npm test             # тесты интерфейса (node --test) и движка (cargo test)
-npm run build        # установщик: src-tauri/target/release/bundle/nsis/
+npm run build        # установщик: src-tauri/target/release/bundle/ (Windows: nsis, Linux: deb и rpm)
 ```
 
 - **Движок тестируется без сети.** `logic.rs` — чистая логика: тесты подают вручную собранные пакеты и проверяют
   выходящие (порядок, место разделения, время жизни, контрольную сумму). Фильтры компилируются настоящим
-  `WinDivert.dll` и применяются к примерам пакетов; драйвер не загружается.
+  `WinDivert.dll` и применяются к примерам пакетов; драйвер не загружается. Пакет для Linux устанавливается в CI и
+  проверяется целиком скриптом [`scripts/linux-smoke.sh`](scripts/linux-smoke.sh): движок ставится с настоящими
+  systemd и nftables, через него открывается сайт, затем движок удаляется.
 - **Интерфейс можно открыть в браузере.** Если открыть папку `ui/` любым локальным сервером
   (`python -m http.server --directory ui`), вместо настоящего ядра подключится имитация
   ([`ui/js/dev-mock.js`](ui/js/dev-mock.js)).

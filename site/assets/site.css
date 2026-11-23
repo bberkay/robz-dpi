@@ -231,6 +231,18 @@ html[lang='ru'] h2 {
 .btn-star .i {
   color: #e3b341;
 }
+.cta-linux {
+  margin-top: 14px;
+  color: var(--fg-muted);
+  font-size: 14px;
+}
+.cta-linux a {
+  font-family: var(--mono);
+  font-weight: 600;
+}
+.cta-linux span {
+  color: var(--fg-subtle);
+}
 .btn-count {
   min-width: 26px;
   padding: 3px 8px;

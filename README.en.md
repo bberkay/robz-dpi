@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/banner-en.png" alt="Robz DPI: an open-source DPI tool for Windows that works only on the sites you choose. On the right, the main screen of the app." width="100%">
+  <img src="docs/banner-en.png" alt="Robz DPI: an open-source DPI tool for Windows and Linux that works only on the sites you choose. On the right, the main screen of the app." width="100%">
 </p>
 
 <p align="center">
@@ -8,11 +8,14 @@
   <a href="https://github.com/kutsalkiremitci/robz-dpi/stargazers"><img src="https://img.shields.io/github/stars/kutsalkiremitci/robz-dpi?style=flat-square&amp;logo=github&amp;label=stars&amp;labelColor=0d1117&amp;color=e3b341" alt="GitHub stars"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/kutsalkiremitci/robz-dpi?style=flat-square&amp;label=license&amp;labelColor=0d1117&amp;color=3d444d" alt="License: MIT"></a>
   <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Windows 10 and 11">
+  <img src="https://img.shields.io/badge/Linux-deb%20%7C%20rpm-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Linux: deb and rpm packages">
   <img src="https://img.shields.io/badge/interface-T%C3%BCrk%C3%A7e%20%7C%20English%20%7C%20%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Interface: Turkish, English and Russian">
 </p>
 
 <p align="center">
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Setup.exe"><img src="https://img.shields.io/badge/FREE%20DOWNLOAD-WINDOWS%2010%20%C2%B7%2011-8957e5?style=for-the-badge&amp;logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIuNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgM3YxMiIvPjxwYXRoIGQ9Im02LjUgOS41IDUuNSA1LjUgNS41LTUuNSIvPjxwYXRoIGQ9Ik00IDIwLjVoMTYiLz48L3N2Zz4%3D&amp;labelColor=6e40c9" alt="Free download: RobzDPI-Setup.exe, Windows 10 and 11"></a>
+  <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-amd64.deb"><img src="https://img.shields.io/badge/LINUX-.DEB-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Download for Linux: .deb"></a>
+  <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.rpm"><img src="https://img.shields.io/badge/LINUX-.RPM-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Download for Linux: .rpm"></a>
   <a href="https://github.com/kutsalkiremitci/robz-dpi/stargazers"><img src="https://img.shields.io/github/stars/kutsalkiremitci/robz-dpi?style=for-the-badge&amp;logo=github&amp;label=STAR&amp;labelColor=0d1117&amp;color=e3b341" alt="Star on GitHub"></a>
   <br>
   <a href="README.md"><img src="https://img.shields.io/badge/T%C3%9CRK%C3%87E-21262d?style=for-the-badge" alt="Türkçe"></a>
@@ -20,7 +23,7 @@
   <a href="https://discord.gg/UyyEn7SHm4"><img src="https://img.shields.io/badge/DISCORD-SUPPORT-5865F2?style=for-the-badge&amp;logo=discord&amp;logoColor=white&amp;labelColor=4752C4" alt="Discord: support"></a>
 </p>
 
-<h3 align="center">An open-source Windows tool for understanding and testing deep packet inspection (DPI)</h3>
+<h3 align="center">An open-source tool for understanding and testing deep packet inspection (DPI): Windows and Linux</h3>
 
 <p align="center">
   <b>Robz DPI</b> is a network tool built to study how the access restrictions that internet providers apply<br>
@@ -111,6 +114,8 @@ security, and contains no list of "blocked sites"; the user decides which domain
 
 ## Installation
 
+### Windows
+
 **Requirements:** 64-bit Windows 10 or Windows 11.
 
 1. **Download** [RobzDPI-Setup.exe](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Setup.exe)
@@ -127,6 +132,25 @@ security, and contains no list of "blocked sites"; the user decides which domain
 The installer is not signed with a paid certificate, so Windows SmartScreen may show "Windows protected your PC".
 Continue with **More info** → **Run anyway**. To verify that the file comes from this repository, compare it with
 `SHA256SUMS.txt` on the release page.
+
+### Linux
+
+**Requirements:** a 64-bit (x86_64) distribution with systemd, nftables and polkit (present on most desktop
+distributions). No extra driver is needed: packets are captured by the Linux kernel's own packet queue.
+
+| Distribution | Package | Install |
+|---|---|---|
+| Debian, Ubuntu, Linux Mint | [RobzDPI-Linux-amd64.deb](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-amd64.deb) | `sudo apt install ./RobzDPI-Linux-amd64.deb` |
+| Fedora, openSUSE | [RobzDPI-Linux-x86_64.rpm](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.rpm) | `sudo dnf install ./RobzDPI-Linux-x86_64.rpm` |
+
+After installing, open **Robz DPI** from the application menu. The first time you press the button the system asks
+for the administrator password (polkit); on systems that support polkit rules, turning it on and off later asks for
+nothing. The package digests are in `SHA256SUMS-linux.txt` on the release page.
+
+> [!NOTE]
+> The Linux version is new. The packets the engine produces are verified by automated tests, but it has not been
+> tried on every distribution and every provider. If something goes wrong, please
+> [report it](https://github.com/kutsalkiremitci/robz-dpi/issues) with your distribution and the engine log.
 
 ## Usage
 
@@ -183,13 +207,19 @@ WinDivert driver, the `Program Files\RobzDPI` folder) and the settings. The back
 administrator rights, so Windows asks for approval once. Uninstalling from the Windows "Apps" list removes the
 background part too.
 
+On Linux, remove the package with your package manager (`sudo apt remove robz-dpi` or `sudo dnf remove robz-dpi`);
+the background part (the systemd unit, the rules, `/opt/robzdpi` and `/var/lib/robzdpi`) is removed with it.
+
 ## About antivirus software
 
 > [!WARNING]
 > Some antivirus products flag the **WinDivert** driver that Robz DPI uses as a "risk tool", quarantine its files or
 > prevent the driver from loading. When that happens the engine cannot start, or stops by itself.
 
-Robz DPI captures network packets with the open-source [WinDivert](https://github.com/basil00/WinDivert) driver.
+This section applies to the Windows version only; the Linux version does not use WinDivert.
+
+On Windows, Robz DPI captures network packets with the open-source [WinDivert](https://github.com/basil00/WinDivert)
+driver.
 WinDivert is not malware; but because it can capture and modify network traffic, security products classify it as a
 "tool that could be misused". The same warning appears for every program that uses WinDivert, GoodbyeDPI included.
 
@@ -272,8 +302,10 @@ the server understands without trouble but the device in between does not recogn
 
 The rest of the connection is left alone: there is no slowdown and traffic does not pass through another server.
 
-The engine has two parts. The signed driver that takes packets from the kernel and puts them back is **WinDivert**
-(basil00, open source). The code that decides what to do with a packet is in this repository
+The engine has two parts. The layer that takes packets from the kernel and puts them back is the signed
+**WinDivert** driver on Windows (basil00, open source) and the kernel's own packet queue (nfqueue) on Linux, where
+no extra driver is needed. The code that decides what to do with a packet is the same on both systems and is in
+this repository
 ([`src-tauri/src/engine`](src-tauri/src/engine)):
 
 | File | Role |
@@ -283,8 +315,8 @@ The engine has two parts. The signed driver that takes packets from the kernel a
 | `dnsmsg.rs` | Reads the name in a DNS query and the addresses in the answer |
 | `logic.rs` | The decision: what happens to this packet? (pure logic, tested without the network) |
 | `filter.rs` | The filter given to the driver: which packets reach the engine? |
-| `divert.rs` | The WinDivert binding |
-| `service.rs` | The Windows service: takes a packet, decides, puts it back |
+| `divert.rs`, `service.rs` | Windows: the WinDivert binding and the Windows service |
+| `nfqueue.rs`, `linux_service.rs` | Linux: the nftables rules, the packet queue and the systemd unit |
 
 ## Comparison with GoodbyeDPI
 
@@ -329,6 +361,9 @@ provider. If the same method gives a result with GoodbyeDPI but not with Robz DP
   every value coming from the interface is validated again.
 - **The service runs from a protected folder.** The engine is copied to `Program Files\RobzDPI`, which only
   administrators can change. The signed-in user can start and stop the service but cannot change the program it runs.
+- **The same layout applies on Linux.** The engine runs from `/opt/robzdpi` as a systemd unit restricted to network
+  capabilities; installing it and changing its settings need polkit approval. When the engine stops, its nftables
+  rules are removed.
 
 ## Frequently asked questions
 
@@ -364,10 +399,10 @@ Any site. Robz DPI does not come with a list of sites; Discord and Roblox are on
 </details>
 
 <details>
-<summary><b>Does it work on macOS or Linux?</b></summary>
+<summary><b>Does it work on macOS?</b></summary>
 
-Only 64-bit Windows 10 and 11 for now. The packet logic builds and is tested on every platform; what is missing is
-the layer that captures packets on those systems.
+No. Robz DPI runs on Windows 10 and 11 and on Linux. Capturing packets this way on macOS requires a network
+extension signed by Apple, so there is no macOS version.
 
 </details>
 
@@ -384,18 +419,21 @@ do not use it and consult a lawyer. Details: [disclaimer](DISCLAIMER.md#english)
 ## Development
 
 **Requirements:** [Rust](https://rustup.rs) (MSVC), Node.js 22+, the Visual Studio C++ tools and the Windows SDK
-(Tauri's [Windows prerequisites](https://tauri.app/start/prerequisites/)).
+(Tauri's [Windows prerequisites](https://tauri.app/start/prerequisites/)). On Linux: `libwebkit2gtk-4.1-dev`,
+`libayatana-appindicator3-dev`, `librsvg2-dev`, `libxdo-dev`, `libssl-dev`.
 
 ```powershell
 npm install          # copies the interface libraries, downloads and verifies WinDivert
 npm run dev          # runs in development mode
 npm test             # interface (node --test) and engine (cargo test) tests
-npm run build        # installer: src-tauri/target/release/bundle/nsis/
+npm run build        # installer: src-tauri/target/release/bundle/ (Windows: nsis, Linux: deb and rpm)
 ```
 
 - **The engine is tested without the network.** `logic.rs` is pure logic: tests feed hand-built packets and check the
   packets that come out (order, split point, lifetime, checksum). Filters are compiled with the real `WinDivert.dll`
-  and applied to sample packets; the driver is not loaded.
+  and applied to sample packets; the driver is not loaded. The Linux package is installed in CI and exercised end to
+  end by [`scripts/linux-smoke.sh`](scripts/linux-smoke.sh): the engine is set up with real systemd and nftables, a
+  site is reached through it, and it is removed again.
 - **The interface can be tried in a browser.** Serving the `ui/` folder with any local server
   (`python -m http.server --directory ui`) swaps the real core for a mock
   ([`ui/js/dev-mock.js`](ui/js/dev-mock.js)).
@@ -415,7 +453,8 @@ src-tauri/src/
   dpi.rs             application state: turn on, turn off, apply, test
   probe.rs           connection test
   shell.rs           window, tray, start with Windows, uninstall
-  engine/            the engine (table above) + helper.rs (administrator helper), scm.rs (Windows services)
+  engine/            the engine (table above) + helper.rs (administrator helper), scm.rs (Windows services),
+                     linux.rs and linux_helper.rs (their Linux counterparts)
 ```
 
 **Releasing:** set the same version number in `package.json`, `src-tauri/Cargo.toml` and

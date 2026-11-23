@@ -19,7 +19,7 @@ const font = (subset) => file(`node_modules/@fontsource-variable/mona-sans/files
 
 const TEXT = {
   tr: {
-    eyebrow: 'Windows için açık kaynak ağ aracı',
+    eyebrow: 'Windows ve Linux için açık kaynak ağ aracı',
     title: 'Yalnız seçtiğiniz sitelerde çalışan DPI aracı',
     sub: 'Tek düğmeyle açılır. Trafiğinizi bir sunucudan geçirmez, hızınızı etkilemez.',
     chips: ['Tek düğme', 'Seçili siteler', 'Veri toplamaz'],
@@ -27,7 +27,7 @@ const TEXT = {
     size: 54,
   },
   en: {
-    eyebrow: 'Open-source network tool for Windows',
+    eyebrow: 'Open-source network tool for Windows and Linux',
     title: 'A DPI tool that works only on the sites you choose',
     sub: 'One button turns it on. It does not route your traffic through a server or affect your speed.',
     chips: ['One button', 'Selected sites', 'No data collected'],
@@ -35,7 +35,7 @@ const TEXT = {
     size: 52,
   },
   ru: {
-    eyebrow: 'Сетевой инструмент с открытым кодом для Windows',
+    eyebrow: 'Сетевой инструмент с открытым кодом для Windows и Linux',
     title: 'Инструмент DPI, который работает только на выбранных сайтах',
     sub: 'Включается одной кнопкой. Трафик не идёт через сторонний сервер, скорость не меняется.',
     chips: ['Одна кнопка', 'Выбранные сайты', 'Без сбора данных'],

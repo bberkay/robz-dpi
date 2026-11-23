@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/banner-tr.png" alt="Robz DPI: yalnız seçtiğiniz sitelerde çalışan, Windows için açık kaynak DPI aracı. Sağda uygulamanın ana ekranı." width="100%">
+  <img src="docs/banner-tr.png" alt="Robz DPI: yalnız seçtiğiniz sitelerde çalışan, Windows ve Linux için açık kaynak DPI aracı. Sağda uygulamanın ana ekranı." width="100%">
 </p>
 
 <p align="center">
@@ -8,11 +8,14 @@
   <a href="https://github.com/kutsalkiremitci/robz-dpi/stargazers"><img src="https://img.shields.io/github/stars/kutsalkiremitci/robz-dpi?style=flat-square&amp;logo=github&amp;label=y%C4%B1ld%C4%B1z&amp;labelColor=0d1117&amp;color=e3b341" alt="GitHub yıldızları"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/kutsalkiremitci/robz-dpi?style=flat-square&amp;label=lisans&amp;labelColor=0d1117&amp;color=3d444d" alt="Lisans: MIT"></a>
   <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Windows 10 ve 11">
+  <img src="https://img.shields.io/badge/Linux-deb%20%7C%20rpm-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Linux: deb ve rpm paketleri">
   <img src="https://img.shields.io/badge/aray%C3%BCz-T%C3%BCrk%C3%A7e%20%7C%20English%20%7C%20%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Arayüz: Türkçe, İngilizce ve Rusça">
 </p>
 
 <p align="center">
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Setup.exe"><img src="https://img.shields.io/badge/%C3%9CCRETS%C4%B0Z%20%C4%B0ND%C4%B0R-WINDOWS%2010%20%C2%B7%2011-8957e5?style=for-the-badge&amp;logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIuNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgM3YxMiIvPjxwYXRoIGQ9Im02LjUgOS41IDUuNSA1LjUgNS41LTUuNSIvPjxwYXRoIGQ9Ik00IDIwLjVoMTYiLz48L3N2Zz4%3D&amp;labelColor=6e40c9" alt="Ücretsiz indir: RobzDPI-Setup.exe, Windows 10 ve 11"></a>
+  <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-amd64.deb"><img src="https://img.shields.io/badge/LINUX-.DEB-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Linux için indir: .deb"></a>
+  <a href="https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.rpm"><img src="https://img.shields.io/badge/LINUX-.RPM-21262d?style=for-the-badge&amp;logo=linux&amp;logoColor=white" alt="Linux için indir: .rpm"></a>
   <a href="https://github.com/kutsalkiremitci/robz-dpi/stargazers"><img src="https://img.shields.io/github/stars/kutsalkiremitci/robz-dpi?style=for-the-badge&amp;logo=github&amp;label=YILDIZ%20VER&amp;labelColor=0d1117&amp;color=e3b341" alt="GitHub'da yıldız ver"></a>
   <br>
   <a href="README.en.md"><img src="https://img.shields.io/badge/ENGLISH-21262d?style=for-the-badge&amp;logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSAzMCI%2BCiAgPHJlY3Qgd2lkdGg9IjQ1IiBoZWlnaHQ9IjMwIiBmaWxsPSIjMDEyMTY5Ii8%2BCiAgPHBhdGggZD0iTTAsMCBMNDUsMzAgTTQ1LDAgTDAsMzAiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSI2Ii8%2BCiAgPHBhdGggZD0iTTAsMCBMNDUsMzAgTTQ1LDAgTDAsMzAiIHN0cm9rZT0iI0M4MTAyRSIgc3Ryb2tlLXdpZHRoPSIyLjIiLz4KICA8cGF0aCBkPSJNMjIuNSwwIFYzMCBNMCwxNSBINDUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSI5Ii8%2BCiAgPHBhdGggZD0iTTIyLjUsMCBWMzAgTTAsMTUgSDQ1IiBzdHJva2U9IiNDODEwMkUiIHN0cm9rZS13aWR0aD0iNS40Ii8%2BCjwvc3ZnPgo%3D" alt="English"></a>
@@ -20,7 +23,7 @@
   <a href="https://discord.gg/UyyEn7SHm4"><img src="https://img.shields.io/badge/DISCORD-DESTEK-5865F2?style=for-the-badge&amp;logo=discord&amp;logoColor=white&amp;labelColor=4752C4" alt="Discord: destek"></a>
 </p>
 
-<h3 align="center">Derin paket incelemesini (DPI) anlamak ve test etmek için açık kaynak Windows aracı</h3>
+<h3 align="center">Derin paket incelemesini (DPI) anlamak ve test etmek için açık kaynak araç: Windows ve Linux</h3>
 
 <p align="center">
   <b>Robz DPI</b>, internet servis sağlayıcılarının derin paket incelemesiyle (DPI) uyguladığı erişim kısıtlamalarının<br>
@@ -111,6 +114,8 @@ sağlamaz ve bir "engelli siteler" listesi içermez; hangi alan adlarında çal�
 
 ## Kurulum
 
+### Windows
+
 **Gereksinimler:** 64 bit Windows 10 ya da Windows 11.
 
 1. **İndirin:** [RobzDPI-Setup.exe](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Setup.exe)
@@ -127,6 +132,25 @@ sağlamaz ve bir "engelli siteler" listesi içermez; hangi alan adlarında çal�
 Kurulum dosyası ücretli bir sertifikayla imzalanmadığı için Windows SmartScreen "Windows kişisel bilgisayarınızı
 korudu" uyarısı gösterebilir. **Ek bilgi** → **Yine de çalıştır** ile devam edebilirsiniz. Dosyanın bu depodan
 geldiğini doğrulamak için sürüm sayfasındaki `SHA256SUMS.txt` dosyasıyla karşılaştırınız.
+
+### Linux
+
+**Gereksinimler:** 64 bit (x86_64) bir dağıtım; systemd, nftables ve polkit (çoğu masaüstü dağıtımında kuruludur).
+Ek sürücü gerekmez: paketleri Linux çekirdeğinin kendi paket kuyruğu yakalar.
+
+| Dağıtım | Paket | Kurulum |
+|---|---|---|
+| Debian, Ubuntu, Linux Mint | [RobzDPI-Linux-amd64.deb](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-amd64.deb) | `sudo apt install ./RobzDPI-Linux-amd64.deb` |
+| Fedora, openSUSE | [RobzDPI-Linux-x86_64.rpm](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Linux-x86_64.rpm) | `sudo dnf install ./RobzDPI-Linux-x86_64.rpm` |
+
+Kurulumdan sonra uygulama menüsünden **Robz DPI**'ı açınız. Düğmeye ilk basışta sistem yönetici parolasını sorar
+(polkit); polkit kurallarını destekleyen sistemlerde sonraki açıp kapamalar parola istemez. Paketlerin özetleri
+sürüm sayfasındaki `SHA256SUMS-linux.txt` dosyasındadır.
+
+> [!NOTE]
+> Linux sürümü yenidir. Motorun ürettiği paketler otomatik testlerle doğrulanmıştır; ancak her dağıtımda ve her
+> servis sağlayıcıda denenmemiştir. Sorun yaşarsanız dağıtımınızı ve motor günlüğünü ekleyerek
+> [bildiriniz](https://github.com/kutsalkiremitci/robz-dpi/issues).
 
 ## Kullanım
 
@@ -181,6 +205,9 @@ Ayarlar → **Robz DPI'ı kaldır**. Tek adımda uygulamayı, arka planda çalı
 sürücüsü, `Program Files\RobzDPI` klasörü) ve ayarları siler. Arka plandaki parça yönetici yetkisiyle kurulduğu için
 Windows bir kez onay ister. Windows'un "Uygulamalar" listesinden kaldırmak da arka plandaki parçayı siler.
 
+Linux'ta paketi paket yöneticinizle kaldırınız (`sudo apt remove robz-dpi` ya da `sudo dnf remove robz-dpi`); arka
+planda çalışan parça (systemd birimi, kurallar, `/opt/robzdpi` ve `/var/lib/robzdpi`) paketle birlikte silinir.
+
 ## Antivirüs yazılımları hakkında
 
 > [!WARNING]
@@ -188,8 +215,10 @@ Windows bir kez onay ister. Windows'un "Uygulamalar" listesinden kaldırmak da a
 > dosyalarını karantinaya alır ya da sürücünün yüklenmesini engeller. Bu durumda motor başlatılamaz ya da
 > kendiliğinden durur.
 
-Robz DPI ağ paketlerini yakalamak için açık kaynak [WinDivert](https://github.com/basil00/WinDivert) sürücüsünü
-kullanır. WinDivert kötü amaçlı bir yazılım değildir; ancak ağ trafiğini yakalayıp değiştirebildiği için güvenlik
+Bu bölüm yalnız Windows sürümü içindir; Linux sürümü WinDivert kullanmaz.
+
+Robz DPI Windows'ta ağ paketlerini yakalamak için açık kaynak [WinDivert](https://github.com/basil00/WinDivert)
+sürücüsünü kullanır. WinDivert kötü amaçlı bir yazılım değildir; ancak ağ trafiğini yakalayıp değiştirebildiği için güvenlik
 ürünleri onu "kötüye kullanılabilecek araç" sınıfında değerlendirir. Aynı uyarı, GoodbyeDPI dahil WinDivert kullanan
 bütün programlarda görülür.
 
@@ -273,8 +302,9 @@ cihazın tanıyamayacağı biçimde yeniden düzenler:
 
 Bağlantının geri kalanına dokunulmaz: hız kaybı olmaz ve trafik başka bir sunucudan geçmez.
 
-Motor iki parçadan oluşur. Paketleri çekirdekten alıp geri bırakan imzalı sürücü **WinDivert**'tir (basil00, açık
-kaynak). Pakete ne yapılacağına karar veren kod bu depodadır ([`src-tauri/src/engine`](src-tauri/src/engine)):
+Motor iki parçadan oluşur. Paketleri çekirdekten alıp geri bırakan katman Windows'ta imzalı **WinDivert**
+sürücüsüdür (basil00, açık kaynak); Linux'ta çekirdeğin kendi paket kuyruğudur (nfqueue) ve ek sürücü gerekmez.
+Pakete ne yapılacağına karar veren kod iki sistemde de aynıdır ve bu depodadır ([`src-tauri/src/engine`](src-tauri/src/engine)):
 
 | Dosya | Görevi |
 |---|---|
@@ -283,8 +313,8 @@ kaynak). Pakete ne yapılacağına karar veren kod bu depodadır ([`src-tauri/sr
 | `dnsmsg.rs` | DNS sorgusundaki adı ve yanıttaki adresleri okur |
 | `logic.rs` | Karar: bu pakete ne yapılacak? (saf mantık, ağa dokunmadan test edilir) |
 | `filter.rs` | Sürücüye verilen süzgeç: motora hangi paketler gelecek? |
-| `divert.rs` | WinDivert bağlayıcısı |
-| `service.rs` | Windows hizmeti: paketi alır, karar verir, geri bırakır |
+| `divert.rs`, `service.rs` | Windows: WinDivert bağlayıcısı ve Windows hizmeti |
+| `nfqueue.rs`, `linux_service.rs` | Linux: nftables kuralları, paket kuyruğu ve systemd birimi |
 
 ## GoodbyeDPI ile karşılaştırma
 
@@ -331,6 +361,8 @@ denenmemiştir. Aynı yöntem GoodbyeDPI ile sonuç verip Robz DPI ile vermiyors
 - **Hizmet korumalı klasörden çalışır.** Motor `Program Files\RobzDPI` klasörüne kopyalanır; bu klasörü yalnız
   yöneticiler değiştirebilir. Oturum açmış kullanıcı hizmeti başlatıp durdurabilir, çalıştırdığı programı
   değiştiremez.
+- **Linux'ta düzen aynıdır.** Motor `/opt/robzdpi` klasöründen, yalnız ağ yetkileriyle sınırlandırılmış bir systemd
+  birimi olarak çalışır; kurulum ve ayar değişikliği polkit onayı ister. Motor durduğunda nftables kuralları silinir.
 
 ## Sık sorulan sorular
 
@@ -366,10 +398,10 @@ Dilediğiniz site. Robz DPI bir site listesiyle gelmez; Discord ve Roblox yalnı
 </details>
 
 <details>
-<summary><b>macOS ya da Linux'ta çalışır mı?</b></summary>
+<summary><b>macOS'ta çalışır mı?</b></summary>
 
-Şimdilik yalnız 64 bit Windows 10 ve 11. Paket mantığı her platformda derlenir ve test edilir; eksik olan, o
-sistemlerde paketleri yakalayan katmandır.
+Hayır. Robz DPI Windows 10 ve 11 ile Linux'ta çalışır. macOS'ta paketleri bu biçimde yakalamak Apple'ın imzaladığı
+bir ağ uzantısı gerektirir; bu nedenle macOS sürümü yoktur.
 
 </details>
 
@@ -386,18 +418,20 @@ bir hukukçuya danışınız. Ayrıntılar: [sorumluluk reddi](DISCLAIMER.md).
 ## Geliştirme
 
 **Gerekenler:** [Rust](https://rustup.rs) (MSVC), Node.js 22+, Visual Studio'nun C++ araçları ve Windows SDK
-(Tauri'nin [Windows ön koşulları](https://tauri.app/start/prerequisites/)).
+(Tauri'nin [Windows ön koşulları](https://tauri.app/start/prerequisites/)). Linux'ta: `libwebkit2gtk-4.1-dev`,
+`libayatana-appindicator3-dev`, `librsvg2-dev`, `libxdo-dev`, `libssl-dev`.
 
 ```powershell
 npm install          # arayüz kütüphanelerini kopyalar, WinDivert'i indirip doğrular
 npm run dev          # geliştirme kipinde açar
 npm test             # arayüz (node --test) ve motor (cargo test) testleri
-npm run build        # kurulum dosyası: src-tauri/target/release/bundle/nsis/
+npm run build        # kurulum dosyası: src-tauri/target/release/bundle/ (Windows: nsis, Linux: deb ve rpm)
 ```
 
 - **Motor ağa dokunmadan test edilir.** `logic.rs` saf mantıktır: testler elle kurulmuş paketleri verir ve çıkan
   paketleri (sıra, bölme noktası, ömür, sağlama toplamı) denetler. Süzgeçler gerçek `WinDivert.dll` ile derlenir ve
-  örnek paketlere uygulanır; sürücü yüklenmez.
+  örnek paketlere uygulanır; sürücü yüklenmez. Linux paketi CI'da kurulur ve [`scripts/linux-smoke.sh`](scripts/linux-smoke.sh)
+  ile uçtan uca denenir: motor gerçek systemd ve nftables ile kurulur, bir siteye bağlanılır, sonra kaldırılır.
 - **Arayüz tarayıcıda denenebilir.** `ui/` klasörü herhangi bir yerel sunucuyla açıldığında
   (`python -m http.server --directory ui`) çekirdeğin yerine sahte bir çekirdek
   ([`ui/js/dev-mock.js`](ui/js/dev-mock.js)) geçer.
@@ -417,7 +451,8 @@ src-tauri/src/
   dpi.rs             uygulamanın durumu: aç, kapat, uygula, test et
   probe.rs           bağlantı testi
   shell.rs           pencere, tepsi, Windows açılışında başlatma, kaldırma
-  engine/            motor (yukarıdaki tablo) + helper.rs (yönetici yardımcısı), scm.rs (Windows hizmetleri)
+  engine/            motor (yukarıdaki tablo) + helper.rs (yönetici yardımcısı), scm.rs (Windows hizmetleri),
+                     linux.rs ve linux_helper.rs (Linux'taki karşılıkları)
 ```
 
 **Sürüm yayınlama:** sürüm numarası `package.json`, `src-tauri/Cargo.toml` ve `src-tauri/tauri.conf.json`
