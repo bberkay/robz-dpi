@@ -29,4 +29,4 @@ Bilinen sınırlar:
 - Bazı antivirüs yazılımları (Kaspersky başta olmak üzere) WinDivert sürücüsünü engelleyebilir; ayrıntılar README'de.
 - Yalnız 64 bit Windows 10 ve 11.
 
-Eğitim ve test amaçlıdır; kullanmadan önce [sorumluluk reddini](DISCLAIMER.md) okuyunuz.
+Eğitim ve test amaçlıdır; kullanmadan önce [sorumluluk reddini](https://github.com/kutsalkiremitci/robz-dpi/blob/main/DISCLAIMER.md) okuyunuz.
