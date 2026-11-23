@@ -231,7 +231,8 @@ background part too.
 
 On Linux, remove the package with your package manager (`sudo apt remove robz-dpi` or `sudo dnf remove robz-dpi`);
 the background part (the systemd unit, the rules, `/opt/robzdpi` and `/var/lib/robzdpi`) is removed with it. If you
-use the AppImage, first remove the background part with Settings → **Uninstall Robz DPI**, then delete the file.
+use the AppImage, Settings → **Uninstall Robz DPI** removes the background part, the AppImage file and the settings in
+one step; the system may ask for the administrator password once.
 
 ## About antivirus software
 

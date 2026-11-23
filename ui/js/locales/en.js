@@ -293,6 +293,12 @@ export default {
   'error.access-denied@linux': 'The system did not allow this action.',
   'error.conflict-stop-failed@linux': 'The other tool could not be stopped. Try closing it yourself.',
 
+  // The AppImage on Linux: "key@appimage" (the app can uninstall itself).
+  'settings.uninstall.desc@appimage':
+    'Completely removes the app (the AppImage file), its background part and your settings from this computer.',
+  'dialog.uninstall.body@appimage':
+    'The AppImage file, the background part (the systemd unit and the rules) and your settings are deleted from this computer. The system may ask for the administrator password. The app then closes.',
+
   // Portable version: "key@portable".
   'settings.uninstall.desc@portable':
     'Removes the background part (the Windows service and the driver) from this computer. You remove the portable version itself and its settings by deleting its folder.',

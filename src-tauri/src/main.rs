@@ -69,6 +69,12 @@ async fn dispatch(app: &AppHandle, dpi: &Arc<Dpi>, method: &str, args: &[Value])
                 shell::run_uninstaller(&uninstaller, dpi.data_dir()).map_err(|e| DpiError::with("uninstall-failed", e))?;
                 app.exit(0);
             }
+            // Linux'ta AppImage: dosya, ayarlar ve (Robz Hub kurduysa) menü girişi silinir. Paket olarak kuruluysa
+            // uygulamayı paket yöneticisi kaldırır: yalnız motor kaldırılmış olur.
+            if let Some(appimage) = shell::appimage() {
+                shell::remove_appimage(&appimage, dpi.data_dir()).map_err(|e| DpiError::with("uninstall-failed", e))?;
+                app.exit(0);
+            }
             // Geliştirme kipinde kaldırma programı yoktur: yalnız motor kaldırılmış olur.
             return Ok(Value::Bool(true));
         }

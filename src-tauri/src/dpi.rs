@@ -119,6 +119,8 @@ impl Dpi {
             "platform": std::env::consts::OS,
             // Taşınabilir sürüm: kaldırma ve ayarların yeri farklıdır (shell::portable).
             "portable": crate::shell::portable().is_some(),
+            // Linux'ta AppImage: paketin tersine uygulama kendini kaldırabilir (shell::remove_appimage).
+            "appImage": crate::shell::appimage().is_some(),
             "supported": engine::SUPPORTED,
             "engineReady": engine::available(),
             "settings": inner.settings.public(),

@@ -293,6 +293,12 @@ export default {
   'error.access-denied@linux': 'Sistem bu işleme izin vermedi.',
   'error.conflict-stop-failed@linux': 'Diğer araç durdurulamadı. Elle kapatmayı dene.',
 
+  // Linux'ta AppImage: "anahtar@appimage" (uygulama kendini kaldırabilir).
+  'settings.uninstall.desc@appimage':
+    'Uygulamayı (AppImage dosyasını), arka planda çalışan parçasını ve ayarlarını bu bilgisayardan tümüyle siler.',
+  'dialog.uninstall.body@appimage':
+    'AppImage dosyası, arka planda çalışan parça (systemd birimi ve kurallar) ve ayarların bu bilgisayardan silinir. Sistem yönetici parolası isteyebilir. Ardından uygulama kapanır.',
+
   // Taşınabilir sürüm: "anahtar@portable".
   'settings.uninstall.desc@portable':
     'Arka planda çalışan parçayı (Windows servisi ve sürücü) bu bilgisayardan siler. Taşınabilir sürümün kendisini ve ayarlarını, klasörünü silerek kaldırırsın.',
