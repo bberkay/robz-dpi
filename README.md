@@ -230,7 +230,8 @@ Windows bir kez onay ister. Windows'un "Uygulamalar" listesinden kaldırmak da a
 Linux'ta paketi paket yöneticinizle kaldırınız (`sudo apt remove robz-dpi` ya da `sudo dnf remove robz-dpi`); arka
 planda çalışan parça (systemd birimi, kurallar, `/opt/robzdpi` ve `/var/lib/robzdpi`) paketle birlikte silinir.
 AppImage kullanıyorsanız Ayarlar → **Robz DPI'ı kaldır** tek adımda arka plandaki parçayı, AppImage dosyasını ve
-ayarları siler; sistem bir kez yönetici parolası isteyebilir.
+ayarları siler; sistem bir kez yönetici parolası isteyebilir. Fedora ve openSUSE'de (.rpm) aynı düğme paketi de
+kaldırır: uygulama, arka plandaki parça ve ayarlar tek adımda silinir; sistem yönetici parolası ister.
 
 ## Antivirüs yazılımları hakkında
 

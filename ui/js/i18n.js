@@ -26,6 +26,7 @@ export function lang() {
 // Sürüme göre değişen metinler anahtarın sonuna eklenen bir adla ayrılır ve önce onlar aranır:
 //   'anahtar@portable'  taşınabilir sürüm (kaldırma ve ayarların yeri farklıdır)
 //   'anahtar@appimage'  Linux'ta AppImage (uygulama kendini kaldırabilir)
+//   'anahtar@package'   Linux'ta uygulamanın kendi kaldırabildiği sistem paketi (rpm)
 //   'anahtar@linux'     Windows dışındaki sistem (yönetici onayı, servis, kaldırma)
 export function t(key, vars) {
   const data = store.data;
@@ -33,6 +34,7 @@ export function t(key, vars) {
   const variants = [];
   if (data?.portable) variants.push(`${key}@portable`);
   if (data?.appImage) variants.push(`${key}@appimage`);
+  if (data?.systemPackage) variants.push(`${key}@package`);
   if (data?.platform && data.platform !== 'windows') variants.push(`${key}@${data.platform}`);
   let value;
   for (const variant of variants) value ??= dict[variant] ?? DICTS.tr[variant];

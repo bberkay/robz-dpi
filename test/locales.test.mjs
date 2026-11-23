@@ -97,11 +97,11 @@ test('Rust kodundaki hata kodlarının metni var', () => {
   assert.deepEqual([...codes].filter((code) => !(`error.${code}` in tr)).sort(), []);
 });
 
-// Sürüme göre farklı metinler "anahtar@linux", "anahtar@appimage" ya da "anahtar@portable" ile verilir; her birinin
+// Sürüme göre farklı metinler "anahtar@linux", "anahtar@appimage", "anahtar@package" ya da "anahtar@portable" ile verilir; her birinin
 // asıl anahtarı olmalı.
 test('sisteme özel metinlerin asıl anahtarı var', () => {
   const variants = Object.keys(tr).filter((key) => key.includes('@'));
   assert.ok(variants.length > 5, `yalnız ${variants.length} sisteme özel metin bulundu`);
   assert.deepEqual(variants.filter((key) => !(key.split('@')[0] in tr)), []);
-  assert.deepEqual(variants.filter((key) => !/@(linux|appimage|portable)$/.test(key)), []);
+  assert.deepEqual(variants.filter((key) => !/@(linux|appimage|package|portable)$/.test(key)), []);
 });

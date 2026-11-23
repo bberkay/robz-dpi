@@ -309,14 +309,14 @@ pub fn appimage() -> Option<PathBuf> {
     None
 }
 
-/// AppImage kaldırılırken silinecekler: dosyanın kendisi, motorun önbellekteki kopyası (engine/linux.rs) ve ayar
-/// klasörü (yalnız uygulamanın kendi klasörüyse; geliştirme için başka bir klasör verilmişse dokunulmaz). Dosyayı
-/// Robz Hub kurduysa (<veri>/robz-hub/apps/robz-dpi/) onun klasörü ve uygulama menüsü girişi de silinir; yoksa
-/// menüde açılmayan bir giriş kalır.
+/// Uygulama kaldırılırken kullanıcının klasörlerinden silinecekler: motorun önbellekteki kopyası (engine/linux.rs)
+/// ve ayar klasörü (yalnız uygulamanın kendi klasörüyse; geliştirme için başka bir klasör verilmişse dokunulmaz).
+/// AppImage'da (`appimage`) dosyanın kendisi de; onu Robz Hub kurduysa (<veri>/robz-hub/apps/robz-dpi/) Robz Hub'ın
+/// klasörü ve uygulama menüsü girişi de silinir, yoksa menüde açılmayan bir giriş kalır.
 #[cfg_attr(not(target_os = "linux"), allow(dead_code))]
-fn appimage_leftovers(appimage: &Path, data_dir: &Path, data_home: Option<&Path>, cache_home: Option<&Path>) -> Vec<PathBuf> {
-    let mut targets = vec![appimage.to_path_buf()];
-    if let Some(data_home) = data_home {
+fn leftovers(appimage: Option<&Path>, data_dir: &Path, data_home: Option<&Path>, cache_home: Option<&Path>) -> Vec<PathBuf> {
+    let mut targets: Vec<PathBuf> = appimage.iter().map(|file| file.to_path_buf()).collect();
+    if let (Some(appimage), Some(data_home)) = (appimage, data_home) {
         let hub_dir = data_home.join("robz-hub").join("apps").join("robz-dpi");
         if appimage.parent() == Some(hub_dir.as_path()) {
             targets.push(hub_dir);
@@ -336,6 +336,17 @@ fn appimage_leftovers(appimage: &Path, data_dir: &Path, data_home: Option<&Path>
 /// uygulamadan çıkmalıdır. Silme çıkıştan sonradır: arayüz kapanırken ayar klasörüne yeniden yazabilir.
 #[cfg(target_os = "linux")]
 pub fn remove_appimage(appimage: &Path, data_dir: &Path) -> std::io::Result<()> {
+    delete_after_exit(Some(appimage), data_dir)
+}
+
+/// Paket kaldırıldıktan sonra: bu süreç kapanınca ayarları ve motorun önbellekteki kopyasını siler.
+#[cfg(target_os = "linux")]
+pub fn remove_user_data(data_dir: &Path) -> std::io::Result<()> {
+    delete_after_exit(None, data_dir)
+}
+
+#[cfg(target_os = "linux")]
+fn delete_after_exit(appimage: Option<&Path>, data_dir: &Path) -> std::io::Result<()> {
     use std::os::unix::process::CommandExt;
     use std::process::Stdio;
     // $1: beklenecek süreç (en çok ~10 sn), kalanlar: silinecek yollar. Yollar komut satırına yazılmaz, argümandır.
@@ -349,7 +360,7 @@ pub fn remove_appimage(appimage: &Path, data_dir: &Path) -> std::io::Result<()> 
     let (data_home, cache_home) = (xdg("XDG_DATA_HOME", ".local/share"), xdg("XDG_CACHE_HOME", ".cache"));
     std::process::Command::new("/bin/sh")
         .args(["-c", SCRIPT, "sh", &std::process::id().to_string()])
-        .args(appimage_leftovers(appimage, data_dir, data_home.as_deref(), cache_home.as_deref()))
+        .args(leftovers(appimage, data_dir, data_home.as_deref(), cache_home.as_deref()))
         // Kabuk ve rm, AppImage'ın içindeki kitaplıkları değil sisteminkileri kullansın.
         .env_remove("LD_LIBRARY_PATH")
         .env_remove("LD_PRELOAD")
@@ -389,28 +400,117 @@ pub fn start_timers(dpi: Arc<Dpi>) {
     });
 }
 
+// ---- paketi kaldırma (Linux) ----------------------------------------------------------------------------------------
+
+/// Bir programı bilinen sistem klasörlerinde arar (PATH kullanıcıya aittir; yönetici olarak çalışacak programda ona
+/// güvenilmez).
+#[cfg(target_os = "linux")]
+fn system_program(name: &str) -> Option<PathBuf> {
+    ["/usr/bin", "/bin", "/usr/sbin", "/sbin"].iter().map(|dir| Path::new(dir).join(name)).find(|path| path.is_file())
+}
+
+/// `rpm -qf --qf '%{NAME}\n'` çıktısından paketin adı: tek satır, yalnız paket adında geçen karakterler.
+#[cfg_attr(not(target_os = "linux"), allow(dead_code))]
+fn package_name(output: &str) -> Option<String> {
+    let mut lines = output.lines();
+    let name = lines.next()?.trim();
+    let plain = name.starts_with(|c: char| c.is_ascii_alphanumeric())
+        && name.chars().all(|c| c.is_ascii_alphanumeric() || matches!(c, '.' | '_' | '+' | '-'));
+    (plain && lines.next().is_none()).then(|| name.to_string())
+}
+
+/// Uygulama rpm paketi olarak kuruluysa (Fedora, openSUSE) paketin adı: çalışan programın sahibi olan paket.
+/// AppImage'da, geliştirme kipinde ve başka yoldan kurulu sürümde None. Bir kez sorulur.
+#[cfg(target_os = "linux")]
+pub fn rpm_package() -> Option<&'static str> {
+    static NAME: OnceLock<Option<String>> = OnceLock::new();
+    NAME.get_or_init(|| {
+        if appimage().is_some() {
+            return None;
+        }
+        let exe = std::env::current_exe().ok()?;
+        let output = std::process::Command::new(system_program("rpm")?)
+            .args(["-qf", "--qf", "%{NAME}\n"])
+            .arg(exe)
+            .stdin(std::process::Stdio::null())
+            .output()
+            .ok()?;
+        output.status.success().then(|| package_name(&String::from_utf8_lossy(&output.stdout))).flatten()
+    })
+    .as_deref()
+}
+
+#[cfg(not(target_os = "linux"))]
+pub fn rpm_package() -> Option<&'static str> {
+    None
+}
+
+/// rpm paketini yönetici onayıyla (pkexec) kaldırır ve bitene kadar bekler; paketin kaldırma betiği motoru da
+/// kaldırır (linux/prerm.sh). `rpm -e` yalnız bu paketi siler: `dnf remove` artık kullanılmayan bağımlılıkları da
+/// götürürdü. Ok(false): kullanıcı onay vermedi, hiçbir şey silinmedi.
+#[cfg(target_os = "linux")]
+pub fn remove_rpm(package: &str) -> std::io::Result<bool> {
+    use std::process::Stdio;
+    let program = |name: &str| system_program(name).ok_or_else(|| std::io::Error::other(format!("{name} bulunamadı")));
+    let status = std::process::Command::new(program("pkexec")?)
+        .arg(program("rpm")?)
+        .args(["-e", "--", package])
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .status()?;
+    match status.code() {
+        Some(0) => Ok(true),
+        // pkexec: 126 kullanıcı onay vermedi.
+        Some(126) => Ok(false),
+        code => Err(std::io::Error::other(format!("çıkış kodu {}", code.unwrap_or(-1)))),
+    }
+}
+
+#[cfg(not(target_os = "linux"))]
+pub fn remove_rpm(_package: &str) -> std::io::Result<bool> {
+    Err(std::io::Error::other("yalnız Linux"))
+}
+
+#[cfg(not(target_os = "linux"))]
+pub fn remove_user_data(_data_dir: &Path) -> std::io::Result<()> {
+    Err(std::io::Error::other("yalnız Linux"))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn lists_what_an_appimage_uninstall_deletes() {
+    fn lists_what_an_uninstall_deletes() {
         let (data_home, cache_home) = (Path::new("/home/a/.local/share"), Path::new("/home/a/.cache"));
         let data_dir = data_home.join(APP_IDENTIFIER);
-        let leftovers = |appimage: &str, data_dir: &Path| appimage_leftovers(Path::new(appimage), data_dir, Some(data_home), Some(cache_home));
+        let of = |appimage: Option<&str>, data_dir: &Path| leftovers(appimage.map(Path::new), data_dir, Some(data_home), Some(cache_home));
 
         // Kullanıcının kendi indirdiği dosya: dosya, motorun kopyası ve ayarlar.
-        let own = leftovers("/home/a/Downloads/RobzDPI-Linux-x86_64.AppImage", &data_dir);
+        let own = of(Some("/home/a/Downloads/RobzDPI-Linux-x86_64.AppImage"), &data_dir);
         assert_eq!(own, ["/home/a/Downloads/RobzDPI-Linux-x86_64.AppImage", "/home/a/.cache/robz-dpi", "/home/a/.local/share/com.robz.dpi"].map(PathBuf::from));
 
         // Robz Hub'ın kurduğu dosya: klasörü ve menü girişi de.
-        let hub = leftovers("/home/a/.local/share/robz-hub/apps/robz-dpi/robz-dpi.AppImage", &data_dir);
+        let hub = of(Some("/home/a/.local/share/robz-hub/apps/robz-dpi/robz-dpi.AppImage"), &data_dir);
         assert!(hub.contains(&PathBuf::from("/home/a/.local/share/robz-hub/apps/robz-dpi")));
         assert!(hub.contains(&PathBuf::from("/home/a/.local/share/applications/robz-hub-robz-dpi.desktop")));
         // Başka bir uygulamanın klasörü Robz Hub'ınki sayılmaz.
-        assert_eq!(leftovers("/home/a/.local/share/robz-hub/apps/robz-play/x.AppImage", &data_dir).len(), 3);
+        assert_eq!(of(Some("/home/a/.local/share/robz-hub/apps/robz-play/x.AppImage"), &data_dir).len(), 3);
+
+        // Paket olarak kurulu sürüm: yalnız motorun kopyası ve ayarlar.
+        assert_eq!(of(None, &data_dir), ["/home/a/.cache/robz-dpi", "/home/a/.local/share/com.robz.dpi"].map(PathBuf::from));
 
         // Geliştirme için verilen ayar klasörüne dokunulmaz.
-        assert!(!leftovers("/home/a/x.AppImage", Path::new("/tmp/deneme")).contains(&PathBuf::from("/tmp/deneme")));
+        assert!(!of(Some("/home/a/x.AppImage"), Path::new("/tmp/deneme")).contains(&PathBuf::from("/tmp/deneme")));
+    }
+
+    #[test]
+    fn accepts_only_plain_package_names() {
+        assert_eq!(package_name("robz-dpi\n"), Some("robz-dpi".to_string()));
+        assert_eq!(package_name("lib++x_1.2\n"), Some("lib++x_1.2".to_string()));
+        for bad in ["", "\n", "-e", "file /x is not owned by any package\n", "a\nb\n"] {
+            assert_eq!(package_name(bad), None, "{bad:?}");
+        }
     }
 }
