@@ -269,7 +269,7 @@ export default {
   'dialog.remove.body@linux':
     'The systemd unit, the rules and the /opt/robzdpi folder are deleted. The app and your settings stay. The system asks for the administrator password.',
   'dialog.uninstall.body@linux':
-    'The background part (the systemd unit and the rules) is removed from this computer; the system may ask for the administrator password. You remove the app itself with your package manager.',
+    'The background part (the systemd unit and the rules) is removed from this computer; the system may ask for the administrator password. You remove the app itself with your package manager (if you use the AppImage, just delete the file).',
   'toast.uninstalledDev@linux':
     'The engine was removed. You can remove the app itself with your package manager (for example: sudo apt remove robz-dpi).',
   'adv.removeEngine.desc@linux':

@@ -29,9 +29,10 @@ jobs:
       # Motorun paket mantığı ağa dokunmadan sınanır; süzgeçler WinDivert.dll ile derlenir (sürücü yüklenmez).
       - run: npm test
 
+  # Ubuntu 22.04'te derlenir: paketler bu sürümün C kitaplığıyla (glibc 2.35) ve daha yenileriyle çalışır.
   linux:
     name: Linux
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -43,21 +44,31 @@ jobs:
           components: clippy
       - uses: Swatinem/rust-cache@v2
         with:
-          workspaces: src-tauri
+          workspaces: |
+            src-tauri
+            src-tauri/engine-bin
       - name: Derleme gereksinimleri
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev libssl-dev xvfb
+          sudo apt-get install -y -qq libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev libssl-dev xvfb libfuse2 file
       - run: npm ci
       - run: npm test
       - name: Derleyici uyarıları
-        run: cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings
-      - name: Paketi derle (.deb)
-        run: npx tauri build --bundles deb
-      - name: Paketi kur
+        run: |
+          cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings
+          cargo clippy --manifest-path src-tauri/engine-bin/Cargo.toml -- -D warnings
+      # Motor programı arayüz kitaplıklarına bağlanmamalı: root olarak çalışır ve AppImage dışında da çalışabilmelidir.
+      - name: Motor programını derle
+        run: |
+          cargo build --release --manifest-path src-tauri/engine-bin/Cargo.toml
+          ldd src-tauri/engine-bin/target/release/robzdpi-engine
+          ! ldd src-tauri/engine-bin/target/release/robzdpi-engine | grep -Ei "gtk|webkit|ssl"
+      - name: Paketleri derle (.deb ve AppImage)
+        run: npx tauri build --bundles deb,appimage
+      - name: Paketi kur (.deb)
         run: sudo apt-get install -y ./src-tauri/target/release/bundle/deb/*.deb
       # Arayüz sanal bir ekranda açılır; 15 saniye boyunca kapanmazsa (timeout 124 döndürürse) açılış sağlamdır.
-      - name: Arayüz açılıyor mu
+      - name: Arayüz açılıyor mu (.deb)
         run: |
           set +e
           xvfb-run -a timeout 15 robz-dpi
@@ -65,5 +76,20 @@ jobs:
           echo "çıkış kodu: $code"
           test "$code" -eq 124
       # Motor gerçek systemd, nftables ve paket kuyruğuyla kurulur, bir siteye bağlanılır, sonra kaldırılır.
-      - name: Motoru uçtan uca dene
+      - name: Motoru uçtan uca dene (.deb)
         run: sudo SMOKE_PACKAGE=robz-dpi bash scripts/linux-smoke.sh
+      - name: Arayüz açılıyor mu (AppImage)
+        run: |
+          set +e
+          chmod +x src-tauri/target/release/bundle/appimage/*.AppImage
+          xvfb-run -a timeout 20 src-tauri/target/release/bundle/appimage/*.AppImage
+          code=$?
+          echo "çıkış kodu: $code"
+          test "$code" -eq 124
+      # AppImage'ın içindeki motor programı, sistemde paket kurulu değilken tek başına çalışmalı.
+      - name: Motoru uçtan uca dene (AppImage)
+        run: |
+          cd "$RUNNER_TEMP"
+          "$GITHUB_WORKSPACE"/src-tauri/target/release/bundle/appimage/*.AppImage --appimage-extract >/dev/null
+          cp squashfs-root/usr/lib/robz-dpi/robzdpi-engine ./robzdpi-engine
+          sudo bash "$GITHUB_WORKSPACE/scripts/linux-smoke.sh" "$PWD/robzdpi-engine"

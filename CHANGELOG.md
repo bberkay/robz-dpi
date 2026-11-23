@@ -2,6 +2,24 @@
 
 Her başlık bir sürümdür; sürüm iş akışı GitHub'daki sürüm notunu buradan alır.
 
+## 0.3.0
+
+AppImage ve daha geniş Linux uyumu.
+
+- **AppImage:** `.deb` ya da `.rpm` kullanmayan dağıtımlar (Arch, Manjaro ve benzerleri) için kurulum gerektirmeyen tek
+  dosya. Motor yine sistemin systemd, nftables ve polkit araçlarını kullanır; açılması için FUSE 2 gerekir.
+- **Motor ayrı bir program:** Linux'ta motor ve yönetici yardımcısı artık arayüzden ayrı, küçük bir programdır
+  (`robzdpi-engine`). Root yetkisiyle çalışan servis arayüz kitaplıklarını yüklemez.
+- **Daha eski dağıtımlar:** Linux paketleri artık Ubuntu 22.04 tabanında derlenir ve glibc 2.35 ile sonrasında çalışır
+  (Ubuntu 22.04, Debian 12, Fedora 36 ve sonrası). 0.2.0 paketleri daha yeni bir tabanda derlenmişti ve bu
+  sistemlerde açılmayabiliyordu.
+
+Bilinen sınırlar (Linux):
+
+- AppImage musl tabanlı dağıtımlarda (Alpine gibi) çalışmaz.
+- Motorun ürettiği paketler otomatik testlerle doğrulanmıştır; Linux sürümü her dağıtımda ve her servis sağlayıcıda
+  denenmemiştir.
+
 ## 0.2.0
 
 Linux desteği.

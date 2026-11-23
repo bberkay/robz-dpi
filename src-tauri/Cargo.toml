@@ -1,6 +1,6 @@
 [package]
 name = "robz-dpi"
-version = "0.2.0"
+version = "0.3.0"
 description = "Yalnız seçtiğiniz sitelerde çalışan açık kaynak DPI aracı."
 authors = ["Robz DPI katkıda bulunanları"]
 license = "MIT"

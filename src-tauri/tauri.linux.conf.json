@@ -4,7 +4,8 @@
   "bundle": {
     "targets": [
       "deb",
-      "rpm"
+      "rpm",
+      "appimage"
     ],
     "resources": {
       "engine/WinDivert.dll": null,
@@ -15,6 +16,9 @@
       "deb": {
         "section": "net",
         "preRemoveScript": "linux/prerm.sh",
+        "files": {
+          "/usr/lib/robz-dpi/robzdpi-engine": "engine-bin/target/release/robzdpi-engine"
+        },
         "depends": [
           "nftables",
           "systemd",
@@ -23,11 +27,19 @@
       },
       "rpm": {
         "preRemoveScript": "linux/prerm.sh",
+        "files": {
+          "/usr/lib/robz-dpi/robzdpi-engine": "engine-bin/target/release/robzdpi-engine"
+        },
         "depends": [
           "nftables",
           "systemd",
           "polkit"
         ]
+      },
+      "appimage": {
+        "files": {
+          "/usr/lib/robz-dpi/robzdpi-engine": "engine-bin/target/release/robzdpi-engine"
+        }
       }
     }
   }

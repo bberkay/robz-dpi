@@ -269,7 +269,7 @@ export default {
   'dialog.remove.body@linux':
     'systemd birimi, kurallar ve /opt/robzdpi klasörü silinir. Uygulama ve ayarların kalır. Sistem yönetici parolası ister.',
   'dialog.uninstall.body@linux':
-    'Arka planda çalışan parça (systemd birimi ve kurallar) bu bilgisayardan silinir; sistem yönetici parolası isteyebilir. Uygulamanın kendisini paket yöneticinle kaldırırsın.',
+    'Arka planda çalışan parça (systemd birimi ve kurallar) bu bilgisayardan silinir; sistem yönetici parolası isteyebilir. Uygulamanın kendisini paket yöneticinle kaldırırsın (AppImage kullanıyorsan dosyayı silmen yeter).',
   'toast.uninstalledDev@linux':
     'Motor kaldırıldı. Uygulamanın kendisini paket yöneticinle kaldırabilirsin (örneğin: sudo apt remove robz-dpi).',
   'adv.removeEngine.desc@linux':

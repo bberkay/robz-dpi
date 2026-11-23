@@ -73,10 +73,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: gh release create "${{ github.ref_name }}" out/RobzDPI-Setup-${{ env.VERSION }}.exe out/RobzDPI-Setup.exe out/SHA256SUMS.txt --title "Robz DPI ${{ env.VERSION }}" --notes-file out/notes.md
 
-  # Linux paketleri (.deb ve .rpm) aynı sürüme eklenir. Motor önce uçtan uca denenir.
+  # Linux paketleri (.deb, .rpm ve AppImage) aynı sürüme eklenir. Motor önce uçtan uca denenir.
+  # Ubuntu 22.04'te derlenir: paketler bu sürümün C kitaplığıyla (glibc 2.35) ve daha yenileriyle çalışır.
   linux:
     needs: release
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -86,14 +87,20 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
         with:
-          workspaces: src-tauri
+          workspaces: |
+            src-tauri
+            src-tauri/engine-bin
       - name: Derleme gereksinimleri
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev libssl-dev rpm
+          sudo apt-get install -y -qq libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev libssl-dev rpm libfuse2 file
+      - name: Motor programının sürümü etiketle aynı mı
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          grep -q "^version = \"$version\"" src-tauri/engine-bin/Cargo.toml || { echo "engine-bin/Cargo.toml sürümü $version değil"; exit 1; }
       - run: npm ci
       - run: npm test
-      - run: npx tauri build --bundles deb,rpm
+      - run: npm run build:linux
       - name: Motoru uçtan uca dene
         run: |
           sudo apt-get install -y ./src-tauri/target/release/bundle/deb/*.deb
@@ -106,8 +113,10 @@ jobs:
           cp src-tauri/target/release/bundle/deb/*.deb out/RobzDPI-Linux-amd64.deb
           cp src-tauri/target/release/bundle/rpm/*.rpm "out/RobzDPI-$version-x86_64.rpm"
           cp src-tauri/target/release/bundle/rpm/*.rpm out/RobzDPI-Linux-x86_64.rpm
-          (cd out && sha256sum *.deb *.rpm > SHA256SUMS-linux.txt && cat SHA256SUMS-linux.txt)
+          cp src-tauri/target/release/bundle/appimage/*.AppImage "out/RobzDPI-$version-x86_64.AppImage"
+          cp src-tauri/target/release/bundle/appimage/*.AppImage out/RobzDPI-Linux-x86_64.AppImage
+          (cd out && sha256sum *.deb *.rpm *.AppImage > SHA256SUMS-linux.txt && cat SHA256SUMS-linux.txt)
       - name: Sürüme ekle
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload "$GITHUB_REF_NAME" out/*.deb out/*.rpm out/SHA256SUMS-linux.txt --clobber
+        run: gh release upload "$GITHUB_REF_NAME" out/*.deb out/*.rpm out/*.AppImage out/SHA256SUMS-linux.txt --clobber

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Kurulu Linux paketini uçtan uca dener (root olarak, systemd olan bir makinede):  sudo scripts/linux-smoke.sh
 #
-#   1. Yönetici yardımcısıyla motoru kurar ve başlatır (arayüzün pkexec ile yaptığı iş)
+#   1. Motor programıyla (robzdpi-engine --helper) motoru kurar ve başlatır: arayüzün pkexec ile yaptığı iş
 #   2. systemd biriminin çalıştığını ve nftables kurallarının yüklendiğini denetler
 #   3. Motorun değiştirdiği paketlerle gerçek bir siteye bağlanır: paketler geçerli olmalı, bağlantı kurulmalı
 #   4. Motoru durdurur ve kaldırır; geride birim, kural ya da klasör kalmamalı
@@ -9,7 +9,7 @@
 # CI bunu her gönderimde çalıştırır. Bilgisayarının ağ ayarlarına kalıcı bir şey bırakmaz.
 set -euo pipefail
 
-BIN="${1:-/usr/bin/robz-dpi}"
+BIN="${1:-/usr/lib/robz-dpi/robzdpi-engine}"
 SITE="${SMOKE_SITE:-example.com}"
 STATE=/var/lib/robzdpi
 WORK="$(mktemp -d)"

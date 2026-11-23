@@ -47,17 +47,44 @@ pub(super) fn system_binary(name: &str) -> Option<PathBuf> {
     ["/usr/bin", "/bin", "/usr/sbin", "/sbin"].iter().map(|dir| Path::new(dir).join(name)).find(|path| path.is_file())
 }
 
-/// Motorun kimliği: bu programın özeti. Uygulama güncellenince değişir; arayüz o zaman "yeniden uygula" ister ve
-/// /opt/robzdpi'deki motor da yenilenir.
+/// Motor programının paketteki yeri (deb ve rpm: /usr/lib/robz-dpi; AppImage: aynı yol, AppImage'ın içinde).
+const ENGINE_PACKAGED: &str = "usr/lib/robz-dpi/robzdpi-engine";
+
+/// Motor programı (robzdpi-engine): arayüzü olmayan küçük program; hem yönetici yardımcısı hem motordur.
+/// Bu süreç zaten oysa kendisidir; arayüz süreci onu paketin içinde arar.
+pub(super) fn engine_binary() -> Option<PathBuf> {
+    let own = image_path();
+    if own.as_deref().and_then(Path::file_name).is_some_and(|name| name == ENGINE_BIN) {
+        return own;
+    }
+    let mut candidates = Vec::new();
+    // AppImage çalışırken içeriğini APPDIR'e bağlar.
+    if let Some(appdir) = std::env::var_os("APPDIR") {
+        candidates.push(Path::new(&appdir).join(ENGINE_PACKAGED));
+    }
+    candidates.push(Path::new("/").join(ENGINE_PACKAGED));
+    // Geliştirme: `cargo build --manifest-path src-tauri/engine-bin/Cargo.toml` çıktısı.
+    #[cfg(debug_assertions)]
+    for profile in ["debug", "release"] {
+        candidates.push(Path::new(env!("CARGO_MANIFEST_DIR")).join("engine-bin/target").join(profile).join(ENGINE_BIN));
+    }
+    candidates.into_iter().find(|path| path.is_file())
+}
+
+/// Motorun kimliği: motor programının özeti. Motor güncellenince değişir; arayüz o zaman "yeniden uygula" ister ve
+/// /opt/robzdpi'deki kopya da yenilenir.
 pub fn engine_id() -> String {
     static ID: OnceLock<String> = OnceLock::new();
-    ID.get_or_init(|| image_path().and_then(|path| std::fs::read(path).ok()).map(|bytes| sha256_hex(&bytes)).unwrap_or_default())
+    ID.get_or_init(|| engine_binary().and_then(|path| std::fs::read(path).ok()).map(|bytes| sha256_hex(&bytes)).unwrap_or_default())
         .clone()
 }
 
-/// Motorun gereksindiği sistem araçları var mı: systemd, nftables ve polkit (pkexec).
+/// Motor programı ve gereksindiği sistem araçları var mı: systemd, nftables ve polkit (pkexec).
 pub fn available() -> bool {
-    system_binary("systemctl").is_some() && super::nfqueue::nft_path().is_some() && system_binary("pkexec").is_some()
+    engine_binary().is_some()
+        && system_binary("systemctl").is_some()
+        && super::nfqueue::nft_path().is_some()
+        && system_binary("pkexec").is_some()
 }
 
 fn systemctl(arguments: &[&str]) -> Option<std::process::Output> {
@@ -175,11 +202,39 @@ fn read_result(nonce: &str) -> Option<DpiError> {
     (result.nonce == nonce).then_some(result.error)
 }
 
-/// Bu programı pkexec ile root olarak başlatır, bitene kadar bekler ve çıkış kodunu döndürür.
+/// Yardımcı olarak root'un çalıştıracağı program. Paket olarak kuruluysa motor programının kendisidir (yalnız
+/// root yazabilir). AppImage içindeyse root onu göremez: AppImage'ın bağlandığı yer yalnız onu bağlayan kullanıcıya
+/// açıktır. O zaman program kullanıcının önbellek klasörüne kopyalanır ve oradan çalıştırılır.
+fn helper_program() -> DpiResult<PathBuf> {
+    let engine = engine_binary().ok_or_else(|| DpiError::new("engine-missing"))?;
+    let inside_appimage = std::env::var_os("APPDIR").is_some_and(|appdir| engine.starts_with(appdir));
+    if !inside_appimage {
+        return Ok(engine);
+    }
+    use std::os::unix::fs::PermissionsExt;
+    let cache = std::env::var_os("XDG_CACHE_HOME")
+        .map(PathBuf::from)
+        .filter(|dir| dir.is_absolute())
+        .or_else(|| std::env::var_os("HOME").map(|home| Path::new(&home).join(".cache")))
+        .ok_or_else(|| DpiError::new("elevation-failed"))?
+        .join("robz-dpi");
+    let copy = cache.join(ENGINE_BIN);
+    let write = || -> std::io::Result<()> {
+        std::fs::create_dir_all(&cache)?;
+        std::fs::set_permissions(&cache, std::fs::Permissions::from_mode(0o700))?;
+        let _ = std::fs::remove_file(&copy);
+        std::fs::copy(&engine, &copy)?;
+        std::fs::set_permissions(&copy, std::fs::Permissions::from_mode(0o700))
+    };
+    write().map_err(|e| DpiError::with("write-failed", e))?;
+    Ok(copy)
+}
+
+/// Motor programını pkexec ile root olarak başlatır, bitene kadar bekler ve çıkış kodunu döndürür.
 /// pkexec'in kendi kodları: 126 kullanıcı onay vermedi, 127 kimlik doğrulanamadı ya da pkexec çalışamadı.
 fn run_elevated(action: &str, job_path: &Path) -> DpiResult<i32> {
     let pkexec = system_binary("pkexec").ok_or_else(|| DpiError::with("elevation-failed", "pkexec"))?;
-    let exe = image_path().ok_or_else(|| DpiError::new("elevation-failed"))?;
+    let exe = helper_program()?;
     let status = Command::new(pkexec)
         .arg(exe)
         .args(["--helper", action])
