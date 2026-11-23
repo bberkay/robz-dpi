@@ -31,7 +31,7 @@ EOF
 # bağlantının kurulamaması denemeyi düşürmez, üçünün de kurulamaması düşürür.
 check_site() { # ad
   local before after code attempt
-  before=$(sed -E 's/.*"tls":([0-9]+).*//' "$STATE/stats.json" 2>/dev/null || echo 0)
+  before=$(sed -E 's/.*"tls":([0-9]+).*/\1/' "$STATE/stats.json" 2>/dev/null || echo 0)
   for attempt in 1 2 3; do
     code=$(curl -s -o /dev/null -m 15 -w '%{http_code}' "https://$SITE/" || true)
     [ "$code" = 200 ] && break
@@ -39,7 +39,7 @@ check_site() { # ad
     sleep 2
   done
   sleep 2.5 # sayaç dosyası birkaç saniyede bir yazılır
-  after=$(sed -E 's/.*"tls":([0-9]+).*//' "$STATE/stats.json")
+  after=$(sed -E 's/.*"tls":([0-9]+).*/\1/' "$STATE/stats.json")
   echo "$1: https://$SITE/ -> $code ($attempt. denemede), işlenen bağlantı $before -> $after"
   [ "$code" = 200 ] || fail "$1: site açılmadı ($code)"
   [ "$after" -gt "$before" ] || fail "$1: motor bağlantıyı görmedi"
