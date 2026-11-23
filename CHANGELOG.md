@@ -2,6 +2,23 @@
 
 Her başlık bir sürümdür; sürüm iş akışı GitHub'daki sürüm notunu buradan alır.
 
+## 0.2.0
+
+Linux desteği.
+
+- **Linux:** `.deb` (Debian, Ubuntu, Linux Mint) ve `.rpm` (Fedora, openSUSE) paketleri. Ek sürücü gerekmez:
+  paketleri çekirdeğin kendi paket kuyruğu (nfqueue) yakalar, kuralları nftables yükler. Motor bir systemd birimi
+  olarak çalışır; yönetici onayı polkit ile istenir. Paket kaldırılınca motor da kaldırılır.
+- **Arayüz:** "Bütün sitelerde" açıklaması sadeleştirildi; sisteme göre değişen metinler Linux'a uyarlandı.
+- **Windows:** "Robz DPI'ı kaldır" ayar klasörünü, dosyaları hâlâ kullanılıyorsa birkaç kez yeniden deneyerek siler.
+
+Bilinen sınırlar (Linux):
+
+- systemd, nftables ve polkit gerektirir; yalnız x86_64.
+- Motorun ürettiği paketler otomatik testlerle (iki makine arasında ve gerçek bir sitede) doğrulanmıştır; ancak Linux
+  sürümü her dağıtımda ve her servis sağlayıcıda denenmemiştir.
+- macOS desteği yoktur.
+
 ## 0.1.0
 
 İlk sürüm. Motor her servis sağlayıcıda denenmemiştir.

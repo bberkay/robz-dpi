@@ -72,3 +72,42 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release create "${{ github.ref_name }}" out/RobzDPI-Setup-${{ env.VERSION }}.exe out/RobzDPI-Setup.exe out/SHA256SUMS.txt --title "Robz DPI ${{ env.VERSION }}" --notes-file out/notes.md
+
+  # Linux paketleri (.deb ve .rpm) aynı sürüme eklenir. Motor önce uçtan uca denenir.
+  linux:
+    needs: release
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+      - name: Derleme gereksinimleri
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev libssl-dev rpm
+      - run: npm ci
+      - run: npm test
+      - run: npx tauri build --bundles deb,rpm
+      - name: Motoru uçtan uca dene
+        run: |
+          sudo apt-get install -y ./src-tauri/target/release/bundle/deb/*.deb
+          sudo bash scripts/linux-smoke.sh
+      - name: Paketleri adlandır ve özetlerini çıkar
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          mkdir out
+          cp src-tauri/target/release/bundle/deb/*.deb "out/RobzDPI-$version-amd64.deb"
+          cp src-tauri/target/release/bundle/deb/*.deb out/RobzDPI-Linux-amd64.deb
+          cp src-tauri/target/release/bundle/rpm/*.rpm "out/RobzDPI-$version-x86_64.rpm"
+          cp src-tauri/target/release/bundle/rpm/*.rpm out/RobzDPI-Linux-x86_64.rpm
+          (cd out && sha256sum *.deb *.rpm > SHA256SUMS-linux.txt && cat SHA256SUMS-linux.txt)
+      - name: Sürüme ekle
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$GITHUB_REF_NAME" out/*.deb out/*.rpm out/SHA256SUMS-linux.txt --clobber

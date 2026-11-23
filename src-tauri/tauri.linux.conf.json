@@ -1,0 +1,34 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "mainBinaryName": "robz-dpi",
+  "bundle": {
+    "targets": [
+      "deb",
+      "rpm"
+    ],
+    "resources": {
+      "engine/WinDivert.dll": null,
+      "engine/WinDivert64.sys": null,
+      "engine/licenses/": null
+    },
+    "linux": {
+      "deb": {
+        "section": "net",
+        "preRemoveScript": "linux/prerm.sh",
+        "depends": [
+          "nftables",
+          "systemd",
+          "polkitd | policykit-1"
+        ]
+      },
+      "rpm": {
+        "preRemoveScript": "linux/prerm.sh",
+        "depends": [
+          "nftables",
+          "systemd",
+          "polkit"
+        ]
+      }
+    }
+  }
+}
