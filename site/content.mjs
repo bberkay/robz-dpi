@@ -36,7 +36,7 @@ export default {
     skip: 'İçeriğe geç',
     langLabel: 'Dil',
     nav: { how: 'Nasıl çalışır', usage: 'Kullanım', faq: 'Sık sorulanlar', github: 'GitHub' },
-    pillTag: 'Deneysel',
+    pillTag: 'Önemli',
     pillText: 'Eğitim ve test amaçlıdır: sorumluluk reddini oku',
     heroTitle: 'Seçtiğini aç, gerisine dokunma.',
     heroLead:
@@ -205,7 +205,7 @@ export default {
     skip: 'Skip to content',
     langLabel: 'Language',
     nav: { how: 'How it works', usage: 'How to use', faq: 'FAQ', github: 'GitHub' },
-    pillTag: 'Experimental',
+    pillTag: 'Notice',
     pillText: 'For education and testing: read the disclaimer',
     heroTitle: 'Open what you pick, leave the rest alone.',
     heroLead:
@@ -374,7 +374,7 @@ export default {
     skip: 'Перейти к содержимому',
     langLabel: 'Язык',
     nav: { how: 'Как это работает', usage: 'Как пользоваться', faq: 'Вопросы', github: 'GitHub' },
-    pillTag: 'Эксперимент',
+    pillTag: 'Важно',
     pillText: 'Для обучения и тестирования: прочитайте отказ от ответственности',
     heroTitle: 'Открывай выбранное, остальное не трогай.',
     heroLead:

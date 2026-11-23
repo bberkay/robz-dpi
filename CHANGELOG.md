@@ -4,7 +4,7 @@ Her başlık bir sürümdür; sürüm iş akışı GitHub'daki sürüm notunu bu
 
 ## 0.1.0
 
-İlk sürüm. Deneyseldir: motor her servis sağlayıcıda denenmedi.
+İlk sürüm. Motor her servis sağlayıcıda denenmemiştir.
 
 - **Tek düğme:** motoru açar ve kapatır. Windows ilk açışta ve ayar değişince yönetici izni ister; açıp kapamak
   izin istemez.

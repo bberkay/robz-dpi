@@ -3,7 +3,7 @@
   "productName": "Robz DPI",
   "version": "0.1.0",
   "private": true,
-  "description": "Eğitim ve test amaçlı, açık kaynak DPI aracı: yalnız seçtiğin sitelerde çalışır, motoru Rust ile yazıldı.",
+  "description": "Yalnız seçtiğiniz sitelerde çalışan, Windows için açık kaynak DPI aracı.",
   "license": "MIT",
   "homepage": "https://github.com/kutsalkiremitci/robz-dpi",
   "repository": {

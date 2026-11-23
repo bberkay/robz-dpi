@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/banner-en.png" alt="Robz DPI: Open what you pick, leave the rest alone. A one-button DPI tool for Discord, Roblox and the sites you add. Engine written in Rust, open source. On the right, the Robz DPI main screen." width="100%">
+  <img src="docs/banner-en.png" alt="Robz DPI: an open-source DPI tool for Windows that works only on the sites you choose. On the right, the main screen of the app." width="100%">
 </p>
 
 <p align="center">
@@ -7,12 +7,8 @@
   <a href="https://github.com/kutsalkiremitci/robz-dpi/releases"><img src="https://img.shields.io/github/downloads/kutsalkiremitci/robz-dpi/total?style=flat-square&amp;label=downloads&amp;labelColor=0d1117&amp;color=8957e5" alt="Total downloads"></a>
   <a href="https://github.com/kutsalkiremitci/robz-dpi/stargazers"><img src="https://img.shields.io/github/stars/kutsalkiremitci/robz-dpi?style=flat-square&amp;logo=github&amp;label=stars&amp;labelColor=0d1117&amp;color=e3b341" alt="GitHub stars"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/kutsalkiremitci/robz-dpi?style=flat-square&amp;label=license&amp;labelColor=0d1117&amp;color=3d444d" alt="License: MIT"></a>
-  <br>
-  <img src="https://img.shields.io/badge/Rust-Tauri%202-ab7df8?style=flat-square&amp;logo=rust&amp;logoColor=white&amp;labelColor=0d1117" alt="Built with Rust and Tauri 2">
-  <img src="https://img.shields.io/badge/engine-own%20code-ab7df8?style=flat-square&amp;labelColor=0d1117" alt="Its own engine">
   <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Windows 10 and 11">
   <img src="https://img.shields.io/badge/interface-T%C3%BCrk%C3%A7e%20%7C%20English%20%7C%20%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9-3d444d?style=flat-square&amp;labelColor=0d1117" alt="Interface: Turkish, English and Russian">
-  <img src="https://img.shields.io/badge/status-experimental-d29922?style=flat-square&amp;labelColor=0d1117" alt="Status: experimental">
 </p>
 
 <p align="center">
@@ -21,78 +17,89 @@
   <br>
   <a href="README.md"><img src="https://img.shields.io/badge/T%C3%9CRK%C3%87E-21262d?style=for-the-badge" alt="Türkçe"></a>
   <a href="README.ru.md"><img src="https://img.shields.io/badge/%D0%A0%D0%A3%D0%A1%D0%A1%D0%9A%D0%98%D0%99-21262d?style=for-the-badge" alt="Русский"></a>
-  <a href="https://discord.gg/UyyEn7SHm4"><img src="https://img.shields.io/badge/DISCORD-FREE%20SUPPORT-5865F2?style=for-the-badge&amp;logo=discord&amp;logoColor=white&amp;labelColor=4752C4" alt="Discord: free support"></a>
+  <a href="https://discord.gg/UyyEn7SHm4"><img src="https://img.shields.io/badge/DISCORD-SUPPORT-5865F2?style=for-the-badge&amp;logo=discord&amp;logoColor=white&amp;labelColor=4752C4" alt="Discord: support"></a>
 </p>
 
-<h3 align="center">One button to turn it on. It works only on the sites you pick.</h3>
+<h3 align="center">An open-source Windows tool for understanding and testing deep packet inspection (DPI)</h3>
 
 <p align="center">
-  <b>Robz DPI</b> is a small Windows app, written in <b>Rust</b>, that lets you reach sites your internet provider<br>
-  blocks with deep packet inspection (DPI). It does not route your connection through a server or slow it down:<br>
-  it only sends the first packet of a connection in a form the device in between cannot recognize.
+  <b>Robz DPI</b> is a network tool built to study how the access restrictions that internet providers apply<br>
+  with deep packet inspection (DPI) work, and to test them on your own connection.<br>
+  One button turns it on and it works only on the sites you choose; it does not route your traffic through a server or affect your speed.
 </p>
 
-```diff
-- Download a zip, work out which .cmd file to run, open it as administrator
-- It applies to every site: some sites stop loading and you cannot tell why
-- Edit a text file to add a site, edit flags to try another method
-+ Install Robz DPI, press the button
-+ It applies only to Discord, Roblox and the sites you add; the rest is left alone
-+ Adding a site is typing an address into a box; changing the method is one click
-```
+> [!NOTE]
+> **For education and testing.** Robz DPI is an open-source project written to learn and study how network protocols
+> and DPI systems work, and to try this on your own network. It comes with no warranty; every consequence of using it,
+> and following the laws where you are, is the responsibility of the user. Please read the
+> **[disclaimer](DISCLAIMER.md#english)** before using it.
 
 > [!WARNING]
-> **For education and testing; experimental.** Robz DPI is an open source project written to learn and study how
-> network protocols and DPI systems work, and to try this on your own network. It comes with no warranty; every
-> consequence of using it, and following the laws where you are, is your responsibility. Read the
-> **[disclaimer](DISCLAIMER.md#english)** before using it.
->
-> Its engine has not been tried on every internet provider. If it does not work for you,
-> [open an issue](https://github.com/kutsalkiremitci/robz-dpi/issues): that is the only way to learn which method
-> works on which connection.
+> **Antivirus software.** Some antivirus products, Kaspersky in particular, flag the WinDivert driver that Robz DPI
+> uses as a "risk tool" and may stop the program from running. Details and what to do:
+> [About antivirus software](#about-antivirus-software).
 
 ## Contents
 
-- [What it does](#what-it-does)
-- [Start in 3 steps](#start-in-3-steps)
-- [User guide](#user-guide)
-- [If it does not work](#if-it-does-not-work)
+- [Purpose and scope](#purpose-and-scope)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [About antivirus software](#about-antivirus-software)
+- [Troubleshooting](#troubleshooting)
 - [How it works](#how-it-works)
-- [How it differs from GoodbyeDPI](#how-it-differs-from-goodbyedpi)
+- [Comparison with GoodbyeDPI](#comparison-with-goodbyedpi)
 - [Security and privacy](#security-and-privacy)
-- [FAQ](#faq)
+- [Frequently asked questions](#frequently-asked-questions)
 - [Development](#development)
-- [Thanks](#thanks)
+- [Credits](#credits)
 - [Support and contributing](#support-and-contributing)
 - [Disclaimer](#disclaimer)
+- [License](#license)
 
-## What it does
+## Purpose and scope
+
+Deep packet inspection (DPI) means a network device makes decisions by looking inside the packets that pass through
+it. Providers can use it to read the site name that is written in the clear in the first packet of a connection, and
+cut that connection. Tools that examine this behavior have existed for a long time, but most of them run from the
+command line, apply to every site and require technical knowledge.
+
+Robz DPI aims to offer the same methods in a form that is understandable, limited and auditable:
+
+- **Understandable:** one button and a simple interface. No scripts, flags or text files to edit.
+- **Limited:** by default it applies only to the sites you choose and leaves every other connection alone.
+- **Auditable:** all of the code that handles packets is in this repository and is tested without touching the network.
+
+Robz DPI is not a VPN, a proxy or an access service. It does not hide your IP address, provides no anonymity or
+security, and contains no list of "blocked sites"; the user decides which domains it works on.
+
+## Features
 
 <table>
   <tr>
     <td width="33%" valign="top"><b>One button</b><br>
-      On, off. Windows asks for administrator permission once, the first time; turning it on and off later does not ask.</td>
-    <td width="33%" valign="top"><b>Only what you pick</b><br>
-      Discord and Roblox come ready. Other sites are left alone, so you do not get "that site stopped loading".</td>
+      On and off. Windows asks for administrator approval only on the first start and when settings change.</td>
+    <td width="33%" valign="top"><b>Selected sites only</b><br>
+      Discord and Roblox come ready. Other sites are not touched, so they keep working as before.</td>
     <td width="33%" valign="top"><b>Your own sites</b><br>
-      Another site? Type its address into the box and add it. No files to edit, no flags to memorize.</td>
+      Type the address into the box and add it; subdomains are covered automatically.</td>
   </tr>
   <tr>
-    <td valign="top"><b>Everywhere, if you want</b><br>
-      "All sites" mode works like GoodbyeDPI Turkey: it applies to every connection, without a list.</td>
-    <td valign="top"><b>Four built-in methods</b><br>
-      Providers block in different ways. If one does not work, pick the next; the connection test shows the result at once.</td>
-    <td valign="top"><b>Fixes DNS too</b><br>
-      Redirects the DNS queries of blocked sites to the server you choose. Only the queries for your sites are touched.</td>
+    <td valign="top"><b>All sites mode</b><br>
+      Optionally applies to every connection without a list (the default behavior of GoodbyeDPI).</td>
+    <td valign="top"><b>Four ready-made methods</b><br>
+      Providers work in different ways. If one method gives no result, pick the next; the connection test shows the
+      outcome right away.</td>
+    <td valign="top"><b>DNS redirection</b><br>
+      DNS lookups for the selected sites go to the server you choose; other lookups are left alone.</td>
   </tr>
   <tr>
-    <td valign="top"><b>Always on</b><br>
-      If you like, it starts in the tray with Windows and turns on by itself when you left it on.</td>
-    <td valign="top"><b>An advanced section for tinkerers</b><br>
-      Every detail of the method, what the engine is doing, and its log. Everything works without opening it.</td>
+    <td valign="top"><b>Runs in the background</b><br>
+      Optionally starts in the tray with Windows and remembers its last state.</td>
+    <td valign="top"><b>Advanced section</b><br>
+      Every detail of the method, the engine's counters and its log. Using it is optional.</td>
     <td valign="top"><b>Open source, collects no data</b><br>
-      No account, ads or usage statistics. All the code, engine included, is in this repository. Turkish, English
-      and Russian.</td>
+      No account, ads or usage statistics. The interface is in Turkish, English and Russian.</td>
   </tr>
 </table>
 
@@ -102,56 +109,61 @@
   <img src="docs/screenshots/en/06-terms.png" alt="First run: the disclaimer summary and the acceptance checkbox" width="32%">
 </p>
 
-## Start in 3 steps
+## Installation
 
-1. **Download:** [RobzDPI-Setup.exe](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Setup.exe)
-   (always the latest version).
-2. **Install:** run the file. The installer does not ask for administrator permission and takes a few seconds.
-3. **Turn it on:** the first time it opens, Robz DPI shows three short steps: language, accepting the disclaimer,
-   and where it should work. Then press the big button. Windows asks "do you want to allow this app to make changes?";
-   say **Yes**. The button turns green: Discord and Roblox now load.
+**Requirements:** 64-bit Windows 10 or Windows 11.
+
+1. **Download** [RobzDPI-Setup.exe](https://github.com/kutsalkiremitci/robz-dpi/releases/latest/download/RobzDPI-Setup.exe)
+   (always the latest release).
+2. **Install:** run the file. Installing needs no administrator rights and takes a few seconds.
+3. **First run:** the app shows three short steps, once: language, accepting the disclaimer and where it should work.
+4. **Turn it on:** press the big button. Windows asks "Do you want to allow this app to make changes to your
+   device?"; answer **Yes**. The button turns green.
 
 > [!IMPORTANT]
-> If **GoodbyeDPI** or a similar tool is running on your computer, close it first. Two tools modify the same packet
-> twice and connections break. Robz DPI notices a running GoodbyeDPI, warns you, and can stop it for you.
+> If **GoodbyeDPI** or a similar tool is running on your computer, close it first. Two tools change the same packet
+> twice and connections break. Robz DPI detects a running GoodbyeDPI, warns you and stops it with your approval.
 
-## User guide
+The installer is not signed with a paid certificate, so Windows SmartScreen may show "Windows protected your PC".
+Continue with **More info** → **Run anyway**. To verify that the file comes from this repository, compare it with
+`SHA256SUMS.txt` on the release page.
+
+## Usage
 
 ### General
 
 - **The big button** turns the engine on and off. While on, it shows what it applies to and how many connections it
   has handled.
-- **Keep it always on:** Robz DPI starts in the tray when Windows starts. If you left the engine on, it turns on by
-  itself; if you left it off, it stays off.
+- **Keep it always on:** Robz DPI starts in the tray when Windows starts. If the engine was left on, it turns on by
+  itself.
 - **Where should it work?**
-  - **Only what I pick** (recommended): applies only to the apps whose switch is on and the sites you add.
-  - **All sites:** applies to every connection. Some sites do not accept a split connection and stop loading; if
-    that happens, go back to "Only what I pick".
+  - **Only what I pick** (recommended): applies only to the apps you switch on and the sites you add.
+  - **All sites:** applies to every connection. Some sites do not accept a split connection and will not load; in
+    that case go back to "Only what I pick".
 - **Your own sites:** type the address (`example.com`, or paste a link) and press **Add**. Subdomains
-  (`cdn.example.com`) are covered automatically. You can add several addresses at once, separated by spaces.
-- **Connection test:** tries a real connection to what you picked, from this computer.
+  (`cdn.example.com`) are covered automatically; several addresses can be added at once, separated by spaces.
+- **Connection test:** tries a real connection to the selected sites from this computer.
 
-If you change a setting while the engine is running, a blue box appears: press **Apply** for the new setting to take
-effect (changing settings asks for administrator permission; turning on and off does not).
+If a setting is changed while the engine is running, a blue notice appears; the new setting takes effect when you
+press **Apply**. Changing settings needs administrator approval; turning on and off does not.
 
 ### Settings
 
-- **Method:** there are four built-in methods. Method 1 works on most connections. If it does not, try the others in
-  order and check the connection test after each.
-- **DNS:** your provider's DNS returns wrong addresses for blocked sites. Robz DPI redirects the queries for those
-  sites to the server you choose (Quad9, Yandex, AdGuard, OpenDNS, or your own). Queries are not encrypted.
-- **Stay in the tray when closed**, **language** and **Uninstall Robz DPI** are here too.
+- **Method:** there are four ready-made methods. Method 1 gives a result on most connections; if it does not, try the
+  others in order and check the connection test after each.
+- **DNS:** lookups for the selected sites are redirected to the server you choose (Quad9, Yandex, AdGuard, OpenDNS or
+  one you type). Lookups are not encrypted.
+- **Stay in the tray when closed**, **language** and **Uninstall Robz DPI** are here as well.
 
 ### Advanced
 
-Turning on "Show advanced settings" adds three things:
+Turning on "Show advanced settings" reveals three sections:
 
-- **Method details:** after which byte the first packet is split, the order of the parts, the kind and lifetime of
-  the fake request, the site shown in the fake request, turning off QUIC, and what to do for connections whose site
-  name is not visible. Changing a setting of a built-in method copies it as "Custom"; the built-in methods stay intact.
-- **Engine activity:** how many connections it was applied to, how many DNS queries were redirected, and which site
-  names were handled last.
-- **Engine log:** when the engine started, with which filter, and why it stopped if it did.
+- **Method details:** where the first packet is split, the order of the parts, the kind and lifetime of the fake
+  request, the site shown in the fake request, turning off QUIC, and what to do when the site name is not visible.
+  Changing a setting of a ready-made method copies it to "Custom"; the ready-made methods stay as they are.
+- **Engine activity:** connections handled, DNS lookups redirected, and the most recent site names.
+- **Engine log:** when the engine started, which filter it runs with and, if it stopped, why.
 
 <p align="center">
   <img src="docs/screenshots/en/03-settings.png" alt="Settings: four methods, DNS server, language and uninstall" width="40%">
@@ -160,114 +172,125 @@ Turning on "Show advanced settings" adds three things:
 
 ### Tray icon
 
-Closing the window keeps Robz DPI in the icon next to the clock. Right-click it for **Turn on** / **Turn off**. The
-engine is a separate Windows service: it keeps running until you turn it off, even if you quit Robz DPI entirely.
+When the window is closed, Robz DPI keeps running from the icon next to the clock; right-click it for **Turn on** and
+**Turn off**. The engine is a separate Windows service: it keeps running until you turn it off, even if you quit the
+app completely.
 
-## If it does not work
+### Uninstalling
+
+Settings → **Uninstall Robz DPI**. In one step it removes the app, its background part (the Windows service, the
+WinDivert driver, the `Program Files\RobzDPI` folder) and the settings. The background part was installed with
+administrator rights, so Windows asks for approval once. Uninstalling from the Windows "Apps" list removes the
+background part too.
+
+## About antivirus software
+
+> [!WARNING]
+> Some antivirus products flag the **WinDivert** driver that Robz DPI uses as a "risk tool", quarantine its files or
+> prevent the driver from loading. When that happens the engine cannot start, or stops by itself.
+
+Robz DPI captures network packets with the open-source [WinDivert](https://github.com/basil00/WinDivert) driver.
+WinDivert is not malware; but because it can capture and modify network traffic, security products classify it as a
+"tool that could be misused". The same warning appears for every program that uses WinDivert, GoodbyeDPI included.
+
+| Product | Known behavior |
+|---|---|
+| **Kaspersky** | Detects WinDivert as [`RiskTool.Multi.WinDivert.gen`](https://threats.kaspersky.com/en/threat/RiskTool.Multi.WinDivert.gen). According to user reports it [may keep blocking](https://forum.kaspersky.com/topic/exclusions-wont-work-for-goodbyedpi-52810) the driver even after an exclusion is added. |
+| **Malwarebytes** | Detects the driver as [`RiskWare.WinDivert.VulnDriver`](https://www.malwarebytes.com/blog/detections/riskware-windivert-vulndriver). |
+| **Norton** | Users have [reported](https://community.norton.com/t/i-think-norton-is-blocking-goodbyedpi/514443) that tools using WinDivert are blocked. |
+| **Other products** | May show similar warnings; behavior differs by product and version. |
+
+If you see such a warning:
+
+1. **Verify the files.** Download the installer only from the
+   [Releases](https://github.com/kutsalkiremitci/robz-dpi/releases) page of this repository and compare it with
+   `SHA256SUMS.txt`. The bundled WinDivert files are the official release; their SHA-256 digests are pinned in
+   [`engine.lock.json`](engine.lock.json) and checked both at build time and at install time.
+2. **Add an exclusion.** In your antivirus, exclude the `C:\Program Files\RobzDPI` folder and the folder where the
+   app is installed, `%LOCALAPPDATA%\Robz DPI`.
+3. **Restore quarantined files.** If the files were deleted, uninstall Robz DPI and install it again.
+4. **If blocking continues,** Robz DPI cannot be used together with that security product.
+
+Adding an exclusion is your decision. Before you turn off a warning from your security software, verify that the
+files are genuine as described above.
+
+## Troubleshooting
 
 <details>
-<summary><b>The button is green but Discord or a site still does not load</b></summary>
+<summary><b>The button is green but a site does not load</b></summary>
 
-1. Press **Connection test**. If it says "Not reachable", pick **the next method** in Settings, press **Apply** and
-   test again. Try all four.
-2. Check that **Redirect DNS queries** is on. If it is, pick another **DNS server** and try again.
-3. If "Secure DNS" (DoH) is on in your browser, DNS is not the problem; focus on the method.
-4. If nothing helps, look at **Engine activity** under Advanced: is the connection count going up? If not, the
-   engine is not seeing that site (the address may be wrong). If it goes up but the site does not load, the method
-   does not work on that connection: [open an issue](https://github.com/kutsalkiremitci/robz-dpi/issues) with your
+1. Run the **Connection test**. If it says "Not reachable", pick the **next method** in Settings, press **Apply** and
+   test again. Try all four methods.
+2. Check that **Redirect DNS queries** is on; if it is, choose another **DNS server**.
+3. If "Secure DNS" (DoH) is on in your browser, DNS is not the cause; focus on the method.
+4. If nothing helps, look at **Engine activity** in the Advanced section. If the connection count does not grow, the
+   engine does not see that site (the address may be wrong). If it grows but the site does not load, the method gives
+   no result on that connection: [open an issue](https://github.com/kutsalkiremitci/robz-dpi/issues) with your
    provider and the engine log.
 
 </details>
 
 <details>
-<summary><b>It says "The engine could not start" or "The engine stopped by itself"</b></summary>
+<summary><b>"The engine could not start" or "The engine stopped by itself"</b></summary>
 
-The reason is shown under the message. The most common ones:
+The reason is written under the notice. The most common ones:
 
-- **A security program blocked the driver:** add an exception for Robz DPI in your antivirus. Some antivirus
-  products (Kaspersky in particular, according to GoodbyeDPI users) may block WinDivert despite an exception.
-- **An incompatible version of WinDivert is loaded:** close the program using it (an old GoodbyeDPI, zapret) and
+- **A security product blocked the driver:** see [About antivirus software](#about-antivirus-software).
+- **An incompatible WinDivert version is loaded:** close the program that uses it (an old GoodbyeDPI, zapret) and
   restart the computer.
 - **Windows did not accept the driver's signature:** update Windows.
 
 </details>
 
 <details>
-<summary><b>"Windows protected your PC" appears</b></summary>
-
-The installer is not signed with a paid certificate, so Windows SmartScreen shows this warning to early downloaders.
-Continue with **More info** → **Run anyway**. To check that the file came from this repository, compare it with
-`SHA256SUMS.txt` on the release page.
-
-</details>
-
-<details>
-<summary><b>My antivirus raised a warning</b></summary>
-
-Robz DPI uses the [WinDivert](https://github.com/basil00/WinDivert) driver to capture packets. Like any tool that
-can modify network traffic, WinDivert is flagged as a "risky tool" by some antivirus products; this happens with
-every program that uses it, GoodbyeDPI included. The bundled WinDivert files are the official release and are
-verified by their SHA-256 digests ([`engine.lock.json`](engine.lock.json)).
-
-</details>
-
-<details>
 <summary><b>Some sites do not load in "All sites" mode</b></summary>
 
-Some sites reject a connection that was split in two. This is inherent to the technique, and it is why Robz DPI
-applies only to the sites you pick by default. Go back to "Only what I pick" and add the sites you want.
+Some sites reject a connection that was split in two. This comes from the method itself and is the reason Robz DPI
+applies only to selected sites by default. Go back to "Only what I pick" and add the sites you need.
 
 </details>
 
 <details>
-<summary><b>How do I remove Robz DPI completely?</b></summary>
+<summary><b>Some sites do not load with any method</b></summary>
 
-Settings → **Uninstall Robz DPI**. It removes everything in one step: the app, its background part (the Windows
-service, the WinDivert driver, the `Program Files\RobzDPI` folder) and your settings. Because the background part was
-installed with administrator privileges, Windows asks for approval once.
-
-Uninstalling from the Windows "Apps" list does the same: the uninstaller removes the background part too. If you
-answer "No" to the approval prompt, the app is still uninstalled but the service stays.
+Robz DPI works only on restrictions that look at the first packet of a connection. If an address is closed by the
+provider directly at IP level (the connection is refused before it is even established), no method gives a result.
 
 </details>
 
 ## How it works
 
-When you connect to a site, your browser first sends a packet that contains the site's name (the TLS ClientHello).
-Your provider's device reads the name in that packet and cuts the connection if the site is blocked. Robz DPI sends
-that packet in a form the device cannot recognize but the site's server understands without trouble:
+When an app connects to a site, it first sends a packet that carries the site's name (the TLS ClientHello). The DPI
+device in between decides by reading the name in that packet. Robz DPI rearranges only this first packet, in a way
+the server understands without trouble but the device in between does not recognize:
 
-1. **It splits it.** The packet is cut into two parts and the second part is sent first. The server puts the parts
-   in order; the device in between never sees the name in one piece.
-2. **It puts a fake request in front.** It sends a fake packet carrying the name of a site that is not blocked. That
-   packet either dies on the way before reaching the server (short lifetime) or is broken in a way the server
-   discards; the device in between takes it for the real one.
-3. **It fixes DNS.** It redirects the address query for a blocked site to a server and port your provider cannot
-   interfere with, and hands the answer back to the app as if it came from where the app asked.
+1. **It splits it.** The packet is cut in two and the second part is sent first. The server puts the parts in order.
+2. **It puts a fake request in front.** A fake packet carrying another site's name is sent. It either dies on the way
+   before reaching the server (short lifetime) or is broken so that the server discards it.
+3. **It redirects the DNS lookup.** The address lookup for a selected site is sent to the DNS server you choose; the
+   answer is handed back to the app as if it came from where it asked.
 
-It does not touch the rest of the connection (whatever you download, watch or say): there is no speed loss and your
-traffic does not go through another server. That is why it is not a VPN: it does not hide your IP address, it only
-gets past the block.
+The rest of the connection is left alone: there is no slowdown and traffic does not pass through another server.
 
 The engine has two parts. The signed driver that takes packets from the kernel and puts them back is **WinDivert**
 (basil00, open source). The code that decides what to do with a packet is in this repository
 ([`src-tauri/src/engine`](src-tauri/src/engine)):
 
-| File | What it does |
+| File | Role |
 |---|---|
 | `packet.rs` | Reads, splits and rebuilds IP, TCP and UDP packets; computes checksums |
-| `tls.rs` | Reads the site name from a ClientHello; builds the fake ClientHello |
-| `dnsmsg.rs` | Reads the name in a DNS query and the addresses in an answer |
-| `logic.rs` | The decision: what happens to this packet? (pure logic, tested without touching the network) |
+| `tls.rs` | Reads the site name from the ClientHello; builds the fake ClientHello |
+| `dnsmsg.rs` | Reads the name in a DNS query and the addresses in the answer |
+| `logic.rs` | The decision: what happens to this packet? (pure logic, tested without the network) |
 | `filter.rs` | The filter given to the driver: which packets reach the engine? |
-| `divert.rs` | WinDivert binding |
-| `service.rs` | The Windows service: take a packet, decide, put it back |
+| `divert.rs` | The WinDivert binding |
+| `service.rs` | The Windows service: takes a packet, decides, puts it back |
 
-## How it differs from GoodbyeDPI
+## Comparison with GoodbyeDPI
 
-Robz DPI's techniques come from [GoodbyeDPI](https://github.com/ValdikSS/GoodbyeDPI); they were re-implemented in
-Rust by reading its source. The four built-in methods behave like the flag sets in the scripts of
-[GoodbyeDPI-Turkey](https://github.com/cagritaskn/GoodbyeDPI-Turkey):
+Robz DPI's methods come from [GoodbyeDPI](https://github.com/ValdikSS/GoodbyeDPI); the engine was rewritten from
+scratch by studying its source code. The four ready-made methods behave like the combinations in the
+[GoodbyeDPI-Turkey](https://github.com/cagritaskn/GoodbyeDPI-Turkey) scripts:
 
 | Robz DPI | GoodbyeDPI equivalent |
 |---|---|
@@ -276,40 +299,38 @@ Rust by reading its source. The four built-in methods behave like the flag sets 
 | Method 3 | `--set-ttl 3` |
 | Method 4 | `-9` |
 
-Writing the engine from scratch changed these things:
+What changed by rewriting the engine:
 
 | | GoodbyeDPI | Robz DPI |
 |---|---|---|
-| Packets that reach the engine | Every packet under 1200 bytes going to ports 80 and 443 | Only the first packet of a connection (ClientHello); the selection happens in the driver |
-| DNS redirection | All queries | Only the queries for the sites you picked (all, if you want) |
-| When the site name is in the second packet | In list mode the connection is left alone | Recognizes the target's address from the DNS answer and applies |
-| Code that reads packets | C | Safe Rust (no `unsafe`), tested with malformed input |
-| Auto lifetime, server 3 hops away | The number overflows; the fake packet can reach the server | Fixed |
-| What "running" means | The process started | The driver really opened; if it cannot, it says why |
+| Packets that reach the engine | Every packet under 1200 bytes going to ports 80 and 443 | Only the first packet of a connection; selection happens in the driver |
+| DNS redirection | All lookups | Only lookups for the selected sites (optionally all) |
+| Site name falls into the second packet | Leaves the connection alone in list mode | Recognizes the target address from the DNS answer and applies the method |
+| Code that reads packets | C | Memory-safe Rust, tested with malformed input |
+| Automatic lifetime, server 3 hops away | The number overflows and the fake packet may reach the server | Fixed |
+| "Running" means | The process started | The driver really opened; if not, the reason is reported |
 | Changing settings | Command-line flags, a text file | The interface |
 
-GoodbyeDPI is a proven program that has been in use for years; Robz DPI is new. If GoodbyeDPI works for you and
-Robz DPI does not with the same method, that is our bug: please
+GoodbyeDPI is proven software that has been used for years; Robz DPI is new and has not been tried on every
+provider. If the same method gives a result with GoodbyeDPI but not with Robz DPI, please
 [report it](https://github.com/kutsalkiremitci/robz-dpi/issues).
 
 ## Security and privacy
 
-- **It collects no data.** No account, ads, usage statistics or update checks. Robz DPI goes on the network in two
-  cases only: to the sites you picked when you press "Connection test", and to the DNS server you chose while DNS
+- **It collects no data.** No account, ads, usage statistics or update checks. Robz DPI goes online in only two
+  cases: to the selected sites when the "Connection test" is run, and to the selected DNS server while DNS
   redirection is on.
-- **The engine only modifies the packet.** It does not read, store or send the content anywhere. Connections are not
-  decrypted; encrypted traffic cannot be looked into.
-- **The only third-party binary is WinDivert.** It is downloaded from the official release, its SHA-256 digests are
-  pinned in [`engine.lock.json`](engine.lock.json), and it is verified both at build time and when the engine is
-  installed. The engine itself is compiled from the code in this repository.
-- **Administrator permission only when needed.** The interface runs without privileges. Installing the engine and
-  changing its settings asks for Windows approval (UAC); that work is done in a separate, windowless helper mode,
-  and every value coming from the interface is validated again. No free text or command-line flags are accepted.
+- **The engine only rearranges the first packet.** It does not read, store or send the contents. Connections are not
+  decrypted.
+- **The only third-party binary is WinDivert.** It is downloaded from the official release; its SHA-256 digests are
+  pinned in [`engine.lock.json`](engine.lock.json) and checked both at build time and at install time.
+- **Administrator rights are requested only when needed.** The interface runs unprivileged. Installing the engine and
+  changing its settings need Windows approval (UAC); that work is done in a separate, windowless helper mode and
+  every value coming from the interface is validated again.
 - **The service runs from a protected folder.** The engine is copied to `Program Files\RobzDPI`, which only
-  administrators can modify. The signed-in user can start and stop the service but cannot change the program it runs.
-- **The interface is a closed box.** It cannot run scripts from outside and reaches Windows through a single command.
+  administrators can change. The signed-in user can start and stop the service but cannot change the program it runs.
 
-## FAQ
+## Frequently asked questions
 
 <details>
 <summary><b>Is Robz DPI paid?</b></summary>
@@ -319,45 +340,44 @@ No. It is free and open source (MIT). There is no paid version, no ads and no ac
 </details>
 
 <details>
-<summary><b>Is this a VPN? Will my internet slow down?</b></summary>
+<summary><b>Is it a VPN? Does it affect internet speed?</b></summary>
 
-It is not a VPN. Your traffic does not go through another server, your IP address does not change, and your speed
-does not drop. Robz DPI touches only the first packet of each connection; the rest takes its normal route.
-
-</details>
-
-<details>
-<summary><b>Does voice on Discord and gameplay on Roblox work?</b></summary>
-
-Voice and game traffic take a separate route (UDP) and Robz DPI does not touch it. Blocks are mostly applied when
-connecting to the site and the sign-in servers, so voice and gameplay are expected to work once those load; but this
-has not been tried on every connection. If it does not work for you,
-[report it](https://github.com/kutsalkiremitci/robz-dpi/issues).
+It is not a VPN. Traffic does not go through another server and the IP address does not change. Robz DPI touches only
+the first packet of each connection; the rest takes its normal path.
 
 </details>
 
 <details>
-<summary><b>Which sites can I add?</b></summary>
+<summary><b>Do voice on Discord and gameplay on Roblox work?</b></summary>
 
-Any site you want. Robz DPI does not ship a list of blocked sites; Discord and Roblox are only ready-made shortcuts.
+Voice and game traffic travels a separate way (UDP) and Robz DPI does not touch it. The restriction is usually applied
+while connecting to the site and the session servers, so once those open, voice and gameplay are expected to work as
+well; this has not been tried on every connection.
+
+</details>
+
+<details>
+<summary><b>Which sites can be added?</b></summary>
+
+Any site. Robz DPI does not come with a list of sites; Discord and Roblox are only ready-made shortcuts.
 
 </details>
 
 <details>
 <summary><b>Does it work on macOS or Linux?</b></summary>
 
-Only Windows 10 and 11 (64-bit) for now. The packet logic compiles and is tested on every platform; what is missing
-is the layer that captures packets on those systems. macOS is the next target.
+Only 64-bit Windows 10 and 11 for now. The packet logic builds and is tested on every platform; what is missing is
+the layer that captures packets on those systems.
 
 </details>
 
 <details>
 <summary><b>Is it legal?</b></summary>
 
-That depends on where you are and what you use the software for; this repository does not give legal advice. Robz
-DPI is a network tool for education and testing: how and where it is used is the user's responsibility. Knowing and
-following the laws and the court and administrative decisions where you are is up to you. If in doubt, do not use it
-and consult a lawyer. Details: [disclaimer](DISCLAIMER.md#english).
+That depends on the country you are in and what you use the software for; this repository does not give legal advice.
+Robz DPI is a network tool for education and testing: how and where it is used is the responsibility of the user.
+Knowing and following the laws and the court and authority decisions where you are is up to you. If you are not sure,
+do not use it and consult a lawyer. Details: [disclaimer](DISCLAIMER.md#english).
 
 </details>
 
@@ -368,85 +388,78 @@ and consult a lawyer. Details: [disclaimer](DISCLAIMER.md#english).
 
 ```powershell
 npm install          # copies the interface libraries, downloads and verifies WinDivert
-npm run dev          # open in development mode
-npm test             # interface (node --test) and Rust (cargo test) tests
+npm run dev          # runs in development mode
+npm test             # interface (node --test) and engine (cargo test) tests
 npm run build        # installer: src-tauri/target/release/bundle/nsis/
 ```
 
-- **The engine is tested without touching the network.** `logic.rs` is pure logic: the tests feed it hand-built
-  packets and check the packets that come out (order, split point, lifetime, checksum). The filters are compiled
-  with the real `WinDivert.dll` and applied to sample packets; the driver is not loaded.
-- **The interface can be tried in a browser.** Serve the `ui/` folder with any local server (`python -m http.server
-  --directory ui`) and a mock core ([`ui/js/dev-mock.js`](ui/js/dev-mock.js)) takes the place of the real one: the
-  design can be tried without touching the computer.
-- `node scripts/screenshots.mjs` regenerates [`docs/screenshots`](docs/screenshots) in three languages; `node
-  scripts/render-banners.mjs` redraws the README images.
-- `node site/build.mjs` builds the three-language one-page website into [`site/dist`](site); each language page
-  uses the screenshots in that language.
+- **The engine is tested without the network.** `logic.rs` is pure logic: tests feed hand-built packets and check the
+  packets that come out (order, split point, lifetime, checksum). Filters are compiled with the real `WinDivert.dll`
+  and applied to sample packets; the driver is not loaded.
+- **The interface can be tried in a browser.** Serving the `ui/` folder with any local server
+  (`python -m http.server --directory ui`) swaps the real core for a mock
+  ([`ui/js/dev-mock.js`](ui/js/dev-mock.js)).
+- `node scripts/screenshots.mjs` regenerates [`docs/screenshots`](docs/screenshots) in three languages,
+  `node scripts/render-banners.mjs` the README images and `node site/build.mjs` the website.
 
 ```
 engine.lock.json     the official WinDivert release and its SHA-256 digests
 ui/                  interface: plain ES modules, Preact + htm, no bundler
-  js/locales/        Turkish and English text
+  js/locales/        Turkish, English and Russian texts
+site/                the three-language one-page website
 src-tauri/src/
-  main.rs            entry: interface, --helper (administrator helper) or --engine (the engine)
+  main.rs            entry: interface, --helper (administrator helper) or --engine (engine)
   settings.rs        settings and validation
-  catalog.rs         built-in apps, methods, DNS servers
-  plan.rs            from settings to an engine request; the strategy and its validation
-  dpi.rs             app state: turn on, turn off, apply, test
+  catalog.rs         ready-made apps, methods, DNS servers
+  plan.rs            from settings to the engine request; the strategy and its validation
+  dpi.rs             application state: turn on, turn off, apply, test
   probe.rs           connection test
-  shell.rs           window, tray, starting with Windows
+  shell.rs           window, tray, start with Windows, uninstall
   engine/            the engine (table above) + helper.rs (administrator helper), scm.rs (Windows services)
 ```
 
 **Releasing:** set the same version number in `package.json`, `src-tauri/Cargo.toml` and
-`src-tauri/tauri.conf.json`, write the notes in [`CHANGELOG.md`](CHANGELOG.md) and push a `vX.Y.Z` tag. The workflow
+`src-tauri/tauri.conf.json`, write the notes in [`CHANGELOG.md`](CHANGELOG.md) and push the `vX.Y.Z` tag. The workflow
 builds the installer and publishes it as `RobzDPI-Setup-X.Y.Z.exe` and `RobzDPI-Setup.exe`.
 
-## Thanks
+## Credits
 
-- **[GoodbyeDPI](https://github.com/ValdikSS/GoodbyeDPI)** (ValdikSS): the source of the techniques. Robz DPI's
-  engine was written by reading its source code.
-- **[GoodbyeDPI-Turkey](https://github.com/cagritaskn/GoodbyeDPI-Turkey)** (Çağrı Taşkın): the flag sets that work
-  for internet providers in Turkey.
+- **[GoodbyeDPI](https://github.com/ValdikSS/GoodbyeDPI)** (ValdikSS): the source of the methods.
+- **[GoodbyeDPI-Turkey](https://github.com/cagritaskn/GoodbyeDPI-Turkey)** (Çağrı Taşkın): the combinations the
+  ready-made methods are based on.
 - **[WinDivert](https://github.com/basil00/WinDivert)** (basil00): the driver that captures packets.
 
 License details: [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 
 ## Support and contributing
 
-- **Stuck during setup?** There is free support on the [Discord](https://discord.gg/UyyEn7SHm4) server.
-- **Did it not work, or do you have an idea?** [Open an issue](https://github.com/kutsalkiremitci/robz-dpi/issues).
-  Including your provider, the methods you tried and the engine log makes it much faster to solve.
-- **If you like it,** starring the repository helps more people find the project.
-
-Contributions are welcome: send a pull request for code, translations, a new method, or what works on a given
-provider.
+- **Installation support:** free support is available on the [Discord](https://discord.gg/UyyEn7SHm4) server.
+- **Bugs and suggestions:** [open an issue](https://github.com/kutsalkiremitci/robz-dpi/issues). Including your
+  provider, the methods you tried and the engine log speeds up the solution.
+- **Contributing:** pull requests are welcome for code, translations, a new method, or information about which method
+  gives a result on a given provider.
 
 ## Disclaimer
 
 Full text: **[DISCLAIMER.md](DISCLAIMER.md#english)** (Turkish, English, Russian). Downloading, installing or using
-Robz DPI means you accept that text; the app also asks for your acceptance the first time it opens. In short:
+Robz DPI means accepting that text; the app also asks for acceptance on first run. In short:
 
 - **For education, research and testing.** It was written to learn how network protocols and DPI systems work and to
-  try this on your own network. It is not a commercial product or service.
-- **No warranty.** It is provided as is; there is no guarantee that it works, gives access to any site, or does no
-  harm.
-- **The user is responsible.** All legal, administrative, criminal, financial and technical consequences of using it
-  belong to the user. Do not use it in a way that violates the laws or the court and administrative decisions where
-  you are.
+  try this on your own network. It is not a commercial product or a service.
+- **No warranty.** It is provided as is; there is no guarantee that it will work, give access to a site or do no harm.
+- **The user is responsible.** Every legal, administrative, criminal, financial and technical consequence of using it
+  belongs to the user. Do not use it in violation of the laws and the court and authority decisions where you are.
 - **It encourages no one.** The project owner and contributors do not direct anyone to violate laws, access
-  restrictions or the terms of service of third-party services. The software contains no list of "blocked sites";
-  the user decides which domain names it applies to.
-- **It is not a service.** It is not a VPN, proxy or access service; traffic does not pass through any server
-  belonging to the project and no content is hosted. It does not hide your IP address or provide anonymity or
-  security.
-- **It has technical risks.** It uses a service with administrator privileges and a kernel driver; connection
-  interruptions, conflicts with other software and trouble with the anti-cheat systems of games are possible.
+  restrictions or the terms of third-party services. The software contains no list of "blocked sites"; the user
+  decides which domains it applies to.
+- **It is not a service.** It is not a VPN, a proxy or an access service; traffic does not pass through any server of
+  the project and no content is hosted. It does not hide the IP address and provides no anonymity or security.
+- **It has technical risks.** It uses a service with administrator rights and a kernel driver; connection
+  interruptions, conflicts with other software and problems with the anti-cheat systems of games are possible.
 - **No affiliation with third parties.** Discord and Roblox are trademarks of their owners; this project is not
   affiliated with or endorsed by them.
 
 ## License
 
 [MIT](LICENSE). WinDivert is distributed under its own license (LGPL-3.0 or GPL-2.0); GoodbyeDPI, the source of the
-techniques, is licensed under Apache-2.0. Details: [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+methods, is licensed under Apache-2.0. Details: [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).

@@ -19,28 +19,28 @@ const font = (subset) => file(`node_modules/@fontsource-variable/mona-sans/files
 
 const TEXT = {
   tr: {
-    title: 'Seçtiğini aç, gerisine dokunma.',
-    sub: 'Discord, Roblox ve eklediğin siteler için tek düğmeli DPI aracı. Motoru Rust ile yazıldı, açık kaynak.',
-    del: 'her siteye uygulanan betikler, bozulan sayfalar',
-    add: 'yalnız seçtiklerin, tek düğme',
+    eyebrow: 'Windows için açık kaynak ağ aracı',
+    title: 'Yalnız seçtiğiniz sitelerde çalışan DPI aracı',
+    sub: 'Tek düğmeyle açılır. Trafiğinizi bir sunucudan geçirmez, hızınızı etkilemez.',
+    chips: ['Tek düğme', 'Seçili siteler', 'Veri toplamaz'],
     shot: 'docs/screenshots/tr/02-on.png',
-    size: 58,
-  },
-  en: {
-    title: 'Open what you pick, leave the rest alone.',
-    sub: 'A one-button DPI tool for Discord, Roblox and the sites you add. Engine written in Rust, open source.',
-    del: 'scripts applied to every site, broken pages',
-    add: 'only what you pick, one button',
-    shot: 'docs/screenshots/en/02-on.png',
     size: 54,
   },
+  en: {
+    eyebrow: 'Open-source network tool for Windows',
+    title: 'A DPI tool that works only on the sites you choose',
+    sub: 'One button turns it on. It does not route your traffic through a server or affect your speed.',
+    chips: ['One button', 'Selected sites', 'No data collected'],
+    shot: 'docs/screenshots/en/02-on.png',
+    size: 52,
+  },
   ru: {
-    title: 'Открывай выбранное, остальное не трогай.',
-    sub: 'Инструмент DPI с одной кнопкой для Discord, Roblox и добавленных вами сайтов. Движок написан на Rust, открытый код.',
-    del: 'скрипты для всех сайтов, сломанные страницы',
-    add: 'только выбранное, одна кнопка',
+    eyebrow: 'Сетевой инструмент с открытым кодом для Windows',
+    title: 'Инструмент DPI, который работает только на выбранных сайтах',
+    sub: 'Включается одной кнопкой. Трафик не идёт через сторонний сервер, скорость не меняется.',
+    chips: ['Одна кнопка', 'Выбранные сайты', 'Без сбора данных'],
     shot: 'docs/screenshots/ru/02-on.png',
-    size: 46, // Mona Sans'ta Kiril harfleri yok; yedek yazı tipi daha geniştir
+    size: 36, // Mona Sans'ta Kiril harfleri yok; yedek yazı tipi daha geniştir
   },
 };
 
@@ -56,15 +56,13 @@ html, body { width: ${width}px; height: ${height}px; overflow: hidden; backgroun
 .text { position: absolute; left: 72px; top: 72px; width: 690px; }
 .brand { display: flex; align-items: center; gap: 14px; font-size: 26px; font-weight: 700; font-stretch: 112%; }
 .brand img { width: 48px; height: 48px; border-radius: 11px; }
-h1 { margin-top: 44px; font-size: ${t.size}px; line-height: 1.06; font-weight: 820; font-stretch: 125%; letter-spacing: -0.025em; text-wrap: balance; }
+.eyebrow { margin-top: 52px; color: #ab7df8; font-family: 'Cascadia Code', 'Cascadia Mono', Consolas, monospace; font-size: 17px; letter-spacing: 0.02em; }
+h1 { margin-top: 16px; font-size: ${t.size}px; line-height: 1.06; font-weight: 820; font-stretch: 125%; letter-spacing: -0.025em; text-wrap: balance; }
 p { margin-top: 22px; max-width: 620px; color: #9198a1; font-size: 21px; line-height: 1.45; }
-.diff { margin-top: 32px; max-width: 640px; overflow: hidden; border: 1px solid #3d444d; border-radius: 10px;
-  font-family: 'Cascadia Code', 'Cascadia Mono', Consolas, monospace; font-size: 18px; }
-.diff div { padding: 9px 16px; }
-.d { background: rgba(248, 81, 73, 0.12); color: #ffdcd7; }
-.d span { text-decoration: line-through; text-decoration-color: rgba(248, 81, 73, 0.7); }
-.a { background: rgba(46, 160, 67, 0.18); color: #aff5b4; }
-.d b { color: #f85149; } .a b { color: #3fb950; }
+.chips { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+.chips span { display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 0 18px; border: 1px solid #3d444d; border-radius: 999px;
+  background: #151b23; color: #f0f6fc; font-size: 18px; font-weight: 550; white-space: nowrap; }
+.chips span::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #ab7df8; }
 .repo { position: absolute; left: 72px; bottom: 44px; color: #6e7681; font-family: 'Cascadia Code', Consolas, monospace; font-size: 16px; }
 .window { position: absolute; left: 836px; top: 64px; width: 384px; overflow: hidden; border: 1px solid #3d444d; border-radius: 12px;
   background: #010409; box-shadow: 0 30px 80px rgba(1, 4, 9, 0.9); }
@@ -76,9 +74,10 @@ p { margin-top: 22px; max-width: 620px; color: #9198a1; font-size: 21px; line-he
 </style></head><body><div class="stage">
   <div class="text">
     <div class="brand"><img src="${file('ui/assets/icon.png')}" alt="">Robz DPI</div>
+    <div class="eyebrow">${t.eyebrow}</div>
     <h1>${t.title}</h1>
     <p>${t.sub}</p>
-    <div class="diff"><div class="d"><b>- </b><span>${t.del}</span></div><div class="a"><b>+ </b>${t.add}</div></div>
+    <div class="chips">${t.chips.map((chip) => `<span>${chip}</span>`).join('')}</div>
   </div>
   <div class="repo">github.com/kutsalkiremitci/robz-dpi</div>
   <div class="window"><div class="bar"><img src="${file('ui/assets/icon.png')}" alt="">Robz DPI</div><img src="${file(t.shot)}" alt=""></div>
